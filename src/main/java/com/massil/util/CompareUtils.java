@@ -11,6 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.lang.Math.ceil;
+
 @Component
 public class CompareUtils {
     Logger log= LoggerFactory.getLogger(CompareUtils.class);
@@ -180,6 +182,10 @@ public class CompareUtils {
         }
         log.info("File does not exist in the folder.");
         return false;
+    }
+    public Long calTotalPages(Long totalRecords,Long pageSize){
+        double totalpages = ceil((totalRecords/(pageSize*1.00)));
+        return (long) totalpages;
     }
 
 }

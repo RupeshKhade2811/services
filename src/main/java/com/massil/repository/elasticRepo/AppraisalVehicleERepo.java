@@ -7,6 +7,7 @@ import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.model.EAppraiseVehicle;
 import com.massil.persistence.model.EConfigCodes;
 import com.massil.repository.ConfigCodesRepo;
+import com.massil.util.CompareUtils;
 import jakarta.persistence.TypedQuery;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.SearchQuery;
@@ -35,6 +36,8 @@ public class AppraisalVehicleERepo {
     private SearchSession searchSession;
     @Autowired
     private ConfigCodesRepo configCodesRepo;
+    @Autowired
+    private CompareUtils compareUtils;
 
 
     public CardsPage appraisalCards(UUID userId, Integer pageNumber, Integer pageSize){
@@ -56,8 +59,7 @@ public class AppraisalVehicleERepo {
         CardsPage cardsPage=new CardsPage();
         cardsPage.setAppraiseVehicleList(appraiseVehicles);
         cardsPage.setTotalRecords(totalRecords);
-        double totalpages = ceil((totalRecords/(pageSize*1.00)));
-        cardsPage.setTotalPages((long) totalpages);
+        cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
         return cardsPage;
     }
 
