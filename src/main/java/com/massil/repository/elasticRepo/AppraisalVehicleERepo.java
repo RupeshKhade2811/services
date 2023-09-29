@@ -1,5 +1,6 @@
 package com.massil.repository.elasticRepo;
 
+import com.massil.constants.AppraisalConstants;
 import com.massil.controller.AppraisalVehicleController;
 import com.massil.dto.CardsPage;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.Math.ceil;
+
 
 @Component
 public class AppraisalVehicleERepo {
@@ -39,23 +42,22 @@ public class AppraisalVehicleERepo {
 
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
         SearchResult<EAppraiseVehicle> searchResult = searchSession.search(EAppraiseVehicle.class)
-                .where( f -> f.and(
-                        f.match().field( "title" )
-                                .matching( "robot" ),
-                        f.match().field( "description" )
-                                .matching( "crime" ),
-                        f.match().field( "description" )
-                                .matching( "crime" ),
-                        f.match().field( "description" )
-                                .matching( "crime" )
-                ) )
+                .where( f -> f.bool()
+                        .must( f.match().field( "user.id" )
+                                .matching( userId ) )
+                        .mustNot( f.match().field( "invntrySts" )
+                                .matching( AppraisalConstants.INVENTORY ))
+                        .must(f.match().field("valid")
+                                .matching(true))
+                ).sort( f -> f.field( "createdOn" ).desc() )
                 .fetch(offset,pageSize);
         long totalRecords = searchResult.total().hitCount();
         List<EAppraiseVehicle> appraiseVehicles = searchResult.hits();
         CardsPage cardsPage=new CardsPage();
         cardsPage.setAppraiseVehicleList(appraiseVehicles);
         cardsPage.setTotalRecords(totalRecords);
-        cardsPage.setTotalPages(totalRecords/pageSize);
+        double totalpages = ceil((totalRecords/(pageSize*1.00)));
+        cardsPage.setTotalPages((long) totalpages);
         return cardsPage;
     }
 
