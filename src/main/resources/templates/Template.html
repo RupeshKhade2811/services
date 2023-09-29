@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>vehicle bill of sale</title>
+    <style>
+            H1{
+                color: black;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                font-size: 200%;
+                text-align: center;
+            }
+            body{
+                color: black;
+            }
+        </style>
+</head>
+<body >
+<h1><b>VEHICLE BILL OF SALE</b></h1>
+<p><b>State:</b> {{slrState}}</p>
+<p><u><b>Background:</b></u></p>
+<p>1.  This Vehicle Bill of Sale is made and entered into on the [INSERT DATE] between:</p>
+<p><b>Seller</b>: {{slrName}} located at {{slrAptNum}} with a mailing address of {{slrMail}} ("<b>Seller</b>") </p>
+<p>and</p>
+<p><b>Buyer</b>: {{buyerName}} located at {{buyerStrtAdr}} with a mailing address of {{buyerMail}} ("<b>Buyer</b>")</p>
+<P><b><u>Vehicle Information</u></b></P>
+<p>2.  {{vehicleMake}}, {{vehicleModel}}, {{vehicleYear}},{{price}}, {{vehExtColor}}, BODY STYLE, {{vinNumber}}, {{vehicleMileage}}</p>
+<P><b><u>Purchase Price</u></b></P>
+<p>3.  Dollar[INSERT PURCHASE PRICE]</p>
+<P>4.  I, {{slrName}} the Seller, hereby sell, transfer and convey all rights, title and interest in
+    the above to {{buyerName}} for and in consideration of the total sum of Dollars[AMOUNT].
+   inclusive of all sales tax <B>OR</B> plus any applicable sales tax paid by: [INSERT ALL THAT APPLY]</P>
+<p>[Personal Check];</p>
+<p>[Cashier's Check];</p>
+<p>[Money Order];</p>
+<p>[Cash];</p>
+<p>[Credit Card];</p>
+<p>[PayPal];</p>
+<p>[OTHER];</p>
+<p><b><u>Buyer Obligations</u></b></p>
+<p>5. Buyer Shall:</p>
+<p> a) Co-operate with the Seller in all matters relating to this Agreement;</p>
+<p> b) Be responsible for all maintenance tax, speeding tickets, and parking fines:</p>
+<p> c) [INSERT BUYER OBLIGATIONS]</p>
+<P><b><u>Condition of Vehicle</u></b></P>
+<p>6. The condition of the Vehicle is in new <b>OR</b> excellent <b>OR</b> very good <b>OR</b> good <b>OR</b> fair condition.</p>
+<p><b><u>Odometer Disclosure Statement</u></b></p>
+<p>7. Federal and state law require the mileage of the Vehicle to be provided upon transfer of</p>
+<p>ownership. Failure to complete this or providing a false statement may result in fines and/or </p>
+<p>imprisonment.</p>
+
+</body>
+</html>

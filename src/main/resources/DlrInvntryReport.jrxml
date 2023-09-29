@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DlrInvntryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8e27c0b6-9a60-4f9f-8170-f4c5acad2e0b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="vehicleYear" class="java.lang.String"/>
+	<field name="vehicleModel" class="java.lang.String"/>
+	<field name="vehicleMake" class="java.lang.String"/>
+	<field name="vehExtColor" class="java.lang.String"/>
+	<field name="vehicleSeries" class="java.lang.String"/>
+	<field name="vinNumber" class="java.lang.String"/>
+	<field name="vehicleMileage" class="java.lang.String"/>
+	<field name="intrColor" class="java.lang.String"/>
+	<field name="consumerAskPrice" class="java.lang.Double"/>
+	<field name="daysSinceInventory" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<staticText>
+				<reportElement x="121" y="4" width="289" height="40" uuid="2d2eb4d9-3115-4443-891b-1ddea2b02ed6"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FACTORY KEY ASSURE LLC]]></text>
+			</staticText>
+			<image>
+				<reportElement x="84" y="-6" width="80" height="96" uuid="7a4d2396-b8c2-4cbe-8ace-73bde8f1dd0b"/>
+				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="149" y="50" width="235" height="30" uuid="12ff4ed0-f0ce-419c-ae50-46aaaf3acc9e"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEALER INVENTORY REPORT]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="464" y="45" width="88" height="29" uuid="a67a8162-4fb6-4f67-aa6f-1fab8c89d240"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="405" y="44" width="69" height="20" uuid="06cc6a5a-6efb-4878-ac36-16b865e082b5"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Print Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="68" width="50" height="20" uuid="2b230cd6-7029-4b23-ad40-65984845ffa1"/>
+				<text><![CDATA[SearchBy:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="49">
+			<staticText>
+				<reportElement mode="Opaque" x="-2" y="3" width="40" height="46" backcolor="#8F96F2" uuid="10ad71c9-c40c-4545-a2e4-8ec94275c2bc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Year]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="38" y="3" width="56" height="46" backcolor="#8F96F2" uuid="0ea96725-f3db-4965-b9c9-ab95d55c1c8c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Make]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="94" y="3" width="56" height="46" backcolor="#8F96F2" uuid="fa29a3b5-3950-47f5-aa28-8b2504816714"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Model]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="150" y="3" width="58" height="46" backcolor="#8F96F2" uuid="76a36745-9128-4c3e-9c36-830b5bed948e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Series]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="208" y="3" width="47" height="46" backcolor="#8F96F2" uuid="fe4ebf73-10ad-405a-8093-35e471e98d8d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Days in Inventory]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="255" y="3" width="50" height="46" backcolor="#8F96F2" uuid="ee7fc9d5-4f5b-435f-8117-794f249e6217"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Color]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="305" y="3" width="50" height="46" backcolor="#8F96F2" uuid="f4274a12-bd9a-42df-a5e5-42b6beea6170"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interior]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="355" y="3" width="110" height="46" backcolor="#8F96F2" uuid="fa19a181-651b-4c07-9d12-ef0332827e14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="511" y="3" width="44" height="46" backcolor="#8F96F2" uuid="36c69caa-5a0f-44ac-bd3a-c22fb22df6ff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Asking Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="465" y="3" width="46" height="46" backcolor="#8F96F2" uuid="75557c46-5618-47d5-a27c-1b4a888d7fba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Milage]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="-2" y="0" width="40" height="28" backcolor="#DCE6F2" uuid="0c436dd2-98f6-4e00-bbdd-52702e78cedd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vehicleYear}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="208" y="0" width="47" height="28" backcolor="#DCE6F2" uuid="f4b2ed47-b575-4246-867a-1ad1e51c6123"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{daysSinceInventory}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="150" y="0" width="58" height="28" backcolor="#DCE6F2" uuid="174ffcda-a713-44d3-9a34-8f7ff2e11987"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vehicleSeries}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="94" y="0" width="56" height="28" backcolor="#DCE6F2" uuid="e2f32442-1aed-4aa3-a9eb-29eba22f9e2c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vehicleModel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="38" y="0" width="56" height="28" backcolor="#DCE6F2" uuid="ec23c421-247c-43ec-8b15-4e746f4a33d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vehicleMake}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="511" y="0" width="44" height="28" backcolor="#DCE6F2" uuid="8fef89f9-7b5b-4daf-9ba8-b00421dd1945"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{consumerAskPrice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="465" y="0" width="46" height="28" backcolor="#DCE6F2" uuid="35eb8cac-d606-46d2-a0e1-780a20958051"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vehicleMileage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="355" y="0" width="110" height="28" backcolor="#DCE6F2" uuid="5a987380-74f5-481b-933b-eb908d4ec182"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="305" y="0" width="50" height="28" backcolor="#DCE6F2" uuid="52eaa40a-8ac4-4c42-8a5e-e37754113daa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{intrColor}.toLowerCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="255" y="0" width="50" height="28" backcolor="#DCE6F2" uuid="e280b1b7-3676-4315-8cdf-fd98c33c8720"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vehExtColor}.toLowerCase()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Opaque" x="-2" y="27" width="557" height="1" forecolor="rgba(0, 0, 0, 0.27450982)" uuid="6b327c3f-eba7-40a8-a24e-a1039aa9d377">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="843" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b20a831b-1127-4314-a4ff-da70c9495a21">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["reports/"]]></defaultValueExpression>
+	</parameter>
+	<field name="vehicleYear" class="java.lang.String"/>
+	<field name="vehicleMake" class="java.lang.String"/>
+	<field name="vehicleModel" class="java.lang.String"/>
+	<field name="odometer" class="java.lang.String"/>
+	<field name="vinNumber" class="java.lang.String"/>
+	<field name="checkVin" class="java.lang.String"/>
+	<field name="engineTemp" class="java.lang.String"/>
+	<field name="batteryVoltage" class="java.lang.String"/>
+	<field name="fuelPressure" class="java.lang.String"/>
+	<field name="warmUps" class="java.lang.String"/>
+	<field name="timeSince" class="java.lang.String"/>
+	<field name="mileSince" class="java.lang.String"/>
+	<field name="currentTroubleCodes" class="java.lang.String"/>
+	<field name="pendingTroubleCodes" class="java.lang.String"/>
+	<field name="testDriveMes" class="java.util.List"/>
+	<field name="dataSummary" class="java.lang.String"/>
+	<field name="trCodesSummary" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="160" y="0" width="180" height="30" forecolor="#2549E8" uuid="da59eac2-3f26-49a4-8d88-83b0fa532e6c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Factory KeyAssure]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="303" y="2" width="30" height="23" forecolor="#3016F2" uuid="faa57f07-6ec8-4adf-8908-15a967eba15e"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LLC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="20" width="239" height="30" forecolor="#252CE8" uuid="69bc4bfe-0618-4da1-96d3-8ef169dba482">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KeyAssure Vehicle Report]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="52" width="556" height="1" uuid="91088a55-4033-4747-9f8c-3dc1548af064">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<image>
+				<reportElement x="123" y="-8" width="50" height="60" uuid="b947552d-ce86-4cfa-b1ed-6633ade49460"/>
+				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="241" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="-11" y="3" width="98" height="19" backcolor="#8B62DE" uuid="e72f849b-ba2a-4b34-bc58-e7347cf719f7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[     Vehicle Details]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="3" width="25" height="12" uuid="924c4d43-706a-46c2-af05-29e706795332"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="3" width="25" height="13" uuid="2d5124de-cabe-4806-b6ea-674f8c8806a9"/>
+				<textElement markup="styled">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="309" y="15" width="69" height="1" uuid="0e58bbd3-558c-4193-8af2-03a5946df6ba"/>
+			</line>
+			<line>
+				<reportElement x="172" y="15" width="69" height="1" uuid="af509cc8-5f6e-4bf9-8bda-b0a3bb456754"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="33" width="25" height="13" uuid="ddfe700a-8eeb-4df8-99e2-796bba219c4f"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Year:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="33" width="100" height="30" uuid="6d000ab3-a8bc-491c-b5f0-57a4432d89af"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Make:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="273" y="33" width="100" height="30" uuid="b7c7364a-7e1a-4ece-aa24-08c72e771c3c"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Model:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="33" width="100" height="30" uuid="07b956c6-4213-4b66-863c-545fa90d66c4"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Odometer:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="63" width="25" height="13" uuid="967d0db9-99f7-4e6a-aaee-dda7bf79cfcc"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIN:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="63" width="100" height="30" uuid="0595a2fe-6241-4253-b8aa-cd373bb82a0a"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vin Match?]]></text>
+			</staticText>
+			<line>
+				<reportElement x="173" y="45" width="79" height="1" uuid="42ff8c01-d717-49f7-9a50-a7a06c4d74da"/>
+			</line>
+			<line>
+				<reportElement x="26" y="45" width="69" height="1" uuid="cae7179f-b988-49dc-8526-0960b8e0d660"/>
+			</line>
+			<line>
+				<reportElement x="306" y="46" width="85" height="1" uuid="96de9b55-1a75-4629-846c-53931da2ebc4"/>
+			</line>
+			<line>
+				<reportElement x="453" y="46" width="87" height="1" uuid="e7e880ab-879d-4933-a683-6df746d04259"/>
+			</line>
+			<line>
+				<reportElement x="21" y="77" width="117" height="1" uuid="13c41ab2-c8cc-4dae-8db0-d0039e95c49b"/>
+			</line>
+			<line>
+				<reportElement x="200" y="76" width="105" height="1" uuid="befae93f-c580-4317-9c48-ce646ee2834b"/>
+			</line>
+			<textField>
+				<reportElement x="11" y="23" width="100" height="30" uuid="23684e52-414d-4ad0-99b2-a9842a6feec7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vehicleYear}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="186" y="33" width="82" height="30" uuid="a3f01c55-9ea4-4b63-8fda-0afe9bd4db52"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vehicleMake}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="322" y="33" width="100" height="30" uuid="d0e0b6be-742d-4ebd-9586-8866b32799cf"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vehicleModel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="33" width="100" height="30" uuid="163f48a7-d5c7-4dab-a2a0-cfe8379d347c"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{odometer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="22" y="63" width="116" height="30" uuid="b5141acb-0cb6-4e9a-bd95-502d21b4eb0b"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="172" y="2" width="80" height="13" uuid="0284c49e-6540-4187-905c-4e2d9a539981"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="307" y="2" width="84" height="14" uuid="62711ff1-6b2e-4b8b-b8f0-4244f841b847"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="217" y="63" width="100" height="30" uuid="6bb70d69-7afd-475e-8e02-d5b0f421ae5f"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{checkVin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="-11" y="98" width="118" height="14" backcolor="#8B62DE" uuid="d0d9f18e-b02a-4893-8497-25cac84b8726"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prestart measurements]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="122" width="100" height="23" uuid="ece1feaf-540c-4af8-959e-dd1dd6978a75"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Engine Temp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="120" width="100" height="30" uuid="2183d1ad-2bbf-41e6-93e7-a72d29605fc3"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Battery Voltage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="118" width="100" height="30" uuid="4e1951a3-5d50-4fcc-aed0-bfae7db49a85"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fuel Pressure ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="150" width="168" height="30" uuid="e2227845-0184-45f6-9233-f7ac709eabbf"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Warm-ups since last memory clean]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="308" y="150" width="142" height="30" uuid="723f8b73-b1d9-472d-a124-1fa1e2e3a433"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time since last memory clean ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="175" width="168" height="30" uuid="5ed98f42-3685-4e20-a2b0-e0f2cfa40c7e"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Miles since last memory clean]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="200" width="148" height="30" uuid="12d0b43a-15bb-497f-8fba-00ed4f117d31"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Current Trouble Codes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="200" width="148" height="30" uuid="b4e55934-59f3-46c1-b65f-821fe1c64668"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pending Trouble Codes ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="66" y="133" width="71" height="1" uuid="6e4c8f7e-70d6-4b45-832a-8f4b455137ce"/>
+			</line>
+			<line>
+				<reportElement x="233" y="132" width="69" height="1" uuid="b9e5965b-ccb3-49f7-87c6-ed0ac677c659"/>
+			</line>
+			<line>
+				<reportElement x="419" y="132" width="88" height="1" uuid="73dd19f0-1baa-423f-b562-06d014f68301"/>
+			</line>
+			<line>
+				<reportElement x="174" y="162" width="109" height="1" uuid="9f775fdf-1ec2-4b2c-b281-0eb7452c1378"/>
+			</line>
+			<line>
+				<reportElement x="450" y="169" width="101" height="1" uuid="806fba79-7b57-4319-aeea-0909660421c7"/>
+			</line>
+			<line>
+				<reportElement x="140" y="183" width="129" height="1" uuid="c598203b-0000-4b44-bd6b-3d967ea99dfc"/>
+			</line>
+			<line>
+				<reportElement x="114" y="220" width="149" height="1" uuid="5fce4f90-62d6-48c6-b844-b8e0a3f0a4ac"/>
+			</line>
+			<line>
+				<reportElement x="397" y="221" width="154" height="1" uuid="93f3135b-a4a9-43ec-8d71-c2b6aaa0a572"/>
+			</line>
+			<textField>
+				<reportElement x="236" y="118" width="64" height="14" uuid="8c469f9c-c0a7-46ca-9a16-8638f46f7177"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{batteryVoltage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="118" width="68" height="15" uuid="40d04139-f419-478d-becc-dc3ed8d73f44"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fuelPressure}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="466" y="153" width="68" height="15" uuid="29fc0486-a7dd-44ba-b414-3f0b2cb2ca4d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{timeSince}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="69" y="118" width="64" height="16" uuid="09a7b735-ea28-4d14-8654-5623c5dbe6f0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{engineTemp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="148" width="64" height="14" uuid="81ece020-2464-4886-902b-4861cdce707f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{warmUps}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="169" width="64" height="13" uuid="f2b5acf4-80c7-4b44-af73-c2080f09af86"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mileSince}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="205" width="83" height="15" uuid="9217d6d7-817c-43fe-b86a-114e788b3708"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{currentTroubleCodes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="205" width="64" height="16" uuid="074f4030-b6ce-4d82-a73a-6b704a7e5dcf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pendingTroubleCodes}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="132">
+			<staticText>
+				<reportElement mode="Opaque" x="-6" y="5" width="128" height="20" backcolor="#8B62DE" uuid="3c854ee4-d1f4-4bfe-b7d8-665bf9577d54"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Test drive measurements]]></text>
+			</staticText>
+			<subreport>
+				<reportElement stretchType="RelativeToBandHeight" x="-14" y="57" width="549" height="69" uuid="877754a5-fe0f-44cd-82ea-44fa7dee130b"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{testDriveMes})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "testDriveMesReport.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement mode="Opaque" x="490" y="28" width="60" height="28" backcolor="#AEA9F5" uuid="fe262bbb-0894-4623-8361-630b2fe95e20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DWNSTbk2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="375" y="28" width="56" height="28" backcolor="#AEA9F5" uuid="bfa3175a-c016-4e41-9c9d-274ee568bea6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UPSTbk2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="229" y="28" width="56" height="28" backcolor="#AEA9F5" uuid="1055f786-4114-4aab-b1a0-af314c00e5e4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vehicle Speed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="431" y="28" width="59" height="28" backcolor="#AEA9F5" uuid="1c508aea-9887-4206-944d-aaade088e041"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DWNSTbk1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="109" y="28" width="64" height="28" backcolor="#AEA9F5" uuid="8924e50d-beac-4743-87e2-f8ca9991ea3d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Engine RPM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="325" y="28" width="50" height="28" backcolor="#AEA9F5" uuid="e9f5ddc1-4040-48ee-9b0f-79d4c71f4bd7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UPSTbk1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="-6" y="28" width="45" height="28" backcolor="#AEA9F5" uuid="3968640c-00e5-42f5-b291-ae336060a1ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Interval]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="285" y="28" width="40" height="28" backcolor="#AEA9F5" uuid="5c42d8cf-8b23-45b5-8177-6bb7d739b073"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Voltage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="39" y="28" width="70" height="28" backcolor="#AEA9F5" uuid="146ccd3a-8f6a-4441-80a5-6eab5dadbe7f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Engine Temp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="173" y="28" width="56" height="28" backcolor="#AEA9F5" uuid="2359930f-8eb1-4bfa-8862-c94cda418664"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Drive Gear]]></text>
+			</staticText>
+		</band>
+		<band height="52">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="ContainerHeight" isPrintRepeatedValues="false" mode="Transparent" x="6" y="26" width="550" height="25" uuid="7104684a-09e5-4286-9668-5655da1d7fb0">
+					<property name="com.jaspersoft.studio.unit.height" value=""/>
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}==1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dataSummary}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="-6" y="4" width="78" height="20" backcolor="#8B62DE" uuid="383dfc8c-08d4-4bbb-9472-62fbf0a681b7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Summary]]></text>
+			</staticText>
+		</band>
+		<band height="64">
+			<textField textAdjust="StretchHeight">
+				<reportElement key="" stretchType="ContainerHeight" mode="Transparent" x="11" y="33" width="543" height="31" uuid="d63e80a9-c914-4e68-aadb-0de7cfe74444"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trCodesSummary}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="-1" y="9" width="120" height="19" backcolor="#8B62DE" uuid="9663aecc-9ada-4ff4-9af2-9e160c9544b2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trouble Code Summary]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="26">
+			<staticText>
+				<reportElement positionType="Float" stretchType="ContainerBottom" x="0" y="4" width="532" height="20" uuid="4dfe6e70-4b88-4bbd-bd3a-be6adb9be2d1"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KeyAssure--- Just the Facts, directly from vehicles own computer. The only way to be sure, is KeyAssure!]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

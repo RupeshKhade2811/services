@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <title>Odometer Statement</title>
+    <style>
+            H2{
+                color: black;
+                font-family:Arial, Helvetica, sans-serif;
+                font-size: 100%;
+                text-align: center;
+            }
+            H1{
+                color: black;
+                font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: 100%;
+                text-align: center;
+            }
+            a{
+                text-align: center;
+            }
+            body{
+                color: black;
+            }
+            .table1{
+                border-collapse: collapse;
+                text-align: center;
+                width: 100%;
+                margin-right: auto;
+                border: 2PX solid;
+            }
+            .table2{
+                border-collapse:collapse;
+                text-align:left;
+                width: 100%;
+                margin-right: auto;
+                border: 0.5PX solid;
+            }
+        </style>
+</head>
+<body >
+<h2 style="margin-bottom: 0px;"><b>STATE OF FLORIDA </b></h2>
+<p style="text-align: center; margin-top: 0px; margin-bottom: 0px;">DEPARTMENT OF HIGHWAY SAFETY AND MOTOR VEHICLES </p>
+<h2 style="margin-bottom: 0px; margin-top: 0px;"><b>DIVISION OF MOTORIST SERVICES</b></h2>
+<p style="text-align: center; margin-top: 0px; margin-bottom: 0px;">SUBMIT THIS FORM TO YOUR LOCAL TAX COLLECTOR OFFICE </p>
+<p style="text-align: center; margin-top: 0px; margin-bottom: 5px;"><a href="https://www.flhsmv.gov/locations/" >www.flhsmv.gov/offices/</a></p>
+
+<h1>SEPARATE ODOMETER DISCLOSURE STATEMENT AND ACKNOWLEDGMENT</h1>
+<div style="border:1px solid;width:100%;height:auto">
+    <p style="text-align: center;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;margin-bottom: 0px; margin-top: 0px;"><b>VEHICLE DESCRIPTION</b></p>
+    <table class="table1" border="1">
+        <tr>
+            <td>Vehicle Identification Number</td>
+            <td>Year</td>
+            <td>Make</td>
+            <td>color</td>
+            <td>Body</td>
+            <td>Title Number</td>
+        </tr>
+        <tr>
+            <td>{{vinNumber}}</td>
+            <td>{{vehicleYear}}</td>
+            <td>{{vehicleMake}}</td>
+            <td>{{vehExtColor}}</td>
+            <td>{{vehicleSeries}}</td>
+            <td>********</td>
+        </tr>
+    </table>
+    <p style="text-align: center;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;margin-bottom: 0px; margin-top: 0px;"><b>ODOMETER DISCLOSURE STATEMENT</b></p>
+</div>
+
+<p style="margin-bottom: 4px ; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"><b>WARNING: Federal and State law requires that you state the mileage in connection with an application for a Certificate of Title. Failure to complete or providing a false statement may result in fines and/or imprisonment</b></p>
+
+<p style="margin-bottom: 0px;">WE STATE THAT THIS <input type="checkbox" id="myCheckbox1" name="myCheckbox1"></input>
+    <label for="myCheckbox1">5</label> or <input type="checkbox" id="myCheckbox2" name="myCheckbox2"></input>
+    <label for="myCheckbox2">6</label> DIGIT ODOMETER NOW READS {{vehicleMileage}} XX (NO TENTHS) MILES,</p>
+<p style="margin-top: 0px ;margin-bottom: 0px;">DATE READ <input type="text"></input> AND WE HEREBY CERTIFY THAT TO THE BEST OF OUR KNOWLEDGE THE</p>
+<p style="margin-top: 0px ;">ODOMETER READING:</p>
+<div style="display: inline-block;width:20%">
+    <p style="text-align: center;font-size: small;"><u><b>CAUTION:</b></u><br></br>Read carefully before<br></br>checking a box.</p>
+</div>
+<div style="display: inline-block;width:75%;font-size:medium">
+    <p style="margin-bottom: 0px;"><input type="checkbox" id="myCheckboxmile1" name="myCheckboxmile1"></input> <label for="myCheckboxmile1"> 1. REFLECTS ACTUAL MILEAGE. </label></p>
+    <p style="margin-bottom: 0px; margin-top: 0px;"><input type="checkbox" id="myCheckboxmile2" name="myCheckboxmile2"></input> <label for="myCheckboxmile2"> 2. IS IN EXCESS OF ITS MECHANICAL LIMITS.(EXCESS OF ITS MECHANICAL LIMITS APPLIES TO 5 DIGIT ODOMETERS)</label></p>
+    <p style="margin-bottom: 4px; margin-top: 0px;"><input type="checkbox" id="myCheckboxmile3" name="myCheckboxmile3"></input> <label for="myCheckboxmile3"> 3. IS NOT THE ACTUAL MILEAGE. <b style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">WARNING – ODOMETER DISCREPANCY</b></label></p>
+</div>
+<p style="text-align: center;font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"><b>UNDER PENALTIES OF PERJURY, I DECLARE THAT I HAVE READ THE FOREGOING DOCUMENT AND THAT THE FACTS STATED IN IT ARE TRUE.</b></p>
+
+<div style="border:2px solid;width:100%;height:auto">
+    <table class="table2" border="1">
+        <tr>
+            <td>Seller's Signature</td>
+            <td>Seller's Printed Name</td>
+        </tr>
+        <tr>
+            <td>{{slrName}}</td>
+            <td>{{slrName}}</td>
+        </tr>
+    </table>
+    <p>Seller"s Street Address:{{slrAptNum}} </p>
+    <table class="table2" border="1">
+        <tr>
+            <td>City</td>
+            <td>State</td>
+            <td>Zip</td>
+        </tr>
+        <tr>
+            <td>{{slrCity}}</td>
+            <td>{{slrState}}</td>
+            <td>{{slrZip}}</td>
+        </tr>
+    </table>
+</div>
+
+<p></p>
+
+<div style="border:1px solid;width:100%;height:auto">
+    <table class="table2" border="1">
+        <tr>
+            <td>Buyer's Signature</td>
+            <td>Buyer's Printed Name</td>
+        </tr>
+        <tr>
+            <td>{{buyerName}}</td>
+            <td>{{buyerName}}</td>
+        </tr>
+    </table>
+    <p>Buyer"s Street Address:{{buyerStrtAdr}} </p>
+    <table class="table2" border="1">
+        <tr>
+            <td>City</td>
+            <td>State</td>
+            <td>Zip</td>
+        </tr>
+        <tr>
+            <td>{{buyerCity}}</td>
+            <td>{{buyerState}}</td>
+            <td>{{buyerZip}}</td>
+        </tr>
+    </table>
+</div>
+
+
+<p style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;margin-bottom: 7px;"><b>WHO IS AUTHORIZED TO COMPLETE THIS FORM?</b></p>
+<p style="margin-top: 0px ;margin-bottom: 4px;">ANY PERSON WHO IS BUYING OR SELLING A MOTOR VEHICLE AND WHO MUST MAKE OR ACKNOWLEDGE AN ODOMETER</p>
+<p style="margin-top: 0px ;">DISCLOSURE, IN ORDER TO COMPLY WITH STATE OR FEDERAL ODOMETER DISCLOSURE LAW</p>
+
+<p style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;margin-bottom: 7px;"><b>WHEN SHOULD THIS FORM BE USED?</b></p>
+<p style="margin-top: 3px ;margin-bottom: 0px;">1. WHEN A MOTOR VEHICLE, FOR WHICH AN ODOMETER DISCLOSURE IS REQUIRED, HAS BEEN SOLD</p>
+<p style="margin-top: 0px ;margin-bottom: 0px;">2. WHEN A MOTOR VEHICLE, FOR WHICH AN ODOMETER DISCLOSURE IS REQUIRED, HAS BEEN PURCHASED</p>
+<p style="margin-top: 0px ;margin-bottom: 0px;">3. WHEN AN ODOMETER DISCLOSURE STATEMENT AND ACKNOWLEDGMENT BETWEEN THE BUYER AND THE SELLER IS</p>
+<p style="margin-top: 0px ;">REQUIRED, BUT NO ODOMETER DISCLOSURE STATEMENT HAS BEEN MADE ON ANOTHER STATE OR FEDERAL FORM</p>
+
+<p style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;margin-bottom: 7px;"><b>WHEN SHOULD THIS FORM NOT BE USED?</b></p>
+<p style="margin-top: 3px ;margin-bottom: 0px;">1. WHEN A FLORIDA TITLE WHICH WAS ISSUED ON OR AFTER APRIL 29, 1990 IS AVAILABLE</p>
+<p style="margin-top: 0px ;margin-bottom: 0px;">2. WHEN A FORM HSMV 82994, MOTOR VEHICLE DEALER TITLE REASSIGNMENT SUPPLEMENT, HAS BEEN USED</p>
+<p style="margin-top: 0px ;margin-bottom: 0px;">3. WHEN A FORM HSMV 82995, MOTOR VEHICLE DEALER POWER OF ATTORNEY/ODOMETER DISCLOSURE, HAS BEEN USED</p>
+<p style="margin-top: 0px ;">4. WHEN AN OUT-OF-STATE TITLE, WHICH CONFORMS TO FEDERAL LAW, IS USED TO TRANSFER A MOTOR VEHICLE</p>
+
+<p style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;margin-bottom: 7px;"><b>FILING</b></p>
+<p style="margin-top: 3px ;margin-bottom: 0px;">1. COPIES SHOULD BE EXCHANGED BETWEEN THE SELLER AND THE BUYER. DEALERS MUST RETAIN THIS DOCUMENT IN THEIR</p>
+<p style="margin-top: 0px ;margin-bottom: 0px;">RECORDS FOR A PERIOD OF FIVE YEARS</p>
+<p style="margin-top: 0px ;margin-bottom: 0px;">2. IT IS NOT NECESSARY TO FILE THIS FORM OR ANY COPY OF THIS FORM WITH THE STATE OF FLORIDA, UNLESS REQUESTED To</p>
+<p style="margin-top: 0px ;">DO SO BY THE DIVISION OF MOTORIST SERVICES</p>
+
+<p>Check your local phone book government pages or visit the following website for current mailing addresses:<a href="https://www.flhsmv.gov/locations/" > http://www.flhsmv.gov/offices/</a> </p>
+
+<p><b>HSMV 82993 (REV. 11/11)</b></p>
+
+</body>
+</html>

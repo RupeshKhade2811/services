@@ -1,0 +1,122 @@
+server:
+  port: 8082
+
+#log-path: /opt/tomcat/customlogs/
+log-path:  C:/logs/
+market_check_url: http://api.marketcheck.com/v2/decode/car/neovin/
+market_check_url_suffix: /specs?
+api_key: api_key=hTUx9slxqOdFy4WQG7CRTuAIvC38A5mJ
+host : marketcheck-prod.apigee.net
+image_folder_path: C:/myimage/
+video_folder_path: C:/myVideo/
+profile_pic_path: C:/profilepics/
+#image_folder_path: /home/factory/images/
+#video_folder_path: /home/factory/videos/
+properties_path : /home/factory/properties/
+#profile_pic_path: /home/factory/profilepics/
+file_size: 500000000
+#saved_pdf_Path: /home/factory/pdf/
+saved_pdf_Path: C:/pdfFiles/
+get-link: https://services-test.keyassure.live/appraisal/getpic1?pic1=
+appraisal_form_path: src\\main\\resources\\AppraisalFormJR.jrxml
+whlsale_tmp_path: src\\main\\resources\\whlSaleBuyerOdr.jrxml
+vehicle_rep_path: src\\main\\resources\\vehicleReport.jrxml
+identityServer_userCreation: https://is-test.keyassure.live/t/carbon.super/scim2/
+paramValue: 3be77329-6d2d-4a72-a6a1-a6fbb02d0809
+
+
+cron.schedule.expression: "0 */50 * * * *"
+cron.schedule.expression.autoBid: "0 */50 * * * *"
+
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  datasource:
+    password: Massil@123
+    url: jdbc:postgresql://localhost:5432/Factory_db
+    username: postgres
+#    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
+#    driver-class-name: org.postgresql.Driver
+#    username: testuser
+#    password: 9Nh@mErlU10s
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      use-new-id-generator-mappings: false
+      ddl-auto: none
+      id:
+        new_generator_mappings: false
+    properties:
+      hibernate:
+        default_schema: factory_db
+        search:
+          backend:
+            uris: http://127.0.0.1:9200
+#            uris: http://10.175.1.20:9200
+          schema_management:
+            strategy: create-or-update
+            minimal_required_status: yellow
+      org:
+        hibernate:
+          envers:
+            do_not_audit_optimistic_locking_field: false
+            default_schema: factory_aud
+            revision_field_name: REV
+            revision_type_field_name: REV_TYPE
+    show-sql: true
+
+  mail:
+    host: mail.factorykeyassure.com
+    password: xE8_e]=.*/YS
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+    username: system@factorykeyassure.com
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: true
+
+#hibernate:
+#  search:
+#   backend:
+#     hosts: 10.175.1.20:9200
+#     protocol: http
+#     uris: http://10.175.1.20:9200/
+#   schema_management:
+#    strategy: create
+
+
+
+
+

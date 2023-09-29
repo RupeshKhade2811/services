@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="factoryMngReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="47e52c0c-0a4a-460b-a4b8-48cfd280796c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="memberId" class="java.util.UUID"/>
+	<field name="memberName" class="java.lang.String"/>
+	<field name="location" class="java.lang.String"/>
+	<field name="signUpDate" class="java.lang.String"/>
+	<field name="searchby" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="400" y="0" width="52" height="21" uuid="feef3f05-8de0-423a-be35-3832acf3a7c8"/>
+				<text><![CDATA[Print Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="30" width="220" height="30" uuid="8b43afa2-286e-4cac-97b8-17ad7a895af8"/>
+				<textElement>
+					<font size="19" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Factory Manager Report]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="460" y="0" width="90" height="20" uuid="ee4982cf-8dee-423a-a56f-dc83f543dc78"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="34" width="52" height="16" uuid="d09cb7d9-1334-462b-80bd-854e12b2ede1"/>
+				<text><![CDATA[Search By:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="80" height="70" uuid="d484eda5-9aff-439d-8e62-b0a46f7a678a"/>
+				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="200" y="0" width="158" height="30" uuid="a09ef743-d10b-49e3-b4ab-225230008b98"/>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KEY ASSURE llc]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="460" y="35" width="90" height="15" uuid="c073305f-c0f2-46e1-995e-389f0ec4bcf4"/>
+				<textFieldExpression><![CDATA[$F{searchby}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="7" width="100" height="13" backcolor="#4E8F9C" uuid="1d733271-26be-46f6-90ad-57e880e7844a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Member ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="7" width="210" height="13" backcolor="#4E8F9C" uuid="a76be497-ccd3-45e7-bc80-2b3844a51140"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Member Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="310" y="7" width="150" height="13" backcolor="#4E8F9C" uuid="20957edd-cb72-48d9-94d1-bb22986a4e50"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="460" y="7" width="110" height="13" backcolor="#4E8F9C" uuid="1f0293a8-1276-410b-8437-d566bbf77218"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sign Up Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="20" backcolor="#B1DEF0" uuid="a94ba420-a477-4315-9f4b-d333fa329f91"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{memberId}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="100" y="0" width="210" height="20" backcolor="#B1DEF0" uuid="3004a184-c606-41ad-b2b2-6c749148b7da"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{memberName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="310" y="0" width="150" height="20" backcolor="#B1DEF0" uuid="37fa24fe-9369-47e1-81d8-25839c688022"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="460" y="0" width="110" height="20" backcolor="#B1DEF0" uuid="3e9a4434-d88b-4271-a12d-3362d96b3512"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{signUpDate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="20" width="570" height="1" uuid="63e4dad2-dce1-43c4-a5d9-a2787a42204a"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

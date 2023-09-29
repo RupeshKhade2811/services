@@ -1,0 +1,1060 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a4ea9b87-df4b-427a-a545-511fd6880909">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="vehiclePic1" class="java.lang.String"/>
+	<field name="picLink" class="java.lang.String"/>
+	<field name="frDrSideDmgPic" class="java.lang.String"/>
+	<field name="frPassenSideDmgPic" class="java.lang.String"/>
+	<field name="rearDrSideDmgPic" class="java.lang.String"/>
+	<field name="rearPassenSideDmgPic" class="java.lang.String"/>
+	<field name="firstName" class="java.lang.String"/>
+	<field name="lastName" class="java.lang.String"/>
+	<field name="date" class="java.lang.String"/>
+	<field name="phoneNumber" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="state" class="java.lang.String"/>
+	<field name="zipCode" class="java.lang.String"/>
+	<field name="vehicleYear" class="java.lang.String"/>
+	<field name="vehicleMake" class="java.lang.String"/>
+	<field name="vehicleModel" class="java.lang.String"/>
+	<field name="vehicleSeries" class="java.lang.String"/>
+	<field name="engineType" class="java.lang.String"/>
+	<field name="transmissionType" class="java.lang.String"/>
+	<field name="extrColor" class="java.lang.String"/>
+	<field name="intrColor" class="java.lang.String"/>
+	<field name="vehicleMileage" class="java.lang.String"/>
+	<field name="vinNumber" class="java.lang.String"/>
+	<field name="flWinStatus" class="java.lang.String"/>
+	<field name="frWinStatus" class="java.lang.String"/>
+	<field name="rlWinStatus" class="java.lang.String"/>
+	<field name="rrWinStatus" class="java.lang.String"/>
+	<field name="externalDmgSts" class="java.lang.String"/>
+	<field name="frDrSideDmgSts" class="java.lang.String"/>
+	<field name="frDrSideDmgTxtBox" class="java.lang.String"/>
+	<field name="frPassenSideDmgSts" class="java.lang.String"/>
+	<field name="frPassenSideDmgTxtBox" class="java.lang.String"/>
+	<field name="frDrSidePntWrkSts" class="java.lang.String"/>
+	<field name="frDrSidePntWrkTxtBox" class="java.lang.String"/>
+	<field name="frPassenSidePntWrk" class="java.lang.String"/>
+	<field name="frPassenSidePntWrkTxtBox" class="java.lang.String"/>
+	<field name="rearDrSidePntWrk" class="java.lang.String"/>
+	<field name="rearDrSidePntWrkTxtBox" class="java.lang.String"/>
+	<field name="rearPassenSidePntWrk" class="java.lang.String"/>
+	<field name="rearPassenSidePntWrkTxtBox" class="java.lang.String"/>
+	<field name="rearDrSideDmgSts" class="java.lang.String"/>
+	<field name="rearDrSideDmgTxtBox" class="java.lang.String"/>
+	<field name="rearPassenSideDmgSts" class="java.lang.String"/>
+	<field name="rearPassenSideDmgTxtBox" class="java.lang.String"/>
+	<field name="windShieldDmg" class="java.lang.String"/>
+	<field name="rearWindow" class="java.lang.String"/>
+	<field name="vehDrWarnLightSts" class="java.lang.String"/>
+	<field name="apprVehAcCondn" class="java.lang.String"/>
+	<field name="roofTypes" class="java.lang.String"/>
+	<field name="apprVehStereoSts" class="java.lang.String"/>
+	<field name="doorLock" class="java.lang.String"/>
+	<field name="apprVehInteriCondn" class="java.lang.String"/>
+	<field name="apprEnginePer" class="java.lang.String"/>
+	<field name="apprVehOilCondn" class="java.lang.String"/>
+	<field name="apprBrakingSysSts" class="java.lang.String"/>
+	<field name="apprTransmissionSts" class="java.lang.String"/>
+	<field name="steeringFeel" class="java.lang.String"/>
+	<field name="apprVehTireCondn" class="java.lang.String"/>
+	<field name="bookAndKeys" class="java.lang.String"/>
+	<field name="titleSt" class="java.lang.String"/>
+	<field name="profOpinion" class="java.lang.String"/>
+	<field name="price" class="java.lang.String"/>
+	<field name="buyerName" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="802" splitType="Prevent">
+			<rectangle>
+				<reportElement x="0" y="105" width="140" height="19" backcolor="#B555ED" uuid="b53d5fa0-6d28-4d15-8991-f82d9005a3d0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="105" width="130" height="20" uuid="ccf6f6d0-6d91-44a0-8e8e-d21629c2c0ef"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Client Information]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="140" width="80" height="20" uuid="5966bf8f-f9b9-4579-b443-630bf719c413"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[First Name]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="66" y="140" width="100" height="30" uuid="c606673f-9db5-4371-8f21-8e7779dc7f95"/>
+				<textFieldExpression><![CDATA[$F{firstName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="140" width="90" height="30" uuid="e5726a88-54a5-4ca2-959d-e577d92b6829"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Last name]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="240" y="140" width="90" height="14" uuid="466f6bf6-a066-4a5e-b16e-45c3285cbe95"/>
+				<textFieldExpression><![CDATA[$F{lastName}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="60" y="155" width="106" height="1" uuid="ee3ca1c2-f868-4f4c-8716-9189cc164796"/>
+			</line>
+			<staticText>
+				<reportElement x="344" y="140" width="80" height="20" uuid="49dc737b-fb08-45c2-93fe-c6862c4844c0"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="166" width="80" height="20" uuid="e4d2765d-07fa-4f08-89b3-c4aafbdab95d"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<line>
+				<reportElement x="230" y="155" width="108" height="1" uuid="f5791c0e-309b-4473-ae0b-ffa9a3a6a3d6"/>
+			</line>
+			<textField>
+				<reportElement x="384" y="141" width="90" height="14" uuid="2b74f166-fb9d-471d-84b8-19f47b474691"/>
+				<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="374" y="156" width="155" height="1" uuid="8a2ad1d8-5bbb-489f-b43d-6156f2cbd960"/>
+			</line>
+			<textField>
+				<reportElement x="52" y="167" width="334" height="14" uuid="75136cd0-c784-41d1-8e99-057c5d6a2247"/>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="32" y="181" width="383" height="1" uuid="08b990c1-810f-457c-a47f-973db49570f7"/>
+			</line>
+			<staticText>
+				<reportElement x="-1" y="190" width="80" height="20" uuid="87c1db7e-a34d-46d3-a7af-fd1c9725a073"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="195" width="80" height="20" uuid="50ad08b2-6ad7-4d27-b779-cf96e3ef8bb5"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="379" y="195" width="60" height="20" uuid="9f92314d-8d5e-4708-b2b0-927403fc2518"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[State]]></text>
+			</staticText>
+			<line>
+				<reportElement x="279" y="205" width="90" height="1" uuid="3bafd4f1-15bc-4061-92a1-84ab79b11ede"/>
+			</line>
+			<line>
+				<reportElement x="42" y="207" width="210" height="1" uuid="b1b2946a-d3c4-45b9-93c3-6e9c053c661b"/>
+			</line>
+			<line>
+				<reportElement x="409" y="206" width="59" height="1" uuid="9198df36-9aea-4d77-86e4-60f8f0c804c9"/>
+			</line>
+			<textField>
+				<reportElement x="49" y="191" width="180" height="20" uuid="4659b80b-3b7b-4c38-98ce-a5c8f050c2a1"/>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="284" y="192" width="90" height="14" uuid="93286954-feca-4e90-9259-39681541a40b"/>
+				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="192" width="90" height="14" uuid="ce11f97c-c434-4564-bb9b-6b04153bd69b"/>
+				<textFieldExpression><![CDATA[$F{state}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="479" y="195" width="50" height="20" uuid="61fbb2c6-d2ea-4e16-9e45-927bd653ffb0"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Zip]]></text>
+			</staticText>
+			<line>
+				<reportElement x="499" y="206" width="60" height="1" uuid="45f23327-e308-4911-bc62-25b984c34e93"/>
+			</line>
+			<textField>
+				<reportElement x="501" y="191" width="54" height="14" uuid="39619fe5-d43b-49a9-b262-054c7849d51f"/>
+				<textFieldExpression><![CDATA[$F{zipCode}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="1" y="221" width="140" height="19" backcolor="#B555ED" uuid="c4168e25-f0e7-4bd9-a5da-176f975a242a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="221" width="130" height="20" uuid="eefe0c93-8e5d-4428-a599-8005db900bdc"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vehicle Information]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="256" width="80" height="20" uuid="11d1deab-acce-4282-8f40-6d16cd044991"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Year]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="34" y="256" width="100" height="15" uuid="bb1b29f2-c571-473d-8b36-6db6ecfe61d2"/>
+				<textFieldExpression><![CDATA[$F{vehicleYear}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="125" y="256" width="90" height="30" uuid="6420d7ff-4bd9-4929-843d-d9b2b144ba5f"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Make]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="165" y="256" width="90" height="14" uuid="75ccf5e7-d3be-4884-8c78-5a7541799d0d"/>
+				<textFieldExpression><![CDATA[$F{vehicleMake}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="29" y="271" width="90" height="1" uuid="8d0974f9-338c-46dc-a303-986d46c75adc"/>
+			</line>
+			<staticText>
+				<reportElement x="250" y="256" width="80" height="20" uuid="10899627-4fd3-4d58-acd3-a12a2e67a18c"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Model]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="256" width="80" height="20" uuid="034b7011-a5e6-4051-945b-8e9e19a0436e"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Series]]></text>
+			</staticText>
+			<line>
+				<reportElement x="155" y="271" width="90" height="1" uuid="0e46dfac-30ff-48a8-8034-2321f8232735"/>
+			</line>
+			<textField>
+				<reportElement x="295" y="257" width="90" height="14" uuid="feccab95-bb7c-4dd7-bf73-f9d2b6131980"/>
+				<textFieldExpression><![CDATA[$F{vehicleModel}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="285" y="271" width="90" height="1" uuid="5e248782-6bec-45a5-ab2f-f0cf1074573d"/>
+			</line>
+			<textField>
+				<reportElement x="424" y="257" width="90" height="14" uuid="36192d7b-22b5-4bc5-9610-05a9b7a7fd9f"/>
+				<textFieldExpression><![CDATA[$F{vehicleSeries}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="423" y="271" width="90" height="1" uuid="67de831d-5704-422b-9e1b-b5859397f4a3"/>
+			</line>
+			<staticText>
+				<reportElement x="4" y="283" width="80" height="20" uuid="e68bc6c2-72dc-4feb-a906-b1eab86102b1"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Engine]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="284" width="80" height="20" uuid="3cab028b-517b-4483-8cc4-1f96e386a0be"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Transmission]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="353" y="285" width="114" height="20" uuid="f4ec798a-61ac-443a-aafe-5d415ee4b87e"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exterior Color]]></text>
+			</staticText>
+			<line>
+				<reportElement x="234" y="299" width="90" height="1" uuid="f346c757-eedb-4692-a6f3-9e978eeea6fc"/>
+			</line>
+			<line>
+				<reportElement x="43" y="299" width="111" height="1" uuid="d687501f-e2cc-4793-82c9-02400884f417"/>
+			</line>
+			<line>
+				<reportElement x="432" y="298" width="59" height="1" uuid="7e7c2044-88f2-482c-9c24-3d9404f05ab0"/>
+			</line>
+			<textField>
+				<reportElement x="49" y="284" width="106" height="20" uuid="954bc13f-3798-4dae-a04f-512e8f7bdc13"/>
+				<textFieldExpression><![CDATA[$F{engineType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="239" y="285" width="110" height="14" uuid="e96a7d23-6504-44d5-bb67-dfbce7985e12"/>
+				<textFieldExpression><![CDATA[$F{transmissionType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="282" width="90" height="14" uuid="512f42bc-6ee6-4dd4-94ac-a424b6177ea0"/>
+				<textFieldExpression><![CDATA[$F{extrColor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="314" width="86" height="20" uuid="84886879-943f-4569-bcef-16e723829206"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interior Color]]></text>
+			</staticText>
+			<line>
+				<reportElement x="77" y="327" width="81" height="1" uuid="929e3daf-766d-447a-9989-137457280dd6"/>
+			</line>
+			<textField>
+				<reportElement x="82" y="313" width="90" height="14" uuid="aa8e03c8-f4a4-426d-8849-07b63d6784dc"/>
+				<textFieldExpression><![CDATA[$F{intrColor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="162" y="313" width="80" height="20" uuid="8771039b-54ed-4873-92a1-47e736e4e064"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mileage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="314" width="114" height="20" uuid="8484b6b4-644f-4e24-8fd8-f1ba581c3221"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vin]]></text>
+			</staticText>
+			<line>
+				<reportElement x="206" y="328" width="90" height="1" uuid="af8737bd-ce23-4cf2-96a1-870227ff308d"/>
+			</line>
+			<line>
+				<reportElement x="336" y="329" width="125" height="1" uuid="4e13ea8b-fd9a-4de7-90ad-12e45bd1fa63"/>
+			</line>
+			<textField>
+				<reportElement x="211" y="315" width="90" height="14" uuid="a0ea0ccc-bae7-41d8-8fd7-471f65dfa161"/>
+				<textFieldExpression><![CDATA[$F{vehicleMileage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="337" y="316" width="128" height="14" uuid="3518454d-7bfa-462b-b50b-afdbdc65f20f"/>
+				<textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="347" width="140" height="19" backcolor="#B555ED" uuid="42c55f97-5621-4696-a624-a8057f9d1038"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="347" width="130" height="20" uuid="be4ef6bc-4af2-4cb3-ae12-5288730059d3"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exterior Inspection]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="382" width="104" height="20" uuid="6dd167f8-5c24-4e0c-850e-5d948fa51285"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Front Drivers Side]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="382" width="70" height="19" uuid="a2899575-fc43-48b6-bc38-44dea503e84d"/>
+				<textFieldExpression><![CDATA[$F{frDrSideDmgSts}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="183" y="382" width="90" height="30" uuid="929b81a8-9f24-4cbe-84d8-287a1f521769"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="225" y="382" width="238" height="38" uuid="2aac39c8-5ae5-4264-98b0-1ef23d3d671e"/>
+				<textFieldExpression><![CDATA[$F{frDrSideDmgTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="97" y="398" width="65" height="1" uuid="19458986-dd54-4101-a2a6-42a6d7efa41b"/>
+			</line>
+			<line>
+				<reportElement x="215" y="397" width="249" height="1" uuid="6770c717-6710-443c-be17-89ee46f1380c"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="430" width="104" height="20" uuid="cd5c2a2d-a2aa-4dfd-b419-3142e0738338"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paintwork?]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="430" width="100" height="19" uuid="2501fb66-0095-4909-97bf-ce2a44228ab7"/>
+				<textFieldExpression><![CDATA[$F{frDrSidePntWrkSts}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="183" y="430" width="90" height="30" uuid="2e17b784-3cd2-4789-a199-f009391ec736"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="224" y="430" width="238" height="14" uuid="7b0264d6-144a-44e1-89e5-729b07e4c3b9"/>
+				<textFieldExpression><![CDATA[$F{frDrSidePntWrkTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="65" y="445" width="97" height="1" uuid="18e2b0e5-a883-4ed7-9640-905a51a818c9"/>
+			</line>
+			<line>
+				<reportElement x="215" y="445" width="249" height="1" uuid="2a6a5fc5-9c10-4afb-949a-40a755d4f3b2"/>
+			</line>
+			<staticText>
+				<reportElement x="-1" y="457" width="138" height="20" uuid="13642b7f-a4b1-4f6f-9ba5-6beeea855c13"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Front Passengers Side]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="123" y="458" width="45" height="19" uuid="f997b35b-34ca-42ef-9366-1885fbad35a9"/>
+				<textFieldExpression><![CDATA[$F{frPassenSideDmgSts}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="183" y="457" width="90" height="30" uuid="a18dc9ee-1158-47a9-8dac-489dffab43de"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="220" y="457" width="242" height="42" uuid="338fdcf8-6139-44f4-aa22-52886178a371"/>
+				<textFieldExpression><![CDATA[$F{frPassenSideDmgTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="122" y="473" width="40" height="1" uuid="b3a2fdc8-d367-48c6-930b-eee0371da4ec"/>
+			</line>
+			<line>
+				<reportElement x="218" y="471" width="245" height="1" uuid="24953609-3172-439c-a511-515589af56a3"/>
+			</line>
+			<staticText>
+				<reportElement x="-1" y="506" width="104" height="20" uuid="62b766ef-7f2c-46bc-8780-484712ded5b5"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paintwork?]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="68" y="506" width="102" height="16" uuid="f9abb84a-d0a5-43e8-8ad6-dbe7b2aed9f7"/>
+				<textFieldExpression><![CDATA[$F{frPassenSidePntWrk}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="182" y="506" width="90" height="30" uuid="e34c64b6-65dc-4dfa-8e34-041638d693ec"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="224" y="506" width="238" height="14" uuid="9fcaeeee-b0ea-400c-978b-2465978871cb"/>
+				<textFieldExpression><![CDATA[$F{frPassenSidePntWrkTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="63" y="522" width="99" height="1" uuid="02d85ea1-7c48-4201-a82a-c531ccb5d646"/>
+			</line>
+			<line>
+				<reportElement x="214" y="521" width="249" height="1" uuid="e075f19c-0eaf-4b84-802c-2c3736fb6ef8"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="532" width="104" height="20" uuid="8b6fa4bc-951a-4be9-8da4-57ee130fd11a"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rear Drivers Side]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="97" y="533" width="76" height="19" uuid="b71a217d-b533-4104-acef-8b490c08ac45"/>
+				<textFieldExpression><![CDATA[$F{rearDrSideDmgSts}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="183" y="532" width="90" height="30" uuid="0a5b5200-7d55-4a18-83e4-ec73393d1be3"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="226" y="530" width="238" height="42" uuid="2259e711-c51c-4307-8341-9f3bf1b307f9"/>
+				<textFieldExpression><![CDATA[$F{rearDrSideDmgTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="97" y="548" width="68" height="1" uuid="a83e2809-2b0f-48f2-9e57-d2a0c015734f"/>
+			</line>
+			<line>
+				<reportElement x="215" y="547" width="249" height="1" uuid="e5cc1f7e-266b-477e-9609-d2fc1d320a7a"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="582" width="104" height="20" uuid="4ec6a1cd-9c0b-4d50-99ce-5938ae8f38b4"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paintwork?]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="582" width="100" height="30" uuid="7f82731b-dfa0-47eb-962c-226bc0677ac4"/>
+				<textFieldExpression><![CDATA[$F{rearDrSidePntWrk}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="183" y="582" width="90" height="30" uuid="9cd6247c-0ab9-4ebb-a1aa-24d575ca9910"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="225" y="582" width="238" height="14" uuid="b020994e-9e8f-4b70-811d-5dd164a08e02"/>
+				<textFieldExpression><![CDATA[$F{rearDrSidePntWrkTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="65" y="598" width="95" height="1" uuid="ec7ce2e5-35ce-4c01-a2fc-a5283168fbcd"/>
+			</line>
+			<line>
+				<reportElement x="215" y="597" width="249" height="1" uuid="b020e56f-527e-458f-9b65-6e202aa9ff2a"/>
+			</line>
+			<staticText>
+				<reportElement x="-1" y="609" width="138" height="20" uuid="589302b3-a61f-4fcc-9f6f-d3d5c3871bbb"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rear Passengers Side]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="129" y="609" width="42" height="15" uuid="01b32ab8-376c-4c5d-a3fe-15e535a8beab"/>
+				<textFieldExpression><![CDATA[$F{rearPassenSideDmgSts}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="184" y="609" width="90" height="30" uuid="2b71ee35-6ed0-4581-b273-f465811653a8"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="226" y="609" width="234" height="40" uuid="8ac77853-6f29-4355-ad14-6d0cbad5197b"/>
+				<textFieldExpression><![CDATA[$F{rearPassenSideDmgTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="122" y="624" width="40" height="1" uuid="d5f0e7be-1854-48b9-a395-156dfe9704c4"/>
+			</line>
+			<line>
+				<reportElement x="216" y="624" width="247" height="1" uuid="47417cde-8b03-4b65-bd23-1244d96b54a0"/>
+			</line>
+			<staticText>
+				<reportElement x="-1" y="659" width="104" height="20" uuid="7113755c-0bda-4996-81f2-ad3a95e51b20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paintwork?]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="68" y="659" width="100" height="19" uuid="dfb260be-1df2-42af-879d-1b5e23462055"/>
+				<textFieldExpression><![CDATA[$F{rearPassenSidePntWrk}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="182" y="659" width="90" height="30" uuid="ba0a6e06-96fd-4dfd-8f5c-d4897dde0fac"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="224" y="659" width="234" height="14" uuid="f5762bbd-1da5-4c04-b4b4-a05545aaba0d"/>
+				<textFieldExpression><![CDATA[$F{rearPassenSidePntWrkTxtBox}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="63" y="674" width="99" height="1" uuid="c59b0390-63bb-4f71-8d12-cc1b22da1005"/>
+			</line>
+			<line>
+				<reportElement x="214" y="675" width="249" height="1" uuid="dc1deb85-3fc6-4424-bf41-72427e6209b6"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="684" width="136" height="20" uuid="ebf49644-b84a-49eb-baef-7269adf5b726"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Windshielld Damage]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="118" y="684" width="342" height="19" uuid="c4a08757-67c1-4a62-885d-6392337207a3"/>
+				<textFieldExpression><![CDATA[$F{windShieldDmg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="714" width="152" height="30" uuid="5e45d2b2-6c96-4b35-b889-ad30334df4df"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rear Glass Damage]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="119" y="714" width="338" height="14" uuid="84d5fa7b-64b0-4244-840d-10169d2e5534"/>
+				<textFieldExpression><![CDATA[$F{rearWindow}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="113" y="701" width="349" height="1" uuid="d8716587-79fc-45c6-9a3a-f99c6dafc38a"/>
+			</line>
+			<line>
+				<reportElement x="114" y="728" width="349" height="1" uuid="1d10d011-0931-4369-8055-8f3b7c04864a"/>
+			</line>
+			<staticText>
+				<reportElement x="166" y="5" width="219" height="29" uuid="0be79310-6eb2-4c12-9d32-1aafed057bb5"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vehicle Appraisal Form]]></text>
+			</staticText>
+			<image>
+				<reportElement x="-8" y="-5" width="91" height="100" uuid="91ae4040-7953-4cd2-863b-6301bd34caef"/>
+				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="45" y="11" width="110" height="39" uuid="c0f7d4f5-149d-4542-8cc8-1792fbccdc6f"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Factory KeyAssure llc ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="385" y="15" width="162" height="30" uuid="30822fa8-73f1-4eb2-a669-8fafc7c1d91c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DealerShip Member Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="52" width="100" height="30" uuid="f1176d91-d11e-4b92-b3a3-8631dc83842b"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Appraisal Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="385" y="65" width="130" height="20" uuid="5e138a50-ccc7-462b-8a42-aefe922e1c8b"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salesperson]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="280" y="50" width="60" height="14" uuid="656ab184-986e-497a-b771-238caee068d9"/>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="463" y="66" width="90" height="18" uuid="ee977cdc-9bba-45e9-b8d6-db55c44e370c"/>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="275" y="64" width="90" height="1" uuid="0e0f2778-a38c-4ed2-a6d9-0b1f65ddf89d"/>
+			</line>
+			<line>
+				<reportElement x="460" y="82" width="90" height="1" uuid="2e76498f-ecbb-4c93-abf6-88b0fcdaef68"/>
+			</line>
+			<staticText>
+				<reportElement x="180" y="350" width="134" height="30" uuid="0d388b5a-d673-4e5e-9534-46a892b08c58"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exterior Damage Noted]]></text>
+			</staticText>
+			<line>
+				<reportElement x="305" y="365" width="249" height="1" uuid="d3f0110d-76fb-4150-9d1e-3673617be69e"/>
+			</line>
+			<textField>
+				<reportElement x="315" y="350" width="90" height="14" uuid="3c4c7c96-e98f-46ae-b2fd-8d97917ce85e"/>
+				<textFieldExpression><![CDATA[$F{externalDmgSts}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="495" y="305" width="50" height="50" uuid="e669249d-f954-45fb-9e9f-c91c1bc41cdb"/>
+				<imageExpression><![CDATA[$F{vehiclePic1} != null ? $F{picLink} + $F{vehiclePic1} : null]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="495" y="400" width="50" height="50" uuid="209bea2a-91c3-4c38-9493-19790374adce"/>
+				<imageExpression><![CDATA[$F{frDrSideDmgPic} != null ? $F{picLink} + $F{frDrSideDmgPic} : null]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="495" y="469" width="50" height="50" uuid="e8d1efb9-8c87-4e68-a598-73f64dd74cd6"/>
+				<imageExpression><![CDATA[$F{frPassenSideDmgPic} != null ? $F{picLink} + $F{frPassenSideDmgPic} : null]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="495" y="542" width="50" height="50" uuid="eaf7541d-ef47-4ac1-a168-3775a89bd1ac"/>
+				<imageExpression><![CDATA[$F{rearDrSideDmgPic} != null ? $F{picLink} + $F{rearDrSideDmgPic} : null]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="495" y="610" width="50" height="50" uuid="24162205-e386-4cc1-9180-4d45e1a8ecaa"/>
+				<imageExpression><![CDATA[$F{rearPassenSideDmgPic} != null ? $F{picLink} + $F{rearPassenSideDmgPic} : null]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="214" y="420" width="249" height="1" uuid="f7ce1601-a3ff-4422-a208-b91743be1aed"/>
+			</line>
+			<line>
+				<reportElement x="220" y="495" width="241" height="1" uuid="a471a27b-b898-4f7b-a82c-cb244e5ecb25"/>
+			</line>
+			<line>
+				<reportElement x="213" y="571" width="249" height="1" uuid="a9468634-fa48-413e-b357-d26f2d716d6d"/>
+			</line>
+			<line>
+				<reportElement x="216" y="649" width="249" height="1" uuid="3ef4e18c-048d-40a1-badf-a57a05dcd0fc"/>
+			</line>
+		</band>
+		<band height="802">
+			<staticText>
+				<reportElement x="0" y="163" width="170" height="21" uuid="893f1b81-7608-4a8e-9bf3-2f7b3734bc23"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Front Drivers Window Status]]></text>
+			</staticText>
+			<line>
+				<reportElement x="154" y="180" width="105" height="1" uuid="ee111388-f2d4-48ca-84f8-fcdb1344fa9c"/>
+			</line>
+			<textField>
+				<reportElement x="159" y="165" width="83" height="18" uuid="64feeb7c-3202-42bf-9bbb-86a614a84b38"/>
+				<textFieldExpression><![CDATA[$F{flWinStatus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="266" y="163" width="195" height="21" uuid="2c6a2c0d-3475-4337-b457-8bbbc60cf9f7"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Front Passengers Window Status]]></text>
+			</staticText>
+			<line>
+				<reportElement x="441" y="180" width="122" height="1" uuid="7683aef0-b1a7-4806-906b-554d12d8a149"/>
+			</line>
+			<textField>
+				<reportElement x="446" y="165" width="100" height="30" uuid="0450eb7b-7f83-408d-a155-2b5019417e7b"/>
+				<textFieldExpression><![CDATA[$F{frWinStatus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="188" width="170" height="21" uuid="96caaf98-15bd-40a0-8fa1-d51b2c9a0946"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rear Drivers Window Status]]></text>
+			</staticText>
+			<line>
+				<reportElement x="155" y="205" width="105" height="1" uuid="bbe3a091-11df-42e0-8b7a-8f9839a6fb3f"/>
+			</line>
+			<textField>
+				<reportElement x="160" y="190" width="83" height="18" uuid="01266598-0d6c-4e30-8af2-c94f88acc347"/>
+				<textFieldExpression><![CDATA[$F{rlWinStatus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="267" y="188" width="195" height="21" uuid="5187855e-ee0a-423c-bdae-9764f019b9a1"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rear Passengers Window Status]]></text>
+			</staticText>
+			<line>
+				<reportElement x="442" y="205" width="122" height="1" uuid="ac806655-538c-417d-906f-1a730664753b"/>
+			</line>
+			<textField>
+				<reportElement x="447" y="190" width="100" height="18" uuid="8469ef5f-2509-46dc-b1d2-66089efac11c"/>
+				<textFieldExpression><![CDATA[$F{rrWinStatus}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="1" y="220" width="140" height="19" backcolor="#B555ED" uuid="232619d4-df90-481a-8bbc-3cb5f128f3ae"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="220" width="130" height="20" uuid="6f6ff6e2-7751-47b7-8683-9e298b89ca72"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Test Drive]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="255" width="124" height="20" uuid="a8463dff-b497-4656-940d-798f6f51391a"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Engine Performance]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="118" y="255" width="416" height="16" uuid="c37727a4-0a73-4821-92e3-d4882cc10b30"/>
+				<textFieldExpression><![CDATA[$F{apprEnginePer}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="113" y="272" width="421" height="1" uuid="e4a7653e-033d-4bbf-86c1-2a50bfe36650"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="285" width="124" height="20" uuid="dd5c8811-c921-4cda-98ea-cb8d6d6199c4"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Engine Oil]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="68" y="285" width="466" height="15" uuid="d4143ee0-4c09-4e8f-99d8-8b7bbc21d039"/>
+				<textFieldExpression><![CDATA[$F{apprVehOilCondn}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="63" y="300" width="471" height="1" uuid="fbde5a0f-1f10-4eb5-aed7-a387748ef5ab"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="313" width="124" height="20" uuid="ffdfa47a-dd05-470b-9d7a-143577f125f7"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Braking System]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="93" y="313" width="440" height="16" uuid="7564862e-c3d9-492b-8118-e6991687094e"/>
+				<textFieldExpression><![CDATA[$F{apprBrakingSysSts}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="88" y="330" width="445" height="1" uuid="44fbd75b-b24e-4c97-83b5-0afef6e77786"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="342" width="124" height="20" uuid="090b9375-9fde-47d3-bc0b-feed2b66f5ec"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Transmssion Status]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="113" y="342" width="420" height="30" uuid="045264fe-e899-440f-abb4-7a9b13213bfb"/>
+				<textFieldExpression><![CDATA[$F{apprTransmissionSts}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="108" y="359" width="425" height="1" uuid="f43a6ace-d6c6-431a-9fe7-85e69b6cdd51"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="370" width="124" height="20" uuid="103a3d6d-3b2d-4b59-acb5-ece6fdb921db"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Steering Feel]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="370" width="454" height="19" uuid="0c8185e1-9110-4aed-abe7-d4f61bf15cd1"/>
+				<textFieldExpression><![CDATA[$F{steeringFeel}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="74" y="388" width="460" height="1" uuid="86da2d2b-b48c-44ea-97dd-54d479011a59"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="402" width="124" height="20" uuid="05884ae7-e197-4508-810b-00e1e2181c93"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tires]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="39" y="402" width="494" height="15" uuid="f7997c2d-c055-454f-8bbf-fa36270de553"/>
+				<textFieldExpression><![CDATA[$F{apprVehTireCondn}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="32" y="417" width="502" height="1" uuid="5ed0dc38-f774-4d31-b129-938876777c5a"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="430" width="124" height="20" uuid="22f14d2a-9b0f-4a1c-b5b5-e181ffa03bae"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Books and Keys]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="95" y="430" width="438" height="20" uuid="26a39f98-8db5-4bb8-876b-bab81856ecd3"/>
+				<textFieldExpression><![CDATA[$F{bookAndKeys}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="90" y="447" width="443" height="1" uuid="9983f303-fdc4-4a1f-8673-26497cea40ed"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="465" width="124" height="20" uuid="c60461cd-6ee9-404c-bc96-73291d631f8b"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Title Status]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="72" y="462" width="442" height="18" uuid="458bf70d-c8a1-453f-ae00-555ffc5458b8"/>
+				<textFieldExpression><![CDATA[$F{titleSt}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="67" y="477" width="467" height="1" uuid="5ca6c4df-19c9-418c-a445-9dff3eaf62b9"/>
+			</line>
+			<line>
+				<reportElement x="119" y="504" width="405" height="1" uuid="34d51c10-0da6-4a2d-a928-da6102c88b1b"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="492" width="124" height="20" uuid="d55ea277-6463-4a54-8667-d1905fe95c3f"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Professional Opinion]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="124" y="493" width="410" height="30" uuid="4dbaf039-016b-4c7a-8c80-7e66ab31482f"/>
+				<textFieldExpression><![CDATA[$F{profOpinion}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="118" y="518" width="405" height="1" uuid="462d756f-f4c1-4a6a-ad9b-f2253660e9f9"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="530" width="124" height="20" uuid="7e443e97-19c7-4f14-99ea-eb65269e9ab3"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Appraised By]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="82" y="530" width="178" height="22" uuid="2d8fac67-e413-4b40-801e-edec55a3cfcd"/>
+				<textFieldExpression><![CDATA[$F{firstName}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="78" y="542" width="167" height="1" uuid="8995f284-62ea-4d09-b5b8-d2dd286fb8dc"/>
+			</line>
+			<staticText>
+				<reportElement x="283" y="530" width="124" height="20" uuid="86f2d86c-5a57-4f53-b15c-cd80d3716e18"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Appraised Value]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="384" y="530" width="144" height="18" uuid="93d93833-266f-42d5-89a2-d96552ee2202"/>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="374" y="542" width="155" height="1" uuid="4ee7ece4-0975-4f99-ba1e-b5809c63cc71"/>
+			</line>
+			<staticText>
+				<reportElement x="284" y="568" width="124" height="20" uuid="a9ef3ebf-e24a-43e7-bc3f-426073b76ccd"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Signature]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="349" y="568" width="178" height="22" uuid="761973bc-1c45-422a-9a41-e8e043a6f7a9"/>
+				<textFieldExpression><![CDATA[$F{firstName}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="339" y="580" width="189" height="1" uuid="8b240cc0-8ff5-4ea1-acf6-ee6d42a87a9e"/>
+			</line>
+			<staticText>
+				<reportElement x="3" y="584" width="124" height="20" uuid="42b0756a-8b2f-4315-bc09-d034ece6159f"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Edits By]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="58" y="587" width="162" height="20" uuid="4cd2441b-7f6b-49d4-a61e-0df0226de5b1"/>
+				<textFieldExpression><![CDATA[$F{firstName}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="53" y="600" width="167" height="1" uuid="85440d69-31a3-4e95-9261-369335bbaf33"/>
+			</line>
+			<rectangle>
+				<reportElement x="4" y="27" width="140" height="19" backcolor="#B555ED" uuid="bc12811b-a50d-4c60-aef2-3a9d5a518e70"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="14" y="27" width="130" height="20" uuid="547054ae-8f05-419e-b19e-e5330de4ee84"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interior Inspection]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="62" width="124" height="20" uuid="375d1f21-8176-4136-9d60-7a617533f28b"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dash Warning Lights]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="126" y="62" width="428" height="15" uuid="b8956420-c1f6-4c24-8b36-fd773803e5f2"/>
+				<textFieldExpression><![CDATA[$F{vehDrWarnLightSts}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="121" y="77" width="437" height="1" uuid="9f5eb9c6-5cf1-4ce6-9d0d-f30436848173"/>
+			</line>
+			<staticText>
+				<reportElement x="4" y="90" width="104" height="20" uuid="1943b3fb-f1c1-4d9b-86c5-4422b3affee0"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[A/C System]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="74" y="87" width="180" height="16" uuid="24cf9325-d5a9-4341-9b55-9ef4f86a1ba0"/>
+				<textFieldExpression><![CDATA[$F{apprVehAcCondn}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="286" y="90" width="90" height="30" uuid="5f6aa2f3-3a1f-4572-b92f-af1a3a0b7308"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Roof]]></text>
+			</staticText>
+			<line>
+				<reportElement x="317" y="105" width="241" height="1" uuid="1b81dfe3-98df-49d0-b8c3-078306c82c8a"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="115" width="110" height="20" uuid="6964c824-9927-4078-9d96-09e9a669a43b"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stereo]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="47" y="112" width="234" height="21" uuid="390c4cee-6d57-479b-9cf7-cc1611829e3a"/>
+				<textFieldExpression><![CDATA[$F{apprVehStereoSts}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="287" y="115" width="122" height="30" uuid="9e134542-8dd3-4cf7-afe4-df208c185cd5"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Door Locks]]></text>
+			</staticText>
+			<line>
+				<reportElement x="358" y="128" width="199" height="1" uuid="ca8552ad-3f34-43b7-909b-74b7da3a9b0a"/>
+			</line>
+			<textField>
+				<reportElement x="104" y="137" width="446" height="19" uuid="63f455a5-e27e-4137-8003-85aa1744522f"/>
+				<textFieldExpression><![CDATA[$F{apprVehInteriCondn}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="99" y="152" width="459" height="1" uuid="a661c571-fb2d-4c88-8efd-4666ca6f600a"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="137" width="124" height="20" uuid="3152ff0b-0b89-4cbf-8326-c440583d5fd5"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interior Condition]]></text>
+			</staticText>
+			<line>
+				<reportElement x="42" y="129" width="239" height="1" uuid="0ef0bd87-c06d-48b5-8d89-c59698aeab04"/>
+			</line>
+			<line>
+				<reportElement x="67" y="106" width="211" height="1" uuid="1704b5ae-7c69-4b04-9c3d-b8ef950f13ca"/>
+			</line>
+			<textField>
+				<reportElement x="320" y="88" width="230" height="20" uuid="fd664884-9fa8-441c-95e7-5dfe928819c3"/>
+				<textFieldExpression><![CDATA[$F{roofTypes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="113" width="190" height="20" uuid="a4d51276-028b-4f05-af88-55544f305a1e"/>
+				<textFieldExpression><![CDATA[$F{doorLock}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

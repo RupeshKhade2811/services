@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OfferReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b75ac3b4-992d-4736-92a3-1f550af0076b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="sellername" class="java.lang.String"/>
+	<field name="sellerId" class="java.util.UUID"/>
+	<field name="offerCount" class="java.lang.String"/>
+	<field name="vin" class="java.lang.String"/>
+	<field name="miles" class="java.lang.String"/>
+	<field name="searchby" class="java.lang.String"/>
+	<background>
+		<band height="1" splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="85" splitType="Stretch">
+			<staticText>
+				<reportElement x="400" y="0" width="52" height="21" uuid="78ae7715-814d-49ba-a417-4b727cd1171b"/>
+				<text><![CDATA[Print Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="30" width="160" height="30" uuid="daba3ee7-4bae-49f5-abd0-f416713749c8"/>
+				<textElement>
+					<font size="19" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Offers Report]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="460" y="0" width="90" height="20" uuid="bb4395c7-14a1-417f-8db8-285f70b0cf6f"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="34" width="52" height="16" uuid="a3d1fe83-1fe2-4d07-a7a3-ec1d7ab269f0"/>
+				<text><![CDATA[Search By:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="100" height="80" uuid="2f5b8611-6176-414e-817e-65ddc93e8c72"/>
+				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="212" y="0" width="158" height="30" uuid="d68c4292-8581-4a06-9c9c-ae637d8ed4d5"/>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KEY ASSURE llc]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="460" y="34" width="90" height="16" uuid="91423e9c-9a46-41e7-bc04-53f30c7659c3"/>
+				<textFieldExpression><![CDATA[$F{searchby}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="7" width="120" height="13" backcolor="#4E8F9C" uuid="686077bb-7cd1-4a8e-8c4a-4a67cf8bfbf2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[selling member name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="120" y="7" width="92" height="13" backcolor="#4E8F9C" uuid="88cdf097-0ae9-46ce-b55a-cd0b71236ae7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[selling member ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="212" y="7" width="68" height="13" backcolor="#4E8F9C" uuid="9eaa377b-c3de-48c8-b954-06bd421d1c3e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Miles]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="280" y="7" width="130" height="13" backcolor="#4E8F9C" uuid="20de588b-606d-43d3-9e04-6684f95f710f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Offer Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="410" y="7" width="140" height="13" backcolor="#4E8F9C" uuid="50a3b0da-1305-4fa2-9998-0c41e41a6cd9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vin]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="280" y="0" width="130" height="13" backcolor="#B1DEF0" uuid="9808dda4-9e4a-4a83-8ebe-d8dfa4c75a89"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{offerCount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="212" y="0" width="68" height="13" backcolor="#B1DEF0" uuid="5646f55a-6022-4907-b38b-34901b8e7f6e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{miles}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="410" y="0" width="140" height="13" backcolor="#B1DEF0" uuid="4049a471-a933-4581-808e-265468d18395"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="120" y="0" width="92" height="13" backcolor="#B1DEF0" uuid="560bcf29-2c5a-46e0-b1db-a731e4eae85d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{sellerId}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="120" height="13" backcolor="#B1DEF0" uuid="dea3334a-570e-49ce-9cbb-609b85788f81"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{sellername}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="13" width="550" height="1" uuid="aadf05fc-542a-4e47-a88a-3c9ef9821665"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

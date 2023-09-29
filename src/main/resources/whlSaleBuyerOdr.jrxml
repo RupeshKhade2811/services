@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Invoice_Table_Based" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
+	<property name="template.engine" value="tabular_template"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#EEEFF0"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#CACED0">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#D8D8D8"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="tableDataset" uuid="7388b8dc-0e25-4972-a24d-f93a10330935">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="slrName" class="java.lang.String"/>
+	<field name="slrState" class="java.lang.String"/>
+	<field name="slrAptNum" class="java.lang.String"/>
+	<field name="slrCity" class="java.lang.String"/>
+	<field name="slrMail" class="java.lang.String"/>
+	<field name="slrPhNm" class="java.lang.String"/>
+	<field name="slrZip" class="java.lang.String"/>
+	<field name="slrStrtAdr" class="java.lang.String"/>
+	<field name="buyerName" class="java.lang.String"/>
+	<field name="buyerState" class="java.lang.String"/>
+	<field name="buyerAptNum" class="java.lang.String"/>
+	<field name="buyerCity" class="java.lang.String"/>
+	<field name="buyerMail" class="java.lang.String"/>
+	<field name="buyerPhNm" class="java.lang.String"/>
+	<field name="buyerZip" class="java.lang.String"/>
+	<field name="buyerStrtAdr" class="java.lang.String"/>
+	<field name="vinNumber" class="java.lang.String"/>
+	<field name="vehicleSeries" class="java.lang.String"/>
+	<field name="vehicleYear" class="java.lang.String"/>
+	<field name="vehicleModel" class="java.lang.String"/>
+	<field name="vehicleMileage" class="java.lang.String"/>
+	<field name="vehicleMake" class="java.lang.String"/>
+	<field name="vehExtColor" class="java.lang.String"/>
+	<field name="price" class="java.lang.Double"/>
+	<field name="buyerSign" class="java.lang.String"/>
+	<field name="sellerSign" class="java.lang.String"/>
+	<field name="picLink" class="java.lang.String"/>
+	<field name="buyerAgreed" class="java.lang.Boolean"/>
+	<field name="sellerAgreed" class="java.lang.Boolean"/>
+	<title>
+		<band height="410" splitType="Stretch">
+			<staticText>
+				<reportElement x="52" y="65" width="84" height="25" uuid="57aed2b1-4f4e-40a3-a6ad-54dae8dd4c5a">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Buyer]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-4" y="59" width="556" height="1" uuid="806ce5df-1219-4876-ae0c-ca7405b1f246">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="390" y="65" width="84" height="25" uuid="139ebe8d-25b0-411e-986c-270015400874">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Seller]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="180" height="30" forecolor="#2549E8" uuid="e622555d-198b-4ccd-a4a1-c59c53304058">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Factory KeyAssure]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="30" width="158" height="30" forecolor="#252CE8" uuid="120c307c-9a4d-4bd3-bb09-180112743385">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Buyer's Order]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="220" width="220" height="30" uuid="0270b5d6-3268-42ee-bbd4-cc8232cf7546"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Description of vehicle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="248" width="100" height="30" uuid="c9b397dc-253a-4dd4-876f-900ea5834310"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Year:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="248" width="100" height="30" uuid="68ad3691-6521-4617-9fbc-573d1b1dbecd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Make:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="250" width="100" height="30" uuid="72d31cc9-2498-4080-bb70-8775bf53f576"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Model:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="290" width="100" height="30" uuid="12c004ef-683e-4729-8d39-9b8dfe1269b3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Body:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="290" width="100" height="30" uuid="79a56c6f-36dd-4cd1-a46f-a832feeacfc8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Color:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="290" width="100" height="30" uuid="5f8d08f8-bb3b-4307-9137-8e33af32880b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIN:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="330" width="100" height="30" uuid="4a9e879b-face-4eb4-9e38-7ae78bba92ef"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Odometer:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="330" width="100" height="30" uuid="64e56629-f3de-4b7c-9a03-53c46e6e8e9d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agreed Price:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="7" width="30" height="23" forecolor="#3016F2" uuid="870dc57e-307e-4332-a444-1052dd54039f"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[LLC]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="41" y="93" width="98" height="18" uuid="b6a62070-bb8c-411d-9054-6f664ffa5db2"/>
+				<textFieldExpression><![CDATA[$F{slrName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="110" width="100" height="16" uuid="f9528a55-509d-4353-8c43-aa9298ab68cc"/>
+				<textFieldExpression><![CDATA[$F{slrState}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="126" width="100" height="16" uuid="c880d2e0-325b-4e1f-b6ed-d4e395244644"/>
+				<textFieldExpression><![CDATA[$F{slrAptNum}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="142" width="100" height="16" uuid="3285fe66-7f68-4ae0-9a2c-2b4968d95869"/>
+				<textFieldExpression><![CDATA[$F{slrCity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="158" width="120" height="16" uuid="0b123a48-6832-41ff-b477-6175179a55c9"/>
+				<textFieldExpression><![CDATA[$F{slrMail}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="174" width="100" height="16" uuid="80a9f38e-e9ff-4f36-bdc0-da404be68a2a"/>
+				<textFieldExpression><![CDATA[$F{slrPhNm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="190" width="100" height="16" uuid="69ead924-703a-43a9-a78d-45f89b50b480"/>
+				<textFieldExpression><![CDATA[$F{slrZip}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="206" width="100" height="16" uuid="9f8db9b6-5a5d-441b-ab19-eb62f027bb35"/>
+				<textFieldExpression><![CDATA[$F{slrStrtAdr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="93" width="100" height="16" uuid="ccf31fcb-3dc0-40d3-bd08-0e31f1888e5a"/>
+				<textFieldExpression><![CDATA[$F{buyerName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="110" width="100" height="16" uuid="788719ef-51bb-4d80-84c6-0d821010be89"/>
+				<textFieldExpression><![CDATA[$F{buyerState}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="126" width="100" height="16" uuid="1794dac7-8785-415e-a764-b9043a2f4427"/>
+				<textFieldExpression><![CDATA[$F{buyerAptNum}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="142" width="100" height="16" uuid="a1f4b5bd-3011-4104-be7b-c64a34ef72f8"/>
+				<textFieldExpression><![CDATA[$F{buyerCity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="158" width="120" height="16" uuid="f604aa68-4630-4250-aade-7600decc0821"/>
+				<textFieldExpression><![CDATA[$F{buyerMail}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="174" width="100" height="16" uuid="4c77f598-b890-4a90-bb34-721d684aa4b4"/>
+				<textFieldExpression><![CDATA[$F{buyerPhNm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="191" width="100" height="16" uuid="014f0264-4473-45b1-8b65-d848f3b81bb8"/>
+				<textFieldExpression><![CDATA[$F{buyerZip}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="210" width="100" height="16" uuid="adbf2154-803b-43d8-82d5-7ad89b4a8d3e"/>
+				<textFieldExpression><![CDATA[$F{buyerStrtAdr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="250" width="100" height="16" uuid="9aa39f3f-9d46-4b6e-a436-94b93ce9cc7e"/>
+				<textFieldExpression><![CDATA[$F{vehicleYear}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="195" y="250" width="100" height="16" uuid="6a32e7bd-617a-45ce-b45b-6cefd107373f"/>
+				<textFieldExpression><![CDATA[$F{vehicleMake}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="397" y="250" width="100" height="16" uuid="2547b9c4-f17b-4f9e-b446-e763a42dd5ad"/>
+				<textFieldExpression><![CDATA[$F{vehicleModel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="35" y="290" width="100" height="16" uuid="6dcde1bd-1f53-4ef6-8fb9-bb922f3e8479"/>
+				<textFieldExpression><![CDATA[$F{vehicleSeries}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="290" width="100" height="16" uuid="96316bb7-731b-4dac-a04d-e28ee9e9839a"/>
+				<textFieldExpression><![CDATA[$F{vehExtColor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="385" y="290" width="100" height="16" uuid="446727d4-6e26-4786-8c66-e20cf68610d2"/>
+				<textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="330" width="100" height="16" uuid="ef959b09-d0a2-4ffd-9313-218270c64e7f"/>
+				<textFieldExpression><![CDATA[$F{vehicleMileage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="233" y="330" width="100" height="16" uuid="27a36539-7357-4850-970f-d0e2df2c8169"/>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="30" y="262" width="74" height="1" uuid="5b530b9f-8669-4464-9f71-ccf095ccaf55"/>
+			</line>
+			<line>
+				<reportElement x="34" y="303" width="79" height="1" uuid="622d3608-7ddc-455a-be80-0657e0f936a4"/>
+			</line>
+			<line>
+				<reportElement x="190" y="263" width="90" height="1" uuid="9954a838-83fe-4cca-a3cf-84fe3b6486fb"/>
+			</line>
+			<line>
+				<reportElement x="190" y="303" width="90" height="1" uuid="8bf304c8-d138-4955-8541-74ce9fb1de78"/>
+			</line>
+			<line>
+				<reportElement x="57" y="343" width="88" height="1" uuid="7092b483-a7ae-42c8-920e-221d3d302ef8"/>
+			</line>
+			<line>
+				<reportElement x="228" y="343" width="67" height="1" uuid="272351b3-d61a-4b10-b3d5-16e5fb16c257"/>
+			</line>
+			<line>
+				<reportElement x="394" y="263" width="83" height="1" uuid="ea2a3bd8-ee60-4dbf-8b95-a47cfd396a1f"/>
+			</line>
+			<line>
+				<reportElement x="40" y="108" width="79" height="1" uuid="e773acde-14e6-442e-8338-e968a21992b4"/>
+			</line>
+			<line>
+				<reportElement x="40" y="123" width="79" height="1" uuid="946fa0f7-77c8-4ef2-b848-3b516413ea8d"/>
+			</line>
+			<line>
+				<reportElement x="40" y="139" width="79" height="1" uuid="da67891b-b2db-443a-8980-b9682589573b"/>
+			</line>
+			<line>
+				<reportElement x="40" y="155" width="79" height="1" uuid="3a24817a-f041-4527-8c3d-58c05765e45c"/>
+			</line>
+			<line>
+				<reportElement x="40" y="171" width="120" height="1" uuid="aa50008d-890b-4b42-88c2-e0dcdff53dbf"/>
+			</line>
+			<line>
+				<reportElement x="40" y="187" width="79" height="1" uuid="006776c1-193d-4fea-ba80-bcd3569cd840"/>
+			</line>
+			<line>
+				<reportElement x="40" y="203" width="79" height="1" uuid="c898ceed-7171-4286-b2b5-631173231e05"/>
+			</line>
+			<line>
+				<reportElement x="40" y="219" width="79" height="1" uuid="0e5f52c9-c1bc-48f8-ba86-a7f11bb14947"/>
+			</line>
+			<line>
+				<reportElement x="383" y="107" width="97" height="1" uuid="a78cc278-f0a6-40c2-b091-40d6fe0ba054"/>
+			</line>
+			<line>
+				<reportElement x="380" y="123" width="99" height="1" uuid="379a26a9-45f8-4234-8e81-415c9cb1a2cb"/>
+			</line>
+			<line>
+				<reportElement x="380" y="140" width="99" height="1" uuid="4d1f1e07-c74d-4edb-912f-ce9c2a86558e"/>
+			</line>
+			<line>
+				<reportElement x="383" y="155" width="97" height="1" uuid="97a87b72-d831-4be1-8bf7-85f3cd3a5bf6"/>
+			</line>
+			<line>
+				<reportElement x="382" y="171" width="118" height="1" uuid="2688ce30-2e25-43e0-922b-cfde43550eac"/>
+			</line>
+			<line>
+				<reportElement x="380" y="187" width="99" height="1" uuid="ae3d3b32-5518-4059-8469-aaae6dbd6c9b"/>
+			</line>
+			<line>
+				<reportElement x="380" y="208" width="99" height="1" uuid="7439418a-947b-4c9a-b4d4-e9dc399041b7"/>
+			</line>
+			<line>
+				<reportElement x="380" y="222" width="99" height="1" uuid="6ba4272d-c20e-494a-8c2e-97f6bd4aabd5"/>
+			</line>
+			<line>
+				<reportElement x="381" y="305" width="102" height="1" uuid="a0f95e90-591e-4c8c-80e8-1b642097ce76"/>
+			</line>
+		</band>
+	</title>
+	<summary>
+		<band height="300" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<staticText>
+				<reportElement x="2" y="21" width="553" height="79" uuid="084a2ea8-38fb-45c1-819b-178de34eb7f3"/>
+				<textElement textAlignment="Justified">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[IT IS UNDERSTOOD AND AGREED THAT THIS WHOLESALE BUYER'S ORDER ALONG WITH THE FACTORY KEYASSURE APPRAISAL CONDITION REPORT, CONTAINS THE COMPLETE FULL CONTRACT OF THE PARTIES HERETO, AND THAT THE MAKING EXECUTION, AND DELIVERY OF THE
+CONTRACT HAS BEEN INDUCED BY NO OTHER REPRESENTATIONS, STATEMENTS, OR WARRANTIES OTHER THAN THOSE CONTAINED HEREIN  AND STATED IN THE FACTORY KEYASSURE APPRAISAL.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="100" width="552" height="40" uuid="757288de-eac1-48d4-8ae2-02a774117379"/>
+				<text><![CDATA[SHOULD A DESCREPENCY ARISE CONCERNING THIS AGREEMENT BOTH PARTIES AGREE THAT "THE FACTORY KEYASSURE" PERSONEL WILL ARBITRATE BETWEEN THE PARTIES. THE FACTORY KEYASSURE'S ARBITRATION SHALL BE FINAL.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="140" width="555" height="40" uuid="89420e9b-0114-438b-adb2-de05e29a4b2d"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[THE UNDERSIGNED PURCHASER HEREBY REPRESENTS TO THE SELLING DEALER THAT THE UNDERSIGNED PURCHASER HAS THE AUTHORITY TO
+PURCHASE VEHICLES ON BEHALF OF THE DEALERSHIP NAMED ABOVE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="180" width="554" height="30" uuid="23346861-2822-43b7-8865-6743dc548104"/>
+				<text><![CDATA[IN WITHNESS, WHEREOF I/WE HAVE EXECUTED THIS SALES AGREEMENT AND RECEIPT ON THE DATE FIRST WRITTEN BELOW AND ACKNOWLEDGE RECEIPT OF A COPY OF THIS FULLY EXECUTED AGREEMENT.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="215" width="100" height="30" uuid="0558d912-8de5-4021-bbd3-00f914ede711"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="215" width="100" height="30" uuid="1d84a8bf-a972-40d5-b48d-c1de15e0dfbc"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="240" width="100" height="30" uuid="5152e07c-9148-4186-ac00-cb4d92793889"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Buyer-Mgr:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="240" width="100" height="30" uuid="54c27c41-cd3c-4b69-8d4e-65b83c7b3131"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Seller-Mgr:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="270" width="100" height="30" uuid="18a72993-daa4-40d3-a033-35f1ad6bc3f2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-Sign:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="270" width="100" height="30" uuid="a030325b-0351-411b-b196-d34e98e282ac"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-Sign:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-2" y="-30" width="556" height="50" uuid="1a0d7088-5af7-4865-8be1-41ec5f51fb36"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THIS MOTOR VEHICLE IS SOLD IN "AS DESCRIBED" CONDITION. NO OTHER GUARANTEE OR WARRANTY,OTHER THAN THE FACTORY KEYASSURE APPRAISAL CONDITION REPORT IS EXPRESSED OR IMPLIED.]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="32" y="215" width="100" height="30" uuid="6e7c6b5f-4f6c-427d-b3c8-d072e870ec95"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="30" y="228" width="67" height="1" uuid="ccec3885-0601-45a6-8115-3839586e2940"/>
+			</line>
+			<line>
+				<reportElement x="436" y="227" width="67" height="1" uuid="2a4bb04d-7b14-47a8-ae5f-6a96f92c0c62"/>
+			</line>
+			<line>
+				<reportElement x="58" y="253" width="67" height="1" uuid="6fa74bfa-80bc-49e2-bf9a-5c626652b6e8"/>
+			</line>
+			<line>
+				<reportElement x="464" y="252" width="67" height="1" uuid="3435e882-e429-434c-9a09-f00f0ef6babc"/>
+			</line>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="436" y="213" width="100" height="30" uuid="b9d58806-1fe4-40d6-b6ac-1e8da8f8f63b"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="40" y="260" width="70" height="40" uuid="e669249d-f954-45fb-9e9f-c91c1bc41cdb"/>
+				<imageExpression><![CDATA[$F{buyerSign}!= null && $F{buyerAgreed} ? $F{picLink} + $F{buyerSign} : null]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="450" y="260" width="70" height="40" uuid="e669249d-f954-45fb-9e9f-c91c1bc41cdb"/>
+				<imageExpression><![CDATA[$F{sellerSign} != null  && $F{sellerAgreed} ? $F{picLink} + $F{sellerSign} : null]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

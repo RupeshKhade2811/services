@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="testDriveMesReport" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryNewPage="true" uuid="6e99c103-c1ba-4304-b1ba-410df4bd3562">
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <field name="dataInterval" class="java.lang.String"/>
+    <field name="engineTempTest" class="java.lang.String"/>
+    <field name="engineRpm" class="java.lang.String"/>
+    <field name="driveGear" class="java.lang.String"/>
+    <field name="vehicleSpeed" class="java.lang.String"/>
+    <field name="voltage" class="java.lang.String"/>
+    <field name="upstbk1" class="java.lang.String"/>
+    <field name="upstbk2" class="java.lang.String"/>
+    <field name="dwnstbk1" class="java.lang.String"/>
+    <field name="dwnstbk2" class="java.lang.String"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <detail>
+        <band height="22" splitType="Stretch">
+            <textField>
+                <reportElement x="1" y="1" width="59" height="20" uuid="796790fe-4488-48f7-853f-4e5010c66417"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{dataInterval}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="60" y="1" width="70" height="20" uuid="b690acea-776a-4851-b5e3-2934ea395fa4"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{engineTempTest}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="130" y="1" width="64" height="20" uuid="50ae2124-8cdd-4092-9fd8-fa67ef46bb91"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{engineRpm}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="194" y="1" width="46" height="20" uuid="a920da36-3441-4686-aad1-98337303470f"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{driveGear}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="240" y="1" width="60" height="20" uuid="39181c67-9300-42fb-8899-f85f5ad19437"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{vehicleSpeed}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="1" width="40" height="20" uuid="9888a66d-2041-48f7-9a19-f61f665265b0"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{voltage}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="340" y="1" width="50" height="20" uuid="e36f1af2-e600-4fd5-bdfe-368c61293563"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{upstbk1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="390" y="1" width="56" height="20" uuid="76c7cb4b-b714-462d-8827-6147fd9eb3c9"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{upstbk2}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="446" y="1" width="59" height="20" uuid="2e33706a-db04-419e-acab-8dda008565e6"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{dwnstbk1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="505" y="1" width="60" height="20" uuid="8c5b1690-5aeb-475b-9c0c-ba45bb1d3f2a"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{dwnstbk2}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

@@ -1,0 +1,86 @@
+server:
+  port: 8082
+
+log-path: /opt/tomcat/customlogs/
+market_check_url: http://api.marketcheck.com/v2/decode/car/neovin/
+market_check_url_suffix: /specs?
+api_key: api_key=hTUx9slxqOdFy4WQG7CRTuAIvC38A5mJ
+host : marketcheck-prod.apigee.net
+image_folder_path: /home/factory/images/
+video_folder_path: /home/factory/videos/
+properties_path : /home/factory/properties/
+file_size: 500000000
+saved_pdf_Path: /home/factory/pdf/
+get-link: https://services-dev.keyassure.live/appraisal/getpic1?pic1=
+appraisal_form_path: src\\main\\resources\\AppraisalFormJR.jrxml
+whlsale_tmp_path: src\\main\\resources\\whlSaleBuyerOdr.jrxml
+vehicle_rep_path: src\\main\\resources\\vehicleReport.jrxml
+identityServer_userCreation: https://is-dev.keyassure.live/t/carbon.super/scim2/Users
+identityServer_userSearch: https://is-dev.keyassure.live/t/carbon.super/scim2/Users/.search
+identityServer_addRole: https://is-dev.keyassure.live/t/carbon.super/scim2/Roles/
+paramValue: d80b419f-5dc4-4a8d-99e7-02254be9f43b
+
+
+cron.schedule.expression: "0 */50 * * * *"
+
+spring:
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5438/keyassure
+    username: keyassureadmin
+    password: 4M3l&#Q3cSm3
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    hibernate:
+      ddl-auto: none
+      id:
+        new_generator_mappings: true
+    properties:
+      hibernate:
+        default_schema: factory_db
+      org:
+        hibernate:
+          envers:
+            do_not_audit_optimistic_locking_field: false
+            default_schema: factory_aud
+            revision_field_name: REV
+            revision_type_field_name: REV_TYPE
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    password: ealyxmjqkmugyqgr
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+    username: kalyan.dey27@gmail.com
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans"
+
+
+
+swagger:
+  enable: true
+
+
+

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e665c354-d12a-43a5-a5ed-2ec8450e2086">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="memberId" class="java.util.UUID"/>
+	<field name="memberName" class="java.lang.String"/>
+	<field name="location" class="java.lang.String"/>
+	<field name="memberType" class="java.lang.String"/>
+	<field name="signUpDate" class="java.lang.String"/>
+	<field name="factorySalesMan" class="java.lang.String"/>
+	<field name="factoryMgr" class="java.lang.String"/>
+	<field name="totalRev" class="java.lang.String"/>
+	<field name="searchby" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="400" y="0" width="52" height="21" uuid="0823d7f0-cb29-446a-bc13-996f052dfc83"/>
+				<text><![CDATA[Print Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="30" width="200" height="30" uuid="75003c38-e38c-4a1d-9842-0d542a489977"/>
+				<textElement>
+					<font size="19" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Factory Sales Report]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="460" y="0" width="90" height="20" uuid="33ca9e75-348e-4fc8-9777-572028cc43ae"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="34" width="52" height="16" uuid="2eca75de-c88f-4ce5-9d8f-f9b850fd7de0"/>
+				<text><![CDATA[Search By:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="80" height="70" uuid="1e9e771b-0d32-476a-ae30-67e017efb825"/>
+				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="212" y="0" width="158" height="30" uuid="cbb3c4a7-df40-417d-a8c0-3dd2502a0d2d"/>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KEY ASSURE llc]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="460" y="34" width="90" height="16" uuid="22c9fe9d-ca6a-4270-a4c9-b964bc9952f7"/>
+				<textFieldExpression><![CDATA[$F{searchby}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="7" width="50" height="13" backcolor="#4E8F9C" uuid="7a64e141-05ad-40f8-88d8-b921104c72db"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Member ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="50" y="7" width="90" height="13" backcolor="#4E8F9C" uuid="84b074a5-2af2-4c6d-861e-8514f5ffda86"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Member Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="140" y="7" width="50" height="13" backcolor="#4E8F9C" uuid="7a8b5218-17bb-4db4-a609-a059f4194542"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="190" y="7" width="60" height="13" backcolor="#4E8F9C" uuid="0f42140c-1c12-4e21-ab41-c1871e16a7c3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Member Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="400" y="7" width="60" height="13" backcolor="#4E8F9C" uuid="ff1cd5cf-af80-4797-9928-58ca799c0c3d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Factory MGR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="250" y="7" width="60" height="13" backcolor="#4E8F9C" uuid="ddacdf4a-4f1a-4deb-9a06-ae5681f0aff4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sign Up Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="310" y="7" width="90" height="13" backcolor="#4E8F9C" uuid="f43e6c55-33a8-4ee2-a65e-d11afe844c26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Factory Salesman]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="460" y="7" width="80" height="13" backcolor="#4E8F9C" uuid="c7880e25-ab0e-45a3-bdd3-a18baf195ec6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Revenue]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="50" height="13" backcolor="#B1DEF0" uuid="0f000fbe-9846-494b-99a6-913bdbef29ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{memberId}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="50" y="0" width="90" height="13" backcolor="#B1DEF0" uuid="625e4581-a15b-4cf5-877f-a84912fcd522"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{memberName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="140" y="0" width="50" height="13" backcolor="#B1DEF0" uuid="953fde23-9966-43bd-802c-3af6fa198b7c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="190" y="0" width="60" height="13" backcolor="#B1DEF0" uuid="fb9776bd-5e5b-4fd2-be75-893d8716c154"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{memberType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="250" y="0" width="60" height="13" backcolor="#B1DEF0" uuid="0a890133-5bfb-4419-b93f-8a0fbdaf8b22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{signUpDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="310" y="0" width="90" height="13" backcolor="#B1DEF0" uuid="f12ad894-0aec-48a3-9b13-5a791ba05d0b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{factorySalesMan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="400" y="0" width="60" height="13" backcolor="#B1DEF0" uuid="eb8ca1ac-effe-4b06-9aba-f89e77892063"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{factoryMgr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="460" y="0" width="80" height="13" backcolor="#B1DEF0" uuid="281e2946-669f-4d64-9a8a-7a6847e6af15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{totalRev}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="13" width="540" height="1" uuid="f5e1ed10-aee1-4da4-8a2f-b93549f5b53e"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

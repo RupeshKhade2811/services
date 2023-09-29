@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="odometer" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9f76d495-7b42-47a9-8dc5-c04042a59df0">
+    <subDataset name="Dataset1" uuid="1c816ccb-2c49-4e43-90d2-951c9019622e">
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+        <queryString>
+            <![CDATA[]]>
+        </queryString>
+    </subDataset>
+    <subDataset name="Dataset2" uuid="4c32d7a3-f5b3-46ea-9aba-78ffd68db3bf">
+        <queryString>
+            <![CDATA[]]>
+        </queryString>
+    </subDataset>
+    <subDataset name="Empty Dataset1" uuid="97eb99ed-3396-44ef-841f-e924d2eef6a0"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <field name="vinNumber" class="java.lang.String"/>
+    <field name="vehicleYear" class="java.lang.String"/>
+    <field name="vehicleMake" class="java.lang.String"/>
+    <field name="vehExtColor" class="java.lang.String"/>
+    <field name="vehicleSeries" class="java.lang.String"/>
+    <field name="slrName" class="java.lang.String"/>
+    <field name="slrAddress" class="java.lang.String"/>
+    <field name="slrCity" class="java.lang.String"/>
+    <field name="slrState" class="java.lang.String"/>
+    <field name="slrZip" class="java.lang.String"/>
+    <field name="buyerName" class="java.lang.String"/>
+    <field name="buyerAddress" class="java.lang.String"/>
+    <field name="byrCity" class="java.lang.String"/>
+    <field name="byrState" class="java.lang.String"/>
+    <field name="byrZip" class="java.lang.String"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="179" splitType="Stretch">
+            <staticText>
+                <reportElement x="139" y="-15" width="264" height="20" uuid="a80ee5d4-c26a-401e-af4e-3c8081c7ea60"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[STATE OF FLORIDA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="69" y="2" width="400" height="20" uuid="f3ba1ce2-4ffb-422a-8782-0289f7aabcd5"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="12"/>
+                </textElement>
+                <text><![CDATA[DEPARTMENT OF HIGHWAY SAFETY AND MOTOR VEHICLES]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="76" y="16" width="400" height="22" uuid="538337c7-016e-48be-b0ba-2da254564b07"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[DIVISION OF MOTORIST SERVICES]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="115" y="36" width="326" height="20" uuid="71d89e39-64f0-4b00-ba4e-67353c9dfe87"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="12"/>
+                </textElement>
+                <text><![CDATA[ SUBMIT THIS FORM TO YOUR LOCAL TAX COLLECTOR OFFICE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="172" y="56" width="211" height="14" forecolor="rgba(104, 37, 247, 0.8666667)" uuid="7a4eefcf-af87-4a76-bb2b-39ee0cd58231"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="11"/>
+                </textElement>
+                <text><![CDATA[www.flhsmv.gov/offices/]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="-1" y="76" width="561" height="20" uuid="2b1f773b-f99e-4746-92d6-9f272ff9e345"/>
+                <box>
+                    <pen lineWidth="1.0" lineStyle="Solid"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[  SEPARATE ODOMETER DISCLOSURE STATEMENT AND ACKNOWLEDGMENT]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="2" y="99" width="550" height="20" uuid="a984c648-2b4b-414a-96ae-ebc87c9a9386"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[VEHICLE DESCRIPTION]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="212" y="119" width="42" height="20" uuid="282c870f-cc50-4878-b4ca-53fa7d136f89"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.0"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[Year]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="442" y="119" width="110" height="20" uuid="925b9781-4ec6-449d-a9a1-f5233e3c0f47"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.0"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[Title Number]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="254" y="119" width="59" height="20" uuid="c1becb54-9ccc-4e04-8f13-4f0033a70e9e"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.0"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[Make]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="313" y="119" width="59" height="20" uuid="18284b7c-3262-40c9-a913-39d89cbe9f07"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.0"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[Color]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="372" y="119" width="70" height="20" uuid="e54ffca6-686e-4c75-ab44-857bd5ddd48b"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.0"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[Body]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="2" y="119" width="210" height="20" uuid="0bfdf02a-58b8-449c-b459-379526c17d20"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.0"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[Vehicle Identification Number]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="2" y="139" width="210" height="20" uuid="2976f82b-4f7c-42b9-b94d-93c1383a243e"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="212" y="139" width="42" height="20" uuid="68887d33-87b2-4d53-ba2a-8abc78e2410e"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{vehicleYear}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="254" y="139" width="59" height="20" uuid="43fde509-76d3-42df-b0f1-e7eadf91e10f"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{vehicleMake}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="313" y="139" width="59" height="20" uuid="e1cab614-8db6-47da-92ad-168dcd720369"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{vehExtColor}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="372" y="139" width="70" height="20" uuid="41f76e69-6ecf-4dcd-a7ce-d505a1a246b3"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{vehicleSeries}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="442" y="139" width="110" height="20" uuid="cbdcd8f0-06ed-4f49-bf61-865aec6f8c6c"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+            </textField>
+            <staticText>
+                <reportElement x="2" y="159" width="550" height="19" uuid="30d0f67c-dfe8-494c-8ffd-d88188db28e2"/>
+                <box>
+                    <topPen lineWidth="0.5"/>
+                    <leftPen lineWidth="0.5"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="10"/>
+                </textElement>
+                <text><![CDATA[ODOMETER DISCLOSURE STATEMENT]]></text>
+            </staticText>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="96" splitType="Stretch">
+            <staticText>
+                <reportElement x="10" y="0" width="550" height="30" uuid="960775ae-f5c1-4efa-b301-2e0c1ed0bfc7"/>
+                <textElement textAlignment="Justified" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[  WARNING: Federal and State law requires that you state the mileage in connection with an application for a
+  Certificate of Title. Failure to complete or providing a false statement may result in fines and/or imprisonment.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="38" width="94" height="12" uuid="bed1a97e-35df-43c7-b0af-748229d49787"/>
+                <textElement textAlignment="Left" verticalAlignment="Bottom">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[  WE STATE THAT THIS]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="4" y="63" width="550" height="30" uuid="1f49154b-d220-4d6d-a27e-44c62e031ae5"/>
+                <text><![CDATA[DATE READ ________/_______/________, AND WE HEREBY CERTIFY THAT TO THE BEST OF OUR KNOWLEDGE THE ODOMETER READING:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="116" y="38" width="26" height="12" uuid="97d0582f-86eb-447e-9c99-78f679c6556f"/>
+                <textElement textAlignment="Left" verticalAlignment="Bottom">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[  5 or]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="164" y="38" width="126" height="12" uuid="01d12571-0fb8-4248-985b-324bfc8ab0e6"/>
+                <textElement textAlignment="Left" verticalAlignment="Bottom">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[6 DIGIT ODOMETER NOW READS]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="331" y="39" width="10" height="11" uuid="b6838405-f1c7-4a5a-9b5d-62a7a90b65cb"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[  ,]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="383" y="39" width="86" height="11" uuid="e455687f-1af4-4785-854b-8fb1581c5f84"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[XX (NO TENTHS) MILES,]]></text>
+            </staticText>
+        </band>
+    </pageHeader>
+    <columnHeader>
+        <band height="266" splitType="Stretch">
+            <property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+            <staticText>
+                <reportElement x="-15" y="6" width="160" height="38" uuid="291b52db-5409-4eb5-9117-771e6b5d6f80"/>
+                <textElement textAlignment="Center"/>
+                <text><![CDATA[
+Read carefully before
+checking a box.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="15" y="6" width="100" height="20" uuid="a8517b06-154b-4b87-96f8-792fa58e05ed"/>
+                <textElement textAlignment="Center">
+                    <font isBold="true" isUnderline="true"/>
+                </textElement>
+                <text><![CDATA[CAUTION:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="145" y="8" width="179" height="16" uuid="e6bd42a6-8365-4bdd-af73-83656cc4c700"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[1. REFLECTS ACTUAL MILEAGE.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="145" y="25" width="165" height="16" uuid="42ae9214-3ca3-4974-b6f7-d1788a4c732e"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[2. IS IN EXCESS OF ITS MECHANICAL LIMITS.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="145" y="44" width="136" height="18" uuid="9014dfd5-4ea2-4d1a-8e19-ecaca36bfe4f"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[3. IS NOT THE ACTUAL MILEAGE.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="310" y="25" width="240" height="12" uuid="188803f1-80eb-439b-9ad4-ed4f8f57587c"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[(EXCESS OF ITS MECHANICAL LIMITS APPLIES TO 5 DIGIT ODOMETERS)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="-5" y="61" width="574" height="19" uuid="851f76f0-86e0-482f-8b0c-ee2881429f4b"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[UNDER PENALTIES OF PERJURY, I DECLARE THAT I HAVE READ THE FOREGOING DOCUMENT AND THAT THE FACTS STATED IN IT ARE TRUE.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="-1" y="175" width="298" height="29" uuid="7cd7016d-b974-4817-9f99-3bc464226520"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Buyer’s Signature]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="297" y="175" width="258" height="29" uuid="fcd04151-641e-45c1-b66d-711d7f6d1f40"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Buyer’s Printed Name]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="307" y="184" width="244" height="20" uuid="0d9c199c-dfea-424c-b227-67fc8b1f5959"/>
+                <textFieldExpression><![CDATA[$F{buyerName}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="-1" y="204" width="556" height="26" uuid="8f075460-3a34-4359-bda6-971098102079"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Buyer’s Street Address]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="3" y="215" width="552" height="15" uuid="e65a62cb-4f90-430d-9bb7-35af0069e9dc"/>
+                <textFieldExpression><![CDATA[$F{buyerAddress}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="-1" y="230" width="277" height="36" uuid="1049d47d-e657-460e-90a8-258a6ecc6db1"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ City]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="276" y="230" width="150" height="36" uuid="cc8caeb4-56fa-4c4f-bad7-4420d742bf26"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ State]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="426" y="230" width="129" height="36" uuid="28f5cc1d-83ef-4b9f-b473-b82096f9fb65"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Zip]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="2" y="245" width="274" height="21" uuid="eb5fa75f-b6ff-4526-a7ee-54824acd502e"/>
+                <textFieldExpression><![CDATA[$F{byrCity}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="244" width="146" height="22" uuid="073ff493-52fd-4ed9-bc99-f7be22bd8e75"/>
+                <textFieldExpression><![CDATA[$F{byrState}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="430" y="244" width="121" height="22" uuid="081d5f33-986e-4494-abf9-61cf60d322d6"/>
+                <textFieldExpression><![CDATA[$F{byrZip}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="-1" y="80" width="298" height="29" uuid="2147705b-7af0-49fb-a7b2-eab94a9614fb"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[  Seller’s Signature]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="297" y="80" width="258" height="29" uuid="221ac4ad-4e27-4528-bb76-0e7af62b75fe"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Seller’s Printed Name]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="303" y="90" width="244" height="16" uuid="db5383a5-bef8-4677-b961-2b163b3252fa"/>
+                <textFieldExpression><![CDATA[$F{slrName}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="-1" y="109" width="556" height="26" uuid="0ac301da-67c8-45b3-9267-e91399ddffb6"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Seller’s Street Address]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="3" y="120" width="552" height="15" uuid="c325db83-0c95-4755-a2ac-ad68a077dfae"/>
+                <textFieldExpression><![CDATA[$F{slrAddress}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="-1" y="135" width="277" height="36" uuid="ac979e43-865b-4fe5-b073-5a68ef7d79e4"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ City]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="276" y="135" width="150" height="36" uuid="c710bff3-620e-4e80-9131-2fc8438f023f"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ State]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="426" y="135" width="129" height="36" uuid="a9a05bee-52cf-4e09-a794-97c1e165b897"/>
+                <box>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Zip]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="2" y="150" width="274" height="21" uuid="196dc513-8700-4f6b-8698-540d77c69255"/>
+                <textFieldExpression><![CDATA[$F{slrCity}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="149" width="146" height="22" uuid="9188aa24-1352-40d3-b0be-3e578889504d"/>
+                <textFieldExpression><![CDATA[$F{slrState}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="430" y="149" width="121" height="22" uuid="7a4263bc-e2a1-478b-aadf-4b5811252872"/>
+                <textFieldExpression><![CDATA[$F{slrZip}]]></textFieldExpression>
+            </textField>
+            <rectangle>
+                <reportElement x="128" y="26" width="11" height="11" uuid="718533b2-1296-414d-a6c3-71739e4622cb"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="128" y="9" width="11" height="11" uuid="52a99d9a-87a3-49d2-9843-b02f748f153f"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="128" y="45" width="11" height="11" uuid="ddd9e317-9f59-49d7-a0f7-3e1aa4d75935"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="148" y="-58" width="11" height="11" uuid="02d5634a-1b95-4de1-ae6e-8f45872564d2"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="99" y="-58" width="11" height="11" uuid="175b5410-33fd-44a0-b5d8-e341ae38b382"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="292" y="-56" width="11" height="11" uuid="ea9a62a4-ed7c-45f6-9dbd-858f1597abbc"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="305" y="-56" width="11" height="11" uuid="77440f90-d82f-44db-be1d-9c79474a48f5"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="318" y="-56" width="11" height="11" uuid="3579e0cd-fadb-45e7-9b94-e9ca7e43ec31"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="343" y="-56" width="11" height="11" uuid="3902e574-144d-480f-b20a-c7220727bc37"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="356" y="-56" width="11" height="11" uuid="c35b5928-67dd-4695-9bf3-5bee013e902d"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="369" y="-56" width="11" height="11" uuid="65e0deaf-bcf2-4da9-8c3c-9012405f113b"/>
+            </rectangle>
+        </band>
+    </columnHeader>
+    <columnFooter>
+        <band height="255" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="163" width="69" height="14" uuid="f70596de-3629-4116-a762-c5f6dcbfc92d"/>
+                <textElement>
+                    <font fontName="SansSerif" isBold="true"/>
+                </textElement>
+                <text><![CDATA[FILING :]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="177" width="554" height="44" uuid="67f7e5ae-a5b0-4012-a01c-52b7689836cb"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[1. COPIES SHOULD BE EXCHANGED BETWEEN THE SELLER AND THE BUYER. DEALERS MUST RETAIN THIS DOCUMENT IN THEIR
+RECORDS FOR A PERIOD OF FIVE YEARS.
+2. IT IS NOT NECESSARY TO FILE THIS FORM OR ANY COPY OF THIS FORM WITH THE STATE OF FLORIDA, UNLESS REQUESTED TO
+DO SO BY THE DIVISION OF MOTORIST SERVICES.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="1" y="223" width="552" height="16" uuid="6cc9a016-ae0d-4df8-80fc-c7b519aa985d"/>
+                <textElement verticalAlignment="Bottom">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Check your local phone book government pages or visit the following website for current mailing addresses: http://www.flhsmv.gov/offices/]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="2" y="238" width="146" height="17" uuid="2619252e-0bbc-424c-af71-59444a2d7a3c"/>
+                <textElement verticalAlignment="Bottom">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[HSMV 82993 (REV. 11/11)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="118" width="554" height="44" uuid="ed888b52-e351-45e4-89d3-d4f89e8d9b66"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[1. WHEN A FLORIDA TITLE WHICH WAS ISSUED ON OR AFTER APRIL 29, 1990 IS AVAILABLE.
+2. WHEN A FORM HSMV 82994, MOTOR VEHICLE DEALER TITLE REASSIGNMENT SUPPLEMENT, HAS BEEN USED.
+3. WHEN A FORM HSMV 82995, MOTOR VEHICLE DEALER POWER OF ATTORNEY/ODOMETER DISCLOSURE, HAS BEEN USED.
+4. WHEN AN OUT-OF-STATE TITLE, WHICH CONFORMS TO FEDERAL LAW, IS USED TO TRANSFER A MOTOR VEHICLE.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="104" width="212" height="14" uuid="4a5f2c3c-b6d4-46c5-8fd4-d18a0b4fc158"/>
+                <textElement>
+                    <font fontName="SansSerif" isBold="true"/>
+                </textElement>
+                <text><![CDATA[WHEN SHOULD THIS FORM NOT BE USED ?]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="45" width="190" height="14" uuid="e2c5c9b9-d9f0-44c1-971f-8122b82b7af5"/>
+                <textElement>
+                    <font fontName="SansSerif" isBold="true"/>
+                </textElement>
+                <text><![CDATA[WHEN SHOULD THIS FORM BE USED ?]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="59" width="554" height="44" uuid="cc699baf-5a2c-4d5e-a81a-7bbafaf6a662"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[1. WHEN A MOTOR VEHICLE, FOR WHICH AN ODOMETER DISCLOSURE IS REQUIRED, HAS BEEN SOLD.
+2. WHEN A MOTOR VEHICLE, FOR WHICH AN ODOMETER DISCLOSURE IS REQUIRED, HAS BEEN PURCHASED.
+3. WHEN AN ODOMETER DISCLOSURE STATEMENT AND ACKNOWLEDGMENT BETWEEN THE BUYER AND THE SELLER IS
+    REQUIRED, BUT NO ODOMETER DISCLOSURE STATEMENT HAS BEEN MADE ON ANOTHER STATE OR FEDERAL FORM.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="2" width="244" height="14" uuid="2c120475-77e4-4651-ae01-e0fe94276a10"/>
+                <textElement>
+                    <font fontName="SansSerif" isBold="true"/>
+                </textElement>
+                <text><![CDATA[WHO IS AUTHORIZED TO COMPLETE THIS FORM  ?]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="17" width="554" height="26" uuid="3ff47083-f31d-4697-818f-f6a00091020f"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[ANY PERSON WHO IS BUYING OR SELLING A MOTOR VEHICLE AND WHO MUST MAKE OR ACKNOWLEDGE AN ODOMETER
+DISCLOSURE, IN ORDER TO COMPLY WITH STATE OR FEDERAL ODOMETER DISCLOSURE LAW.]]></text>
+            </staticText>
+        </band>
+    </columnFooter>
+</jasperReport>

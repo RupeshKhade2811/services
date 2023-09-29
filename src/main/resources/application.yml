@@ -1,0 +1,105 @@
+server:
+  port: 8082
+
+market_check_url: http://api.marketcheck.com/v2/decode/car/neovin/
+market_check_url_suffix: /specs?
+api_key: api_key=hTUx9slxqOdFy4WQG7CRTuAIvC38A5mJ
+identityServer_userCreation: https://is-test.keyassure.live/t/carbon.super/scim2/
+#paramValue:  d80b419f-5dc4-4a8d-99e7-02254be9f43b
+paramValue:  3be77329-6d2d-4a72-a6a1-a6fbb02d0809
+host : marketcheck-prod.apigee.net
+#image_folder_path: /home/factory/images/
+#video_folder_path: /home/factory/videos/
+#properties_path : /home/factory/properties/
+image_folder_path: C:/myimage/
+video_folder_path: C:/myVideo/
+file_size: 100000000
+odometer_template_path: src\\main\\resources\\odometer.jrxml
+vehBill_template_path: src\\main\\resources\\Template.html
+saved_pdf_Path: D:/pdf/
+appraisal_form_path: src\\main\\resources\\AppraisalFormJR.jrxml
+#get-link: http://localhost:8082/appraisal/getpic1?pic1=
+get-link: https://services-dev.keyassure.live/appraisal/getpic1?pic1=
+cron.schedule.expression: "0 */50 * * * *"
+
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
+    driver-class-name: org.postgresql.Driver
+    username: testuser
+    password: 9Nh@mErlU10s
+
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    hibernate:
+      ddl-auto: none
+      id:
+        new_generator_mappings: true
+    properties:
+      hibernate:
+        default_schema: factory_db
+      org:
+        hibernate:
+          envers:
+            do_not_audit_optimistic_locking_field: false
+            default_schema: factory_aud
+            revision_field_name: REV
+            revision_type_field_name: REV_TYPE
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    password: ealyxmjqkmugyqgr
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+    username: kalyan.dey27@gmail.com
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans"
+
+
+
+swagger:
+  enable: true
+
+logging:
+  path: ./target
+  file:
+    name: app.log
+
+  level:
+    org.springframework.web: ERROR
+    com.massil: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} - %msg%n'
+
+
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: true
+
