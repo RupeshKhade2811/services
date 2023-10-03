@@ -69,5 +69,10 @@ public class EStatus extends TransactionEntity{
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
     private ENotificationTable notification;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToOne(mappedBy = "status",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private EOffers offers;
 
 }

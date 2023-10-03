@@ -5,6 +5,7 @@ import com.massil.dto.*;
 import com.massil.persistence.model.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -30,12 +31,15 @@ public class AppraisalSpecification {
         spec = getEAppraiseVehicleSpecification(filter, spec);
         return spec;
     }
-    public static Specification<EAppraiseVehicle> getSearchFactorySpecification(FilterParameters filter, UUID userId) {
+    public static Specification<EAppraiseVehicle> getSearchFactorySpecification(FilterParameters filter, UUID userId, List<Long> unsoldVehicles) {
         Specification<EAppraiseVehicle> spec = Specification.where((root, query, criteriaBuilder) -> null);
 
         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(AppraisalConstants.USER).get(AppraisalConstants.ID), userId));
         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.INVENTORYSTS), AppraisalConstants.INVENTORY));
         spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("valid"),Boolean.TRUE)));
+        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("field1"), true));
+        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("field2"), true));
+        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.not(root.get("id").in(unsoldVehicles)));
         spec = getEAppraiseVehicleSpecification(filter, spec);
         return spec;
     }

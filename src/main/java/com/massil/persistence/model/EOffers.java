@@ -62,21 +62,18 @@ public class EOffers extends TransactionEntity{
     @JoinColumn(name = "APPR_REF_ID", nullable = false)
     @Where(clause = "IS_ACTIVE=true")
     @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EAppraiseVehicle appRef;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToMany(mappedBy = "offers", cascade = CascadeType.ALL)
     @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private List<EOfferQuotes> offerQuotes;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(targetEntity = EStatus.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "STATUS_ID", nullable = false)
     @Where(clause = "IS_ACTIVE=true")
-    @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    @IndexedEmbedded
     private EStatus status;
 
     @GenericField
@@ -87,7 +84,6 @@ public class EOffers extends TransactionEntity{
     @JoinColumn(name = "SLR_USER_ID",nullable = false,updatable = false)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EUserRegistration sellerUserId;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -95,7 +91,6 @@ public class EOffers extends TransactionEntity{
     @JoinColumn(name = "SLR_DLR_ID",nullable = false,updatable = false)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EDealerRegistration sellerDealerId;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -103,7 +98,6 @@ public class EOffers extends TransactionEntity{
     @JoinColumn(name = "BUYER_USER_ID",nullable = false,updatable = false)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EUserRegistration buyerUserId;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -111,7 +105,6 @@ public class EOffers extends TransactionEntity{
     @JoinColumn(name = "BUYER_DLR_ID",nullable = false,updatable = false)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EDealerRegistration buyerDealerId;
 
     @GenericField
@@ -138,7 +131,6 @@ public class EOffers extends TransactionEntity{
     @OneToOne(mappedBy = "offers",cascade = CascadeType.ALL)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
-    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EShipment shipment;
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(mappedBy = "offers",cascade = CascadeType.ALL)

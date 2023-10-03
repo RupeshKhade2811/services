@@ -135,14 +135,27 @@ public class EUserRegistration extends TransactionEntity {
     @IndexedEmbedded(includeDepth = 1)
     private List<EShipment> sellerUserIdShipments;
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
     private List<EUserWishlist> userWishlists;
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
     private List<EFtryTraining> ftryTrainings;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "sellerUserId",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private List<EOffers> sellersOffers;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "buyerUserId",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private List<EOffers> buyersOffers;
+
+
+
 
 }

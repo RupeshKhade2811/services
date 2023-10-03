@@ -176,7 +176,7 @@ public class EAppraiseVehicle extends TransactionEntity {
     @Where(clause = "IS_ACTIVE = true")
     private List<EUserWishlist> wishlist;
 
-    @IndexedEmbedded(includeDepth = 1)
+    @IndexedEmbedded(structure = ObjectStructure.NESTED)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToMany(mappedBy = "appRef",cascade = CascadeType.ALL)
     @Where(clause = "IS_ACTIVE = true")

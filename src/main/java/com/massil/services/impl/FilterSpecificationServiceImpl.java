@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -153,17 +154,29 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
     @Override
     public CardsPage filterSearchFactoryVehicle(FilterParameters filter, UUID userId, Integer pageNo, Integer pageSize) throws AppraisalException {
         Page<EAppraiseVehicle>resultPage=null;
+        CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
         EUserRegistration userById = userRegistrationRepo.findUserById(userId);
         List<AppraisalVehicleCard> offersCards=new ArrayList<>();
 
             if (null != userById) {
-                Pageable pageable = PageRequest.of(pageNo, pageSize);
+                Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
 
                 if (null!=filter) {
-                    resultPage = eAppraiseVehicleRepo.findAll(AppraisalSpecification.getSearchFactorySpecification(filter,userId), pageable);
+                    if(Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
+                        List<Long> unsoldVehicles = eAppraiseVehicleRepo.apprIdOfUnsoldVehicles(userId);
+
+                        resultPage = eAppraiseVehicleRepo.findAll(AppraisalSpecification.getSearchFactorySpecification(filter, userId,unsoldVehicles), pageable);
+                    }else {
+                        cardsPage = eRepo.filterSearchFactoryVehicle(filter, userId, pageNo, pageSize);
+                    }
                 }else {
-                    resultPage = eAppraiseVehicleRepo.findByUserIdNot(userId,AppraisalConstants.INVENTORY, true,pageable);
+                    if(Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
+                        resultPage = eAppraiseVehicleRepo.findByUserIdNot(userId, AppraisalConstants.INVENTORY, true, pageable);
+                    }
+                    else {
+                        cardsPage = eRepo.searchFactory( userId, pageNo, pageSize);
+                    }
                 }
 
                 if (null!=resultPage && resultPage.getTotalElements() != 0) {
@@ -177,7 +190,6 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
                         ERoleMapping byUserId = roleMappingRepo.findByUserId(vehicle.getUser().getId());
                         AppraisalVehicleCard appraisalVehicleCard = offersMapper.eApprVehiToOffersCards(vehicle, userId);
                         appraisalVehicleCard.setRole(appraisalVehicleMapper.eRoleToRole(byUserId.getRole()));
-
                         offersCards.add(appraisalVehicleCard);
                     }
 
@@ -188,7 +200,31 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
                     ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
                     pageInfo.setRoleType(byUserId.getRole().getRole());
                     pageInfo.setRoleGroup(byUserId.getRole().getRoleGroup());
-                }else throw new AppraisalException("No Cards available");
+                }else if (null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()){
+
+                    pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+                    pageInfo.setTotalPages(cardsPage.getTotalPages());
+
+                    List<EAppraiseVehicle> invtry = cardsPage.getAppraiseVehicleList();
+                    for (EAppraiseVehicle vehicle:invtry) {
+                        ERoleMapping byUserId = roleMappingRepo.findByUserId(vehicle.getUser().getId());
+                        AppraisalVehicleCard appraisalVehicleCard = offersMapper.eApprVehiToOffersCards(vehicle, userId);
+                        appraisalVehicleCard.setRole(appraisalVehicleMapper.eRoleToRole(byUserId.getRole()));
+                        offersCards.add(appraisalVehicleCard);
+                    }
+
+                    pageInfo.setCode(HttpStatus.OK.value());
+                    pageInfo.setMessage("SearchFactory vehicle cards are visible");
+                    pageInfo.setStatus(Boolean.TRUE);
+                    pageInfo.setCards(offersCards);
+                    ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
+                    pageInfo.setRoleType(byUserId.getRole().getRole());
+                    pageInfo.setRoleGroup(byUserId.getRole().getRoleGroup());
+
+                }
+                else throw new AppraisalException("No Cards available");
+
+
             } else throw new AppraisalException("userID is null");
         return pageInfo;
     }

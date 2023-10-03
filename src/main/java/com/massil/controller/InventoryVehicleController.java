@@ -53,7 +53,7 @@ public class InventoryVehicleController {
 
     @Operation(summary = "get SearchFactory cards not by user id ")
     @PostMapping("/getSearchFactory")
-    public ResponseEntity<CardsPage> getSearchFactory(@RequestHeader("id") UUID id, @RequestParam @Min(1) Integer pageNumber, @RequestParam @Min(1) Integer pageSize) throws AppraisalException {
+    public ResponseEntity<CardsPage> getSearchFactory(@RequestHeader("id") UUID id, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws AppraisalException {
 
         CardsPage sf = inventoryService.searchFactory(id,pageNumber,pageSize);
 

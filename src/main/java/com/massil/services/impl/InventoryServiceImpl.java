@@ -9,10 +9,8 @@ import com.massil.dto.CardsPage;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.mapper.OffersMapper;
 import com.massil.persistence.model.*;
-import com.massil.repository.AppraiseVehicleRepo;
-import com.massil.repository.DealerRegistrationRepo;
-import com.massil.repository.RoleMappingRepo;
-import com.massil.repository.UserRegistrationRepo;
+import com.massil.repository.*;
+import com.massil.repository.elasticRepo.AppraisalVehicleERepo;
 import com.massil.services.InventoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +47,10 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private RoleMappingRepo roleMappingRepo;
 
+    @Autowired
+    private ConfigCodesRepo configurationCodesRepo;
+    @Autowired
+    private AppraisalVehicleERepo appraisalVehicleERepo;
 
     @Override
     public CardsPage inventoryCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
@@ -56,6 +58,7 @@ public class InventoryServiceImpl implements InventoryService {
         CardsPage pageInfo = new CardsPage();
 
             Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
             Page<EAppraiseVehicle> pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
             if (pageResult.getTotalElements() != 0) {
                 pageInfo.setTotalPages((long) pageResult.getTotalPages());
@@ -74,7 +77,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public CardsPage searchFactory(UUID id, Integer pageNumber, Integer pageSize) throws AppraisalException {
-
+        CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
         Page<EAppraiseVehicle> pageResult=null;
 
@@ -83,8 +86,11 @@ public class InventoryServiceImpl implements InventoryService {
             List<AppraisalVehicleCard> offersCards=new ArrayList<>();
 
             if(null!=userById) {
-                pageResult = eAppraiseVehicleRepo.findByUserIdNot(id,AppraisalConstants.INVENTORY, true,pageable);
-
+                if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+                    pageResult = eAppraiseVehicleRepo.findByUserIdNot(id, AppraisalConstants.INVENTORY, true, pageable);
+                }else {
+                     cardsPage = appraisalVehicleERepo.searchFactory(id, pageNumber, pageSize);
+                }
 
             }
 
@@ -110,6 +116,30 @@ public class InventoryServiceImpl implements InventoryService {
                 ERoleMapping byUserId = roleMappingRepo.findByUserId(id);
                 pageInfo.setRoleType(byUserId.getRole().getRole());
               pageInfo.setRoleGroup(byUserId.getRole().getRoleGroup());
+
+            }else if(null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()) {
+
+                pageInfo.setTotalPages(cardsPage.getTotalPages());
+                pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+
+                List<EAppraiseVehicle> invtry = cardsPage.getAppraiseVehicleList();
+
+                for (EAppraiseVehicle vehicle:invtry) {
+                    ERoleMapping byUserId = roleMappingRepo.findByUserId(vehicle.getUser().getId());
+                    AppraisalVehicleCard appraisalVehicleCard = offersMapper.eApprVehiToOffersCards(vehicle, id);
+                    appraisalVehicleCard.setRole(appraisalVehicleMapper.eRoleToRole(byUserId.getRole()));
+                    offersCards.add(appraisalVehicleCard);
+                }
+
+                pageInfo.setCode(HttpStatus.OK.value());
+                pageInfo.setMessage("Successfully found Search Factory cards");
+                pageInfo.setStatus(Boolean.TRUE);
+                pageInfo.setCards(offersCards);
+                ERoleMapping byUserId = roleMappingRepo.findByUserId(id);
+                pageInfo.setRoleType(byUserId.getRole().getRole());
+                pageInfo.setRoleGroup(byUserId.getRole().getRoleGroup());
+
+
             }
             else throw new AppraisalException("No Cards available");
 

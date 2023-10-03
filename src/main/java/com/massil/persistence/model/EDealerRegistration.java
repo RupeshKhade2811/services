@@ -137,6 +137,16 @@ public class EDealerRegistration extends TransactionEntity {
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
     private EUserRegistration user;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "sellerDealerId",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private List<EOffers> sellerDealerOffers;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "buyerDealerId",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private List<EOffers> buyerDealerOffers;
 
 
 
