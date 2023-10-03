@@ -86,7 +86,7 @@ public class AppraisalVehicleController {
                 log.info(response.getMessage());
                 return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 
-            } else throw new AppraisalException(AppraisalConstants.INALID_USER_ID);
+            } else throw new AppraisalException(AppraisalConstants.INVALID_USER_ID);
 
     }
 

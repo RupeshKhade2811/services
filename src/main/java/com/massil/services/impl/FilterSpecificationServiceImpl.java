@@ -119,34 +119,52 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
                 pageInfo.setMessage("Cards showing successfully");
                 pageInfo.setStatus(true);
                 return pageInfo;
-            } else throw new AppraisalException(AppraisalConstants.INALID_USER_ID);
+            } else throw new AppraisalException(AppraisalConstants.INVALID_USER_ID);
     }
     public CardsPage filterInventoryVehicle(FilterParameters filter, UUID userId, Integer pageNo,Integer pageSize) throws AppraisalException {
-        Page<EAppraiseVehicle>resultPage=null;
+        Page<EAppraiseVehicle> resultPage=null;
+        CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
         EUserRegistration userById = userRegistrationRepo.findUserById(userId);
 
             if (null != userById) {
-
                 Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-                if (null!=filter) {
-                    resultPage = eAppraiseVehicleRepo.findAll(AppraisalSpecification.getInventrySpecification(filter, userId), pageable);
-                }else {
-                    resultPage = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
+                if (null != filter) {
+                    if (Boolean.TRUE.equals(configCodesRepo.isElasticActive())) {
+                        cardsPage = eRepo.filterInventoryCards(filter, userId, pageNo, pageSize);
+                    } else {
+                        resultPage = eAppraiseVehicleRepo.findAll(AppraisalSpecification.getInventrySpecification(filter, userId), pageable);
+                    }
+                } else {
+                    if (Boolean.TRUE.equals(configCodesRepo.isElasticActive())) {
+                        cardsPage = eRepo.inventoryCards(userId, pageNo, pageSize);
+                    } else {
+                        resultPage = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY, true, pageable);
+                    }
                 }
 
-                pageInfo.setTotalRecords(resultPage.getTotalElements());
+                if (null != resultPage && !resultPage.isEmpty()) {
+                    pageInfo.setTotalRecords(resultPage.getTotalElements());
+                    List<AppraisalVehicleCard> cards = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(resultPage.getContent());
+                    pageInfo.setCards(cards);
+                    pageInfo.setTotalPages((long) resultPage.getTotalPages());
+                } else if (null != cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()) {
+                    pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+                    pageInfo.setTotalPages((long) cardsPage.getTotalPages());
+                    List<EAppraiseVehicle> invtry = cardsPage.getAppraiseVehicleList();
+                    List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
+                    pageInfo.setCards(appraiseVehicleDtos);
 
-                List<AppraisalVehicleCard> cards = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(resultPage.getContent());
-                pageInfo.setCards(cards);
-                pageInfo.setTotalPages((long) resultPage.getTotalPages());
+                }
+                else throw new AppraisalException("InventoryCards not available");
                 pageInfo.setCode(HttpStatus.OK.value());
-                pageInfo.setMessage("Inventory vehicle cards are visible");
-                pageInfo.setStatus(Boolean.TRUE);
-            } else throw new AppraisalException("userID is null");
+                pageInfo.setMessage("Cards showing successfully");
+                pageInfo.setStatus(true);
+                return pageInfo;
+            } else throw new AppraisalException(AppraisalConstants.INVALID_USER_ID);
 
-        return pageInfo;
+
     }
 
 

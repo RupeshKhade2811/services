@@ -35,10 +35,8 @@ public class InventoryVehicleController {
 
     @Operation(summary = "get Inventory cards by user id ")
     @PostMapping("/getInventoryCards")
-    public ResponseEntity<CardsPage> getInventoryCards(@RequestHeader("userId") UUID userId, @RequestParam @Min(1) Integer pageNumber, @RequestParam @Min(1) Integer pageSize) throws AppraisalException {
-
+    public ResponseEntity<CardsPage> getInventoryCards(@RequestHeader("userId") UUID userId, @RequestParam Integer pageNumber, @RequestParam @Min(1) Integer pageSize) throws AppraisalException {
         CardsPage apv = inventoryService.inventoryCards(userId,pageNumber,pageSize);
-
         return new ResponseEntity<CardsPage>(apv, HttpStatus.OK);
 
     }

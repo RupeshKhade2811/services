@@ -9,10 +9,8 @@ import com.massil.dto.CardsPage;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.mapper.OffersMapper;
 import com.massil.persistence.model.*;
-import com.massil.repository.AppraiseVehicleRepo;
-import com.massil.repository.DealerRegistrationRepo;
-import com.massil.repository.RoleMappingRepo;
-import com.massil.repository.UserRegistrationRepo;
+import com.massil.repository.*;
+import com.massil.repository.elasticRepo.AppraisalVehicleERepo;
 import com.massil.services.InventoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,40 +33,56 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private AppraiseVehicleRepo eAppraiseVehicleRepo;
-
     @Autowired
     private AppraisalVehicleMapper appraisalVehicleMapper;
     @Autowired
     private OffersMapper offersMapper;
-
     @Autowired
     private UserRegistrationRepo userRepo;
-
     @Autowired
     private DealerRegistrationRepo dealerRepo;
     @Autowired
     private RoleMappingRepo roleMappingRepo;
+    @Autowired
+    private AppraisalVehicleERepo appraisalVehicleERepo;
+    @Autowired
+    private ConfigCodesRepo configurationCodesRepo;
 
 
     @Override
     public CardsPage inventoryCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
 
+        CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
+        Page<EAppraiseVehicle> pageResult=null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
-            Page<EAppraiseVehicle> pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
-            if (pageResult.getTotalElements() != 0) {
-                pageInfo.setTotalPages((long) pageResult.getTotalPages());
-                pageInfo.setTotalRecords(pageResult.getTotalElements());
-                List<EAppraiseVehicle> invtry = pageResult.toList();
-                List<AppraisalVehicleCard> inventoryVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
-                pageInfo.setCode(HttpStatus.OK.value());
-                pageInfo.setMessage("Successfully found Inventory cards");
-                pageInfo.setStatus(Boolean.TRUE);
-                pageInfo.setCards(inventoryVehicleDtos);
-            }
-            else throw new AppraisalException("Inventory Cards not available");
+        if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+            pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
+        }else {
+            cardsPage = appraisalVehicleERepo.inventoryCards(userId,pageNumber, pageSize);
+        }
 
+        if(null!= pageResult && pageResult.getTotalElements()!=0) {
+            pageInfo.setTotalRecords(pageResult.getTotalElements());
+            pageInfo.setTotalPages((long) pageResult.getTotalPages());
+            List<EAppraiseVehicle> invtry = pageResult.toList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
+            pageInfo.setCards(appraiseVehicleDtos);
+        }
+        else if(null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()){
+
+            pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+            pageInfo.setTotalPages((long) cardsPage.getTotalPages());
+            List<EAppraiseVehicle> invtry = cardsPage.getAppraiseVehicleList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
+            pageInfo.setCards(appraiseVehicleDtos);
+
+        }
+        else throw new AppraisalException("Inventory Cards not available");
+        pageInfo.setCode(HttpStatus.OK.value());
+        pageInfo.setMessage("Cards showing successfully");
+        pageInfo.setStatus(true);
         return pageInfo;
     }
 
