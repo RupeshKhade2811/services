@@ -279,7 +279,7 @@ public class AppraisalConstants {
 
   public static final String ODOMETER_STATEMENT= "odometerStatement.pdf";
   public static final String VEH_BILL_STATEMENT= "vehicleBill.pdf";
-  public static final String INALID_USER_ID= "Invalid user id";
+  public static final String INVALID_USER_ID= "Invalid user id";
   public static final String SERIES="series";
 
 

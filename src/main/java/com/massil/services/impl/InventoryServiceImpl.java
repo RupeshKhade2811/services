@@ -33,19 +33,20 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private AppraiseVehicleRepo eAppraiseVehicleRepo;
-
     @Autowired
     private AppraisalVehicleMapper appraisalVehicleMapper;
     @Autowired
     private OffersMapper offersMapper;
-
     @Autowired
     private UserRegistrationRepo userRepo;
-
     @Autowired
     private DealerRegistrationRepo dealerRepo;
     @Autowired
     private RoleMappingRepo roleMappingRepo;
+    @Autowired
+    private AppraisalVehicleERepo appraisalVehicleERepo;
+    @Autowired
+    private ConfigCodesRepo configurationCodesRepo;
 
     @Autowired
     private ConfigCodesRepo configurationCodesRepo;
@@ -55,7 +56,10 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public CardsPage inventoryCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
 
+        CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
+        Page<EAppraiseVehicle> pageResult=null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
 
             Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
@@ -72,6 +76,32 @@ public class InventoryServiceImpl implements InventoryService {
             }
             else throw new AppraisalException("Inventory Cards not available");
 
+        if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+            pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
+        }else {
+            cardsPage = appraisalVehicleERepo.inventoryCards(userId,pageNumber, pageSize);
+        }
+
+        if(null!= pageResult && pageResult.getTotalElements()!=0) {
+            pageInfo.setTotalRecords(pageResult.getTotalElements());
+            pageInfo.setTotalPages((long) pageResult.getTotalPages());
+            List<EAppraiseVehicle> invtry = pageResult.toList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
+            pageInfo.setCards(appraiseVehicleDtos);
+        }
+        else if(null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()){
+
+            pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+            pageInfo.setTotalPages((long) cardsPage.getTotalPages());
+            List<EAppraiseVehicle> invtry = cardsPage.getAppraiseVehicleList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
+            pageInfo.setCards(appraiseVehicleDtos);
+
+        }
+        else throw new AppraisalException("Inventory Cards not available");
+        pageInfo.setCode(HttpStatus.OK.value());
+        pageInfo.setMessage("Cards showing successfully");
+        pageInfo.setStatus(true);
         return pageInfo;
     }
 
