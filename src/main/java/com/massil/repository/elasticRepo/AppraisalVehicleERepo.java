@@ -12,11 +12,6 @@ import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -122,7 +117,7 @@ public class AppraisalVehicleERepo {
         return cardsPage;
     }
 
-   public CardsPage filterSearchFactoryVehicle(FilterParameters filter, UUID userId, Integer pageNo,Integer pageSize) {
+    public CardsPage filterSearchFactoryVehicle(FilterParameters filter, UUID userId, Integer pageNo,Integer pageSize) {
         log.info("From ElasticSearchRepo filterSearchFactoryVehicle");
 
         Integer offset=Math.multiplyExact(pageNo,pageSize);
@@ -173,7 +168,7 @@ public class AppraisalVehicleERepo {
                                 .matching( AppraisalConstants.INVENTORY ))
                         .must(f.match().field("valid")
                                 .matching(true))
-                ).sort( f -> f.field( "createdOn" ).desc() )
+                ).sort( f -> f.field( "modifiedOn" ).desc() )
                 .fetch(offset,pageSize);
         long totalRecords = searchResult.total().hitCount();
         List<EAppraiseVehicle> appraiseVehicles = searchResult.hits();
@@ -207,7 +202,7 @@ public class AppraisalVehicleERepo {
                             }
 
                         }
-                ).sort( f -> f.field( "createdOn" ).desc() )
+                ).sort( f -> f.field( "modifiedOn" ).desc() )
                 .fetch(offset,pageSize);
         long totalRecords = searchResult.total().hitCount();
         List<EAppraiseVehicle> appraiseVehicles = searchResult.hits();

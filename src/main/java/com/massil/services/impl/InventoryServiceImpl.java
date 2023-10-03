@@ -56,7 +56,7 @@ public class InventoryServiceImpl implements InventoryService {
         CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
         Page<EAppraiseVehicle> pageResult=null;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
 
 
 

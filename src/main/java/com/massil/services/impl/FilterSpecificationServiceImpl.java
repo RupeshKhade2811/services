@@ -86,7 +86,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
         EUserRegistration userById = userRegistrationRepo.findUserById(userId);
 
             if (null != userById) {
-                Pageable pageable = PageRequest.of(pageNo, pageSize);
+                Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
 
                 if (null!=filter) {
                     if(Boolean.TRUE.equals(configCodesRepo.isElasticActive())){
@@ -129,7 +129,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
         EUserRegistration userById = userRegistrationRepo.findUserById(userId);
 
             if (null != userById) {
-                Pageable pageable = PageRequest.of(pageNo, pageSize);
+                Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
 
                 if (null != filter) {
                     if (Boolean.TRUE.equals(configCodesRepo.isElasticActive())) {
