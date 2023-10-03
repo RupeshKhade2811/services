@@ -48,10 +48,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private ConfigCodesRepo configurationCodesRepo;
 
-    @Autowired
-    private ConfigCodesRepo configurationCodesRepo;
-    @Autowired
-    private AppraisalVehicleERepo appraisalVehicleERepo;
+
 
     @Override
     public CardsPage inventoryCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
@@ -61,9 +58,9 @@ public class InventoryServiceImpl implements InventoryService {
         Page<EAppraiseVehicle> pageResult=null;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-            Page<EAppraiseVehicle> pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
+
+           pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
             if (pageResult.getTotalElements() != 0) {
                 pageInfo.setTotalPages((long) pageResult.getTotalPages());
                 pageInfo.setTotalRecords(pageResult.getTotalElements());
