@@ -1,30 +1,21 @@
 package com.massil.repository.elasticRepo;
 
 import com.massil.constants.AppraisalConstants;
-import com.massil.controller.AppraisalVehicleController;
 import com.massil.dto.CardsPage;
+import com.massil.dto.FilterParameters;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.model.EAppraiseVehicle;
-import com.massil.persistence.model.EConfigCodes;
 import com.massil.repository.ConfigCodesRepo;
 import com.massil.util.CompareUtils;
-import jakarta.persistence.TypedQuery;
-import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
-import org.hibernate.search.engine.search.query.SearchQuery;
 import org.hibernate.search.engine.search.query.SearchResult;
-import org.hibernate.search.engine.search.query.SearchResultTotal;
-import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
-
-import static java.lang.Math.ceil;
 
 
 @Component
@@ -52,6 +43,39 @@ public class AppraisalVehicleERepo {
                                 .matching( AppraisalConstants.INVENTORY ))
                         .must(f.match().field("valid")
                                 .matching(true))
+                ).sort( f -> f.field( "createdOn" ).desc() )
+                .fetch(offset,pageSize);
+        long totalRecords = searchResult.total().hitCount();
+        List<EAppraiseVehicle> appraiseVehicles = searchResult.hits();
+        CardsPage cardsPage=new CardsPage();
+        cardsPage.setAppraiseVehicleList(appraiseVehicles);
+        cardsPage.setTotalRecords(totalRecords);
+        cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
+        return cardsPage;
+    }
+    public CardsPage filterAppraisalCards(FilterParameters filter, UUID userId, Integer pageNo, Integer pageSize){
+        log.info("From ElasticSearchRepo");
+
+        Integer offset=Math.multiplyExact(pageNo,pageSize);
+        SearchResult<EAppraiseVehicle> searchResult = searchSession.search(EAppraiseVehicle.class)
+                .where( (f,root)->{
+                    if(null!=filter) {
+                        root.add(f.match().field("user.id").matching(userId ));
+                        root.add(f.bool().mustNot(f.match().field("invntrySts").matching(AppraisalConstants.INVENTORY)));
+                        root.add(f.match().field("valid").matching(true ));
+
+                        if (null != filter.getMake()) {
+                            root.add(f.match().field("vehicleMake").matching(filter.getMake()));
+                        }
+                        if (null != filter.getModel()) {
+                            root.add(f.match().field("vehicleModel").matching(filter.getModel()));
+                        }
+                        if (null != filter.getYear()) {
+                            root.add(f.match().field("vehicleYear").matching(filter.getYear()));
+                        }
+                    }
+
+                }
                 ).sort( f -> f.field( "createdOn" ).desc() )
                 .fetch(offset,pageSize);
         long totalRecords = searchResult.total().hitCount();

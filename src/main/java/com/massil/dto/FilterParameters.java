@@ -10,12 +10,12 @@ import java.util.Date;
 @Setter
 @ToString
 public class FilterParameters {
-    private Integer minDistance;
-    private Integer maxDistance;
+    private Long minDistance;
+    private Long maxDistance;
 
-    private Integer minYear;
-    private Integer maxYear;
-    private Integer year;
+    private Long minYear;
+    private Long maxYear;
+    private Long year;
     private String make;
     private String model;
     private String series;

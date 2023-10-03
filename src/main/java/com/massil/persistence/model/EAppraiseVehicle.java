@@ -14,6 +14,7 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.AuditOverrides;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.search.engine.backend.types.Aggregable;
 import org.hibernate.search.engine.backend.types.ObjectStructure;
 import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
@@ -99,7 +100,7 @@ public class EAppraiseVehicle extends TransactionEntity {
     @FullTextField
     @Column(name="MAKE")
     private String vehicleMake;
-    @GenericField
+    @GenericField(aggregable = Aggregable.YES)
     @Column(name="MILES")
     private Long vehicleMileage;
     @FullTextField
@@ -108,7 +109,7 @@ public class EAppraiseVehicle extends TransactionEntity {
     @FullTextField
     @Column(name="SERIES")
     private String  vehicleSeries;
-    @GenericField
+    @GenericField(aggregable = Aggregable.YES)
     @Column(name="VEH_YEAR")
     private Long vehicleYear;
     @FullTextField
