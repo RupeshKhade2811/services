@@ -11,12 +11,15 @@ import org.hibernate.search.backend.elasticsearch.search.aggregation.impl.Elasti
 import org.hibernate.search.engine.search.aggregation.AggregationKey;
 import org.hibernate.search.engine.search.aggregation.SearchAggregation;
 import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.mapper.orm.scope.SearchScope;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -27,8 +30,6 @@ public class OffersERepo {
 
     @Autowired
     private CompareUtils compareUtils;
-    @Autowired
-    SearchAggregation termsAggregation;
 
     public CardsPage procurementCards(UUID id, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo procurementCards");
@@ -60,8 +61,8 @@ public class OffersERepo {
         log.info("From ElasticSearchRepo liquidationCards");
 
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
-
-
+        SearchScope<EOffers> scope = searchSession.scope( EOffers.class );
+        AggregationKey<Map<Object, Long>> countsByGenreKey = AggregationKey.of( "appRef.id" );
 
         SearchResult<EOffers> searchResult = searchSession.search(EOffers.class)
                 .where( f -> f.bool()
@@ -75,15 +76,24 @@ public class OffersERepo {
                                 .matching(true))
                         .must(f.match().field("isTradeBuy")
                                 .matching(false))
-                              ).sort(f -> f.field( "modifiedOn" ).desc() )
+                              )
+                .aggregation( countsByGenreKey, scope.aggregation().withRoot("appRef").terms()
+                        .field( "id", Object.class )
+                        .orderByTermDescending().toAggregation() )
+                .sort(f -> f.field( "modifiedOn" ).desc() )
                 .fetch(offset,pageSize);
+        Map<Object, Long> countsByGenre = searchResult.aggregation( countsByGenreKey );
+        List<Object> objectList = countsByGenre.keySet().stream().toList();
         long totalRecords = searchResult.total().hitCount();
         List<EOffers> liquidVehicles = searchResult.hits();
         CardsPage cardsPage=new CardsPage();
         cardsPage.setEOffersList(liquidVehicles);
         cardsPage.setTotalRecords(totalRecords);
         cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
+
         return cardsPage;
     }
+
+
 
 }
