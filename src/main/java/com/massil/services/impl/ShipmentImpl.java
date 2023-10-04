@@ -10,6 +10,7 @@ import com.massil.dto.Shipment;
 import com.massil.persistence.mapper.OffersMapper;
 import com.massil.persistence.model.*;
 import com.massil.repository.*;
+import com.massil.repository.elasticRepo.OffersERepo;
 import com.massil.services.ShipmentService;
 import com.massil.util.CompareUtils;
 import org.slf4j.Logger;
@@ -54,6 +55,10 @@ public class ShipmentImpl implements ShipmentService {
     private RoleMappingRepo roleMappingRepo;
     @Autowired
     private CompareUtils compareUtils;
+    @Autowired
+    private ConfigCodesRepo configurationCodesRepo;
+    @Autowired
+    private OffersERepo offersERepo;
 
     Logger log = LoggerFactory.getLogger(ShipmentImpl.class);
 
@@ -61,54 +66,70 @@ public class ShipmentImpl implements ShipmentService {
     @Override
     public CardsPage mySellsCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
 
+        CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
         Page<EOffers> pageResult = null;
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-            EUserRegistration userById = userRepo.findUserById(userId);
-            if (null != userById) {
+        if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+            pageResult = offersRepo.findBySellerUserIdSold(userId,true, AppraisalConstants.BUYERACCEPTED,AppraisalConstants.SELLERACCEPTED, pageable);
+        }else {
+            cardsPage = offersERepo.mySaleCards(userId, pageNumber, pageSize);
+        }
 
-                pageResult = offersRepo.findBySellerUserIdSold(userId,true, AppraisalConstants.BUYERACCEPTED,AppraisalConstants.SELLERACCEPTED, pageable);
-                if (null!= pageResult&&pageResult.getTotalElements() != 0) {
-
-                    pageInfo.setTotalRecords(pageResult.getTotalElements());
-                    pageInfo.setTotalPages((long) pageResult.getTotalPages());
-
-                    List<EOffers> apv = pageResult.toList();
-                    List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
-                    pageInfo.setCards(appraiseVehicleDtos);
-                }
-            } else throw new AppraisalException("AppraisalCards not available");
-
+        if(null!= pageResult && pageResult.getTotalElements()!=0) {
+            pageInfo.setTotalRecords(pageResult.getTotalElements());
+            pageInfo.setTotalPages((long) pageResult.getTotalPages());
+            List<EOffers> apv = pageResult.toList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
+            pageInfo.setCards(appraiseVehicleDtos);
+        }
+        else if(null!=cardsPage && !cardsPage.getEOffersList().isEmpty()){
+            pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+            pageInfo.setTotalPages((long) cardsPage.getTotalPages());
+            List<EOffers> apv = cardsPage.getEOffersList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
+            pageInfo.setCards(appraiseVehicleDtos);
+        }
+        else throw new AppraisalException("Shipment Cards not available");
         pageInfo.setCode(HttpStatus.OK.value());
-        pageInfo.setMessage("Getting all My sell cards in offers page");
+        pageInfo.setMessage("Getting all My selling cards in offers page");
         pageInfo.setStatus(true);
         return pageInfo;
-
     }
+
+
     @Override
     public CardsPage myBuyerCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
 
+        CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
         Page<EOffers> pageResult = null;
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-            EUserRegistration userById = userRepo.findUserById(userId);
-            if (null != userById) {
-                pageResult = offersRepo.findByBuyerUserIdSold(userId,true, AppraisalConstants.BUYERACCEPTED,AppraisalConstants.SELLERACCEPTED, pageable);
-                if (null!= pageResult&&pageResult.getTotalElements() != 0) {
+        if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+            pageResult = offersRepo.findByBuyerUserIdSold(userId,true, AppraisalConstants.BUYERACCEPTED,AppraisalConstants.SELLERACCEPTED, pageable);
+        }else {
+            cardsPage = offersERepo.myPurchaseCards(userId, pageNumber, pageSize);
+        }
 
-                    pageInfo.setTotalRecords(pageResult.getTotalElements());
-                    pageInfo.setTotalPages((long) pageResult.getTotalPages());
-
-                    List<EOffers> apv = pageResult.toList();
-                    List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
-                    pageInfo.setCards(appraiseVehicleDtos);
-                }
-            } else throw new AppraisalException("AppraisalCards not available");
-
+        if(null!= pageResult && pageResult.getTotalElements()!=0) {
+            pageInfo.setTotalRecords(pageResult.getTotalElements());
+            pageInfo.setTotalPages((long) pageResult.getTotalPages());
+            List<EOffers> apv = pageResult.toList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
+            pageInfo.setCards(appraiseVehicleDtos);
+        }
+        else if(null!=cardsPage && !cardsPage.getEOffersList().isEmpty()){
+            pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+            pageInfo.setTotalPages((long) cardsPage.getTotalPages());
+            List<EOffers> apv = cardsPage.getEOffersList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
+            pageInfo.setCards(appraiseVehicleDtos);
+        }
+        else throw new AppraisalException("Shipment Cards not available");
         pageInfo.setCode(HttpStatus.OK.value());
-        pageInfo.setMessage("Getting all My sell cards in offers page");
+        pageInfo.setMessage("Getting all My Purchased cards in offers page");
         pageInfo.setStatus(true);
         return pageInfo;
 
