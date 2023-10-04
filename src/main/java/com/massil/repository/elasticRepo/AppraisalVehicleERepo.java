@@ -210,4 +210,29 @@ public class AppraisalVehicleERepo {
         return cardsPage;
     }
 
+    public CardsPage availableTradeCards(UUID userId, Integer pageNumber, Integer pageSize){
+        log.info("From ElasticSearchRepo");
+
+        Integer offset=Math.multiplyExact(pageNumber,pageSize);
+        SearchResult<EAppraiseVehicle> searchResult = searchSession.search(EAppraiseVehicle.class)
+                .where( f -> f.bool()
+                        .mustNot( f.match().field( "user.id" )
+                                .matching( userId ) )
+                        .must( f.match().field( "invntrySts" )
+                                .matching( AppraisalConstants.CREATED ))
+                        .must(f.match().field("valid")
+                                .matching(true))
+                        .must(f.match().field("tdStatus.pushForBuyFig")
+                                .matching(true))
+                ).sort( f -> f.field( "modifiedOn" ).desc() )
+                .fetch(offset,pageSize);
+        long totalRecords = searchResult.total().hitCount();
+        List<EAppraiseVehicle> appraiseVehicles = searchResult.hits();
+        CardsPage cardsPage=new CardsPage();
+        cardsPage.setAppraiseVehicleList(appraiseVehicles);
+        cardsPage.setTotalRecords(totalRecords);
+        cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
+        return cardsPage;
+    }
+
 }

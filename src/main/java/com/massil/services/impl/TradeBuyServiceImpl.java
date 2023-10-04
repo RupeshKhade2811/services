@@ -12,6 +12,7 @@ import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.mapper.OffersMapper;
 import com.massil.persistence.model.*;
 import com.massil.repository.*;
+import com.massil.repository.elasticRepo.AppraisalVehicleERepo;
 import com.massil.services.TradeBuyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -51,38 +53,50 @@ public class TradeBuyServiceImpl implements TradeBuyService {
     private OfferQuotesRepo offerQuotesRepo;
     @Autowired
     private StatusRepo statusRepo;
+    @Autowired
+    private ConfigCodesRepo configurationCodesRepo;
+    @Autowired
+    private AppraisalVehicleERepo appraisalVehicleERepo;
+
 
 
     @Override
-    public CardsPage availableTradesCards(UUID id, Integer pageNumber, Integer pageSize) throws AppraisalException {
+    public CardsPage availableTradesCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
+        CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
         Page<EAppraiseVehicle> pageResult = null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        EUserRegistration userById = userRepo.findUserById(id);
-        if (null != userById) {
-            pageResult = eAppraiseVehicleRepo.findNotUserIdInAvbleTrdCrds(id, AppraisalConstants.CREATED, true, true, pageable);
+        if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+            pageResult = eAppraiseVehicleRepo.findNotUserIdInAvbleTrdCrds(userId, AppraisalConstants.CREATED, true, true, pageable);
+        }else {
+            cardsPage = appraisalVehicleERepo.availableTradeCards(userId, pageNumber, pageSize);
         }
+
 
         if (null != pageResult && pageResult.getTotalElements() != 0) {
             pageInfo.setTotalRecords(pageResult.getTotalElements());
             pageInfo.setTotalPages((long) pageResult.getTotalPages());
-
-
             List<EAppraiseVehicle> apv = pageResult.toList();
             List<AppraisalVehicleCard> invenVehDtos = new ArrayList<>();
             for (EAppraiseVehicle eAppraiseVehicle : apv) {
-                invenVehDtos.add(appraisalVehicleMapper.lEApprVehiToLApprVehiCard1(eAppraiseVehicle, id));
-
+                invenVehDtos.add(appraisalVehicleMapper.lEApprVehiToLApprVehiCard1(eAppraiseVehicle, userId));
             }
-            pageInfo.setCode(HttpStatus.OK.value());
-            pageInfo.setMessage("Successfully Found Available Trade cards");
-            pageInfo.setStatus(Boolean.TRUE);
+
             pageInfo.setCards(invenVehDtos);
 
-        } else throw new AppraisalException("TardeBuy Cards not available");
-
-
+        }
+        else if(null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()){
+            pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+            pageInfo.setTotalPages((long) cardsPage.getTotalPages());
+            List<EAppraiseVehicle> apv = cardsPage.getAppraiseVehicleList();
+            List<AppraisalVehicleCard> invenVehDtos = new ArrayList<>();
+            for (EAppraiseVehicle eAppraiseVehicle : apv) {
+                invenVehDtos.add(appraisalVehicleMapper.lEApprVehiToLApprVehiCard1(eAppraiseVehicle, userId));
+            }
+            pageInfo.setCards(invenVehDtos);
+        }
+        else throw new AppraisalException("Available TardeBuy Cards not available");
         pageInfo.setMessage("Available trade buy cards found");
         pageInfo.setCode(HttpStatus.OK.value());
         pageInfo.setStatus(true);
