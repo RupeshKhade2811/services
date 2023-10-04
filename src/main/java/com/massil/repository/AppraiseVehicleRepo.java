@@ -139,7 +139,7 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
 
     @Query("SELECT count(*) FROM EAppraiseVehicle e WHERE e.invntrySts <> 'Draft' AND valid=true")
     Long getTotalVehiclesInSystem();
-    @Query("(SELECT o.appRef.id FROM EOffers o WHERE o.status.id in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id <> :userId AND av.invntrySts ='inventory' AND av.valid = true))")
+    @Query("SELECT o.appRef.id FROM EOffers o WHERE o.status.id in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id <> :userId AND av.invntrySts ='inventory' AND av.valid = true)")
    List<Long> apprIdOfUnsoldVehicles(UUID userId);
 
 }

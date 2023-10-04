@@ -22,11 +22,8 @@ import java.util.UUID;
 public class AppraisalVehicleERepo {
     Logger log = LoggerFactory.getLogger(AppraisalVehicleERepo.class);
     @Autowired
-    private AppraisalVehicleMapper mapper;
-    @Autowired
     private SearchSession searchSession;
-    @Autowired
-    private ConfigCodesRepo configCodesRepo;
+
     @Autowired
     private CompareUtils compareUtils;
 

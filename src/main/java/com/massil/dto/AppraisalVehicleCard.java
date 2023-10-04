@@ -26,7 +26,7 @@ public class AppraisalVehicleCard {
 
 
     private Long id;
-  @Schema(description = "Manufacturer name")
+    @Schema(description = "Manufacturer name")
     private String vehicleMake ;
     private String  vehicleModel ;
     private double appraisedValue;
