@@ -16,6 +16,9 @@ import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,8 @@ public class OffersERepo {
 
     @Autowired
     private CompareUtils compareUtils;
+    @Autowired
+    SearchAggregation termsAggregation;
 
     public CardsPage procurementCards(UUID id, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo procurementCards");
@@ -61,8 +66,8 @@ public class OffersERepo {
         log.info("From ElasticSearchRepo liquidationCards");
 
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
-        SearchScope<EOffers> scope = searchSession.scope( EOffers.class );
-        AggregationKey<Map<Object, Long>> countsByGenreKey = AggregationKey.of( "appRef.id" );
+
+
 
         SearchResult<EOffers> searchResult = searchSession.search(EOffers.class)
                 .where( f -> f.bool()
@@ -91,6 +96,63 @@ public class OffersERepo {
         cardsPage.setTotalRecords(totalRecords);
         cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
 
+        return cardsPage;
+    }
+
+
+    public CardsPage mySaleCards(UUID userId, Integer pageNumber, Integer pageSize){
+        log.info("From ElasticSearchRepo");
+
+        Integer offset=Math.multiplyExact(pageNumber,pageSize);
+        SearchResult<EOffers> searchResult = searchSession.search(EOffers.class)
+                .where( f -> f.bool()
+                        .must( f.match().field( "sellerUserId.id" )
+                                .matching( userId ) )
+                        .must(f.match().field("valid")
+                                .matching(true))
+                        .must(f.match().field("appRef.valid")
+                                .matching(true))
+                        .must(f.match().field("isTradeBuy")
+                                .matching(false))
+                        .must(f.or(f.match().field("status.statusCode").matching(AppraisalConstants.BUYERACCEPTED),
+                                f.match().field("status.statusCode").matching(AppraisalConstants.SELLERACCEPTED)))
+
+                ).sort( f -> f.field( "modifiedOn" ).desc() )
+                .fetch(offset,pageSize);
+        long totalRecords = searchResult.total().hitCount();
+        List<EOffers> soldVehicles = searchResult.hits();
+        CardsPage cardsPage=new CardsPage();
+        cardsPage.setEOffersList(soldVehicles);
+        cardsPage.setTotalRecords(totalRecords);
+        cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
+        return cardsPage;
+    }
+
+
+    public CardsPage myPurchaseCards(UUID userId, Integer pageNumber, Integer pageSize){
+        log.info("From ElasticSearchRepo");
+
+        Integer offset=Math.multiplyExact(pageNumber,pageSize);
+        SearchResult<EOffers> searchResult = searchSession.search(EOffers.class)
+                .where( f -> f.bool()
+                        .must( f.match().field( "buyerUserId.id" )
+                                .matching( userId ) )
+                        .must(f.match().field("valid")
+                                .matching(true))
+                        .must(f.match().field("appRef.valid")
+                                .matching(true))
+                        .must(f.match().field("isTradeBuy")
+                                .matching(false))
+                        .must(f.or(f.match().field("status.statusCode").matching(AppraisalConstants.BUYERACCEPTED),
+                                f.match().field("status.statusCode").matching(AppraisalConstants.SELLERACCEPTED)))
+                ).sort( f -> f.field( "modifiedOn" ).desc() )
+                .fetch(offset,pageSize);
+        long totalRecords = searchResult.total().hitCount();
+        List<EOffers> soldVehicles = searchResult.hits();
+        CardsPage cardsPage=new CardsPage();
+        cardsPage.setEOffersList(soldVehicles);
+        cardsPage.setTotalRecords(totalRecords);
+        cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
         return cardsPage;
     }
 
