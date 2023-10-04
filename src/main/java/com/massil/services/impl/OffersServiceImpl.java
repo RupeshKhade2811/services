@@ -9,6 +9,7 @@ import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.mapper.OffersMapper;
 import com.massil.persistence.model.*;
 import com.massil.repository.*;
+import com.massil.repository.elasticRepo.OffersERepo;
 import com.massil.services.OffersService;
 import com.massil.util.CompareUtils;
 import freemarker.template.Configuration;
@@ -82,18 +83,26 @@ public class OffersServiceImpl implements OffersService {
     private AutoBidJobsRepo autoBidJobsRepo;
     @Autowired
     private AutoBidBumpRepo autoBidBumpRepo;
+    @Autowired
+    private OffersERepo offersERepo;
+    @Autowired
+    private ConfigCodesRepo configCodesRepo;
 
 
     @Override
     public CardsPage procurementCards(UUID id, Integer pageNumber, Integer pageSize) throws AppraisalException{
-
+        CardsPage cardsPage =null;
         CardsPage pageInfo = new CardsPage();
         Page<EOffers> pageResult = null;
 
             Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
             EUserRegistration userById = userRepo.findUserById(id);
             if (null != userById) {
-                pageResult = offersRepo.findByBuyerUserIdJPQL(id, AppraisalConstants.INVENTORY, true, false, pageable);
+                if(Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
+                    pageResult = offersRepo.findByBuyerUserIdJPQL(id, AppraisalConstants.INVENTORY, true, false, pageable);
+                }else {
+                    cardsPage = offersERepo.procurementCards(id, pageNumber, pageSize);
+                }
 
             }
 
@@ -103,6 +112,14 @@ public class OffersServiceImpl implements OffersService {
             pageInfo.setTotalPages((long) pageResult.getTotalPages());
 
             List<EOffers> apv = pageResult.toList();
+
+            List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
+            pageInfo.setCards(appraiseVehicleDtos);
+        } else if (null!=cardsPage && !cardsPage.getEOffersList().isEmpty()) {
+            pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+            pageInfo.setTotalPages( cardsPage.getTotalPages());
+
+            List<EOffers> apv = cardsPage.getEOffersList();
 
             List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
             pageInfo.setCards(appraiseVehicleDtos);
@@ -118,15 +135,19 @@ public class OffersServiceImpl implements OffersService {
 
     @Override
     public CardsPage liquidationCards(UUID id, Integer pageNumber, Integer pageSize) throws AppraisalException {
-
+        CardsPage cardsPage =null;
         CardsPage pageInfo = new CardsPage();
         Page<EOffers> pageResult = null;
 
             Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
             EUserRegistration userById = userRepo.findUserById(id);
             if (null != userById) {
-
-                pageResult = offersRepo.findBySellerUserIdJPQL(id,  false, pageable);
+                if(Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
+                    pageResult = offersRepo.findBySellerUserIdJPQL(id, false, pageable);
+                }
+                else {
+                    cardsPage = offersERepo.liquidationCards(id, pageNumber, pageSize);
+                }
             }
 
             if (null!= pageResult&&pageResult.getTotalElements() != 0) {
@@ -137,7 +158,17 @@ public class OffersServiceImpl implements OffersService {
                 List<EOffers> apv = pageResult.toList();
                 List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
                 pageInfo.setCards(appraiseVehicleDtos);
-            } else throw new AppraisalException("AppraisalCards not available");
+            }else if (null!=cardsPage && !cardsPage.getEOffersList().isEmpty()) {
+
+                pageInfo.setTotalRecords(cardsPage.getTotalRecords());
+                pageInfo.setTotalPages( cardsPage.getTotalPages());
+
+                List<EOffers> apv = cardsPage.getEOffersList();
+                List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
+                pageInfo.setCards(appraiseVehicleDtos);
+
+            }
+            else throw new AppraisalException("AppraisalCards not available");
 
 
         pageInfo.setCode(HttpStatus.OK.value());

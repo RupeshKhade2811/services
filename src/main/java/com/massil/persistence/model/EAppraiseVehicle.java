@@ -48,7 +48,7 @@ import java.util.List;
 public class EAppraiseVehicle extends TransactionEntity {
 
     @Id
-    @GenericField
+    @GenericField(aggregable = Aggregable.YES)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appr_veh_seq")
     @GenericGenerator(name = "appr_veh_seq", type = CustomIDGenerator.class)
     private Long id;
