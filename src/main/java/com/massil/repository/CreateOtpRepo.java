@@ -1,6 +1,6 @@
 package com.massil.repository;
 
-import com.factory.appraisal.factoryService.persistence.model.ECreateOtp;
+import com.massil.persistence.model.ECreateOtp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

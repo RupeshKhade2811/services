@@ -19,7 +19,7 @@ import com.massil.repository.*;
 import com.massil.services.DealerRegistrationService;
 import com.massil.services.UserRegistrationService;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.ParseException;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -46,6 +46,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -670,7 +671,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public Response validateOtp(String email, String otp) throws ParseException, AppraisalException {
+    public Response validateOtp(String email, String otp) throws AppraisalException, ParseException {
         Response response = new Response();
         ECreateOtp createOtp = createOtpRepo.gettingLatestOtp(email);
         if (null != createOtp) {

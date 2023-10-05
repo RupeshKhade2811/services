@@ -347,7 +347,7 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
 
     @Async
-    public String pdfCreation(Long appRef,EOffers offer,Map<Integer,String> names) throws IOException, GlobalException {
+    public String pdfCreation(Long appRef,EOffers offer,Map<Integer,String> names) throws IOException, GlobalException, JRException, JDOMException {
         PdfData pdfData = setDataOfPdf(appRef);
         String pdf1 = odometerJrXmlToPdf(pdfData, names.get(1));
 

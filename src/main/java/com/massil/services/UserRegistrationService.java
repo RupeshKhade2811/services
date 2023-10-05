@@ -5,11 +5,12 @@ import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.dto.*;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.ParseException;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
+import java.text.ParseException;
 import java.util.UUID;
 
 public interface UserRegistrationService {
@@ -75,6 +76,6 @@ public interface UserRegistrationService {
 
      Response sendMailForPassowrdSuccess(DealerRegistration dealer,UUID d2UserId,String email) throws AppraisalException, IOException;
 
-     Response validateOtp(String email,String otp) throws ParseException, AppraisalException;
+     Response validateOtp(String email,String otp) throws ParseException, AppraisalException, java.text.ParseException;
 
 }

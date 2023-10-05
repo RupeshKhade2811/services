@@ -3,6 +3,14 @@ package com.massil.services.impl;
 
 
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.Response;
@@ -1529,6 +1537,52 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String transferFile(String file) throws IOException {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+//            List<String> fileName= new ArrayList<>();
+            while ((line = reader.readLine()) != null) {
+                //               fileName.add(line);
+                //           }
+//            for (String imageName:fileName) {
+                String bucket="";
+                int lastDotIndex = line.lastIndexOf('.');
+                String substring = line.substring(lastDotIndex + 1);
+                if(substring.equalsIgnoreCase("jpg") || substring.equalsIgnoreCase("jpeg")){
+                    bucket="images";
+                }else if(substring.equalsIgnoreCase("pdf")){
+                    bucket="pdf";
+                }else if(substring.equalsIgnoreCase("mp4") || substring.equalsIgnoreCase("mov")){
+                    bucket="videos";
+                }
+                byte[] images = null;
+                String filePath = videoFolderPath + line;
+                images = Files.readAllBytes(new File(filePath).toPath());//Reading from folder
+
+
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(images);
+
+                ClientConfiguration config = new ClientConfiguration();
+                config.setProtocol(Protocol.HTTPS);
+                AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
+                S3ClientOptions options = new S3ClientOptions();
+                options.setPathStyleAccess(true);
+                s3.setS3ClientOptions(options);
+                s3.setEndpoint(amazonS3Url);  //ECS IP Address
+
+                System.out.println("Listing buckets");
+                PutObjectRequest request = new PutObjectRequest(bucket, line, inputStream, null);
+                request.setCannedAcl(CannedAccessControlList.PublicRead);
+                s3.putObject(request);
+                //           }
+            }
+
+            return "success";
+        }
     }
 
 

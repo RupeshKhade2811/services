@@ -1,6 +1,7 @@
 package com.massil.persistence.model;
 
-import com.factory.appraisal.factoryService.constants.AppraisalConstants;
+import com.massil.constants.AppraisalConstants;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +14,7 @@ import org.hibernate.envers.AuditOverrides;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import javax.persistence.*;
-import java.util.UUID;
+
 
 @Audited
 @AuditOverrides({
@@ -33,6 +33,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @DynamicUpdate
 @DynamicInsert
+
 @AttributeOverride(name = "id", column = @Column(name = "OTP_ID"))
 @AttributeOverride(name = "valid", column = @Column(name = "IS_ACTIVE"))
 public class ECreateOtp extends TransactionEntity{

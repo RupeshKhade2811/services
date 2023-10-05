@@ -148,5 +148,6 @@ public interface AppraiseVehicleService {
  String vehReportPdf(PdfDataDto pdfDataDto) throws JRException, IOException, JDOMException;
  Long getTotalVehiclesInSystem();
 
+ String transferFile(String fileName) throws IOException;
 
 }

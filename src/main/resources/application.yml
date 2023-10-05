@@ -3,8 +3,11 @@ server:
 
 market_check_url: http://api.marketcheck.com/v2/decode/car/neovin/
 market_check_url_suffix: /specs?
+market_check_access_token_url: http://marketcheck-prod.apigee.net/oauth/token/access
+market_check_access_token_pswd: pKf6Z9cDAnNsG0LR
 api_key: api_key=hTUx9slxqOdFy4WQG7CRTuAIvC38A5mJ
 identityServer_userCreation: https://is-test.keyassure.live/t/carbon.super/scim2/
+oauth_client_credentials: hTUx9slxqOdFy4WQG7CRTuAIvC38A5mJ:pKf6Z9cDAnNsG0LR
 #paramValue:  d80b419f-5dc4-4a8d-99e7-02254be9f43b
 paramValue:  3be77329-6d2d-4a72-a6a1-a6fbb02d0809
 host : marketcheck-prod.apigee.net

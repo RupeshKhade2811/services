@@ -23,6 +23,9 @@ whlsale_tmp_path: src\\main\\resources\\whlSaleBuyerOdr.jrxml
 vehicle_rep_path: src\\main\\resources\\vehicleReport.jrxml
 identityServer_userCreation: https://is-test.keyassure.live/t/carbon.super/scim2/
 paramValue: 3be77329-6d2d-4a72-a6a1-a6fbb02d0809
+access_key: IJNKK0VI1KN7268AVRH2
+secret : q4M7yWvLhpkpIameiiMB6PmmphcEjACOUAbv1oBs
+amazonS3_url : dal-storage.hostwinds.net/keyassure-test/
 
 
 cron.schedule.expression: "0 */50 * * * *"
@@ -35,8 +38,8 @@ spring:
     cache: false
     prefix: file:src/main/resources/templates/
   datasource:
-    password: Massil@123
-    url: jdbc:postgresql://localhost:5432/Factory_db
+    password: 12345
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
 #    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
 #    driver-class-name: org.postgresql.Driver

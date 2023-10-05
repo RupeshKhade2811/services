@@ -5,6 +5,7 @@ import com.massil.ExceptionHandle.Response;
 import com.massil.dto.PdfData;
 import com.massil.dto.PdfDataDto;
 import com.massil.dto.TableList;
+import com.massil.persistence.model.EOffers;
 import freemarker.template.TemplateException;
 import net.sf.jasperreports.engine.JRException;
 import org.jdom2.JDOMException;
@@ -18,7 +19,9 @@ public interface FactoryPdfGenerator {
     public String whlSlByOdrPdf(PdfDataDto pdfDataDto,String name) throws IOException, JRException;
 
     public String vehReportPdf(PdfDataDto pdfDataDto,String name) throws IOException, JRException, JDOMException;
-
+    public String apprReportPdf(String name)throws IOException,JRException,JDOMException;
+    public String licenseReportPdf(EOffers offers, String name)throws IOException,JRException,JDOMException;
+    public String taxCertificate(EOffers offers,String name)throws IOException,JRException,JDOMException;
     public PdfData setDataOfPdf(Long apprRefId);
 
     public PdfDataDto setDataToPdf(Long apprRefId);
