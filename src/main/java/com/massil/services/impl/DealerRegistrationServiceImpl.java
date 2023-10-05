@@ -112,6 +112,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         }
         return "Dealer Has Been saved Successfully";
     }
+    
 
 
     @Override
@@ -181,7 +182,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
 
         roleMapRepo.save(byUserId);
         eUserReg.setModifiedOn(new Date());
-        userRegRepo.save(eUserReg);
+        
 
         log.info("updating dealer in identity server");
         userRegService.updateUserInIS(updateUserIS, d2UserId);

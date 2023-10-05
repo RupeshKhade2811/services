@@ -170,7 +170,7 @@ public class DealerRegistrationController {
             response.setMessage("File Uploaded Successfully");
             response.setStatus(true);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } else throw new AppraisalException("image cann't be empty");
+        } else throw new AppraisalException("pdf cann't be empty");
 
 
 
