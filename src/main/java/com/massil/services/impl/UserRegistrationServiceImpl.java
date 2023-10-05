@@ -658,7 +658,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             SimpleMailMessage helper = new SimpleMailMessage();
             String mailText = "Hi sir/ma'am,\n \tYour Password  has been updated successfully\n\nThank You";
             helper.setFrom(fromMail);
-
             helper.setTo(email);
             helper.setText(mailText);
             helper.setSubject("Password Updated..!");
