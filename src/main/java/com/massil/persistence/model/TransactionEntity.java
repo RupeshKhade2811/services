@@ -5,6 +5,7 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.engine.backend.types.Aggregable;
 import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
@@ -36,7 +37,7 @@ public class TransactionEntity extends IdEntity {
 
 
     @CreatedDate
-    @GenericField(sortable = Sortable.YES)
+    @GenericField(sortable = Sortable.YES,aggregable = Aggregable.YES)
     private Date createdOn;
 
 
@@ -45,7 +46,7 @@ public class TransactionEntity extends IdEntity {
     private String modifiedBy;
 
     @LastModifiedDate
-    @GenericField(sortable = Sortable.YES)
+    @GenericField(sortable = Sortable.YES,aggregable = Aggregable.YES)
     private Date modifiedOn;
 
 
