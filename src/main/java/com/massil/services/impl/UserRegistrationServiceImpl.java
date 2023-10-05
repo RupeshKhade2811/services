@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
@@ -90,7 +91,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private JavaMailSender sender;
 
     @Autowired
-    private DealerRegistrationService dealerRegistrationService;
+    @Lazy
+    private DealerRegistrationServiceImpl dealerRegistrationService;
 
 
     @Override

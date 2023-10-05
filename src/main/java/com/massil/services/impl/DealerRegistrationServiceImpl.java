@@ -68,7 +68,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
     @Autowired
     private CompanyRepo companyRepo;
     @Autowired
-    private UserRegistrationService userRegService;
+    private UserRegistrationServiceImpl userRegService;
     @Autowired
     private AllDealersViewRepo allDealersViewRepo;
 
@@ -181,7 +181,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
 
         roleMapRepo.save(byUserId);
         eUserReg.setModifiedOn(new Date());
-        userRegRepo.save(eUserReg);
+
 
         log.info("updating dealer in identity server");
         userRegService.updateUserInIS(updateUserIS, d2UserId);
