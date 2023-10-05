@@ -1,6 +1,6 @@
 package com.massil.dto;
 
-import com.factory.appraisal.factoryService.ExceptionHandle.Response;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

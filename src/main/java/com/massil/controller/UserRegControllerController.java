@@ -8,6 +8,8 @@ import com.massil.services.FilterSpecificationService;
 import com.massil.services.UserRegistrationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

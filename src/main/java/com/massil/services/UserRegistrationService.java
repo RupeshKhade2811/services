@@ -4,6 +4,8 @@ import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.dto.*;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.ParseException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

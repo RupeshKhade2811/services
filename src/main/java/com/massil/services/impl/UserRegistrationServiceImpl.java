@@ -16,7 +16,10 @@ import com.massil.dto.UsrDlrList;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.model.*;
 import com.massil.repository.*;
+import com.massil.services.DealerRegistrationService;
 import com.massil.services.UserRegistrationService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.ParseException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -26,6 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
@@ -39,14 +45,14 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
+    private static final String OTP_CHARS = "0123456789";
     Logger log = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
     @Autowired
     UserRegistrationRepo userRegistrationRepo;
@@ -67,11 +73,23 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Autowired
     private SubscriptionRepo subscriptionRepo;
 
+    @Autowired
+    private CreateOtpRepo createOtpRepo;
+
+    @Value("${spring.mail.username}")
+    private String fromMail;
+
     @Value("${identityServer_userCreation}")
     private String userCreation;
 
     @Value("${paramValue}")
     private String paramValue;
+
+    @Autowired
+    private JavaMailSender sender;
+
+    @Autowired
+    private DealerRegistrationService dealerRegistrationService;
 
 
     @Override
