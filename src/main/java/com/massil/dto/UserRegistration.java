@@ -52,6 +52,8 @@ public class UserRegistration extends Response {
     @NotNull(message = "zipcode should not be null")
     @Size(max = 5,message = "the maximum length is 5 only")
     private String zipCode;
+    @Size(max = 50, message = "the maximum length is 50 only")
+    private String profilePicture;
     @NotNull
     @Pattern(regexp = "^(?=[a-zA-Z0-9]{12,25}$)[a-zA-Z0-9]+$")
     @Size(max = 25,min = 12,message = "The User Name should not exceed 25 characters and it should not be below 12 characters and special characters are not allowed")

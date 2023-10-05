@@ -297,6 +297,9 @@ public class AppraisalConstants {
   public static final String ODOMETER="Odometer";
   public static final String WHOLE_SALE_BUY_ORDER="Buyer Order";
   public static final String VEHICLE_REPORT="Veh Report";
+    public static final String APPRAISAL_REPORT="Appr Report";
+    public static final String LICENSE_REPORT="License Report";
+    public static final String TAX_FORM="Tax Form";
   public static final String INVNTRY_DAYS="daysSinceInventory";
   public static final String CONSUMER_ASKING_PRICE="consumerAskPrice";
   public static final String SALE_FEE="SALE_FEE";

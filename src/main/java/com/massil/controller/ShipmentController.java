@@ -146,6 +146,36 @@ public class ShipmentController {
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
+    @GetMapping("/apprReportPdf")
+    public ResponseEntity<Resource> apprReportPdf(@RequestParam("fileName") String filename)  {
+        String filePath = pdfpath+filename;
+        Resource resource = new PathResource(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        return ResponseEntity.ok().headers(headers).body(resource);
+    }
+
+    @GetMapping("/licenseReportPdf")
+    public ResponseEntity<Resource> licenseReportPdf(@RequestParam("fileName") String filename)  {
+        String filePath = pdfpath+filename;
+        Resource resource = new PathResource(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        return ResponseEntity.ok().headers(headers).body(resource);
+    }
+
+    @GetMapping("/taxReportPdf")
+    public ResponseEntity<Resource> taxReportPdf(@RequestParam("fileName") String filename)  {
+        String filePath = pdfpath+filename;
+        Resource resource = new PathResource(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        return ResponseEntity.ok().headers(headers).body(resource);
+    }
+
     @GetMapping("/apprPdf")
     public ResponseEntity<Resource>  apprPdf(@RequestParam String start,@RequestParam String end) throws JRException, IOException, ParseException {
         String  filePath = pdfGenerator.appraisalList(start, end);

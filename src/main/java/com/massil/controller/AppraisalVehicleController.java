@@ -64,6 +64,9 @@ public class AppraisalVehicleController {
     public MarketCheckApiService marketCheckService;
 
     @Autowired
+    public TokenService tokenService;
+
+    @Autowired
     private ApprFormService apprForm;
     @Autowired
     private AppraiseVehicleRepo repo;
@@ -457,6 +460,14 @@ public class AppraisalVehicleController {
         response.setStatus(true);
         response.setCode(HttpStatus.OK.value());
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+    @PostMapping("/getAccessToken")
+    public ResponseEntity<TokenSrvc> accessToken() throws AppraisalException {
+        log.info("THIS METHOD SHOWS ACCESS TOKEN FROM MARKET CHECK");
+        TokenSrvc tokenSrvc = tokenService.getAcessTkn();
+        return new ResponseEntity<>(tokenSrvc, HttpStatus.OK);
     }
 
 }
