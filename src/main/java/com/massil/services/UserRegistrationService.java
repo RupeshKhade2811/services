@@ -68,5 +68,11 @@ public interface UserRegistrationService {
     String profilePicUpload(MultipartFile file, UUID userId) throws AppraisalException, IOException;
      VideoAndImageResponse downloadImageFromFileSystem(String imageName) throws IOException, NoSuchFileException;
 
+     Response otpGenerator(String email) throws AppraisalException;
+     Response sendMailForOtp(String email) throws AppraisalException, MessagingException;
+
+     Response sendMailForPassowrdSuccess(DealerRegistration dealer,UUID d2UserId,String email) throws AppraisalException, IOException;
+
+     Response validateOtp(String email,String otp) throws ParseException, AppraisalException;
 
 }

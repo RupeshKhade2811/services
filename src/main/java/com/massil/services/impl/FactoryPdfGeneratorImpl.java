@@ -104,6 +104,9 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         EFileStatus save=null;
         EFileStatus save1=null;
         EFileStatus save2=null;
+        EFileStatus save3=null;
+        EFileStatus save4=null;
+        EFileStatus save5=null;
         List<EFileStatus>list=null;
         List<PdfList>list1=null;
 
@@ -112,6 +115,9 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
             String name = UUID.randomUUID() + AppraisalConstants.pdf;
             String name1 = UUID.randomUUID() + AppraisalConstants.pdf;
             String name2 = UUID.randomUUID() + AppraisalConstants.pdf;
+            String name3 = UUID.randomUUID() + AppraisalConstants.pdf;
+            String name4 = UUID.randomUUID() + AppraisalConstants.pdf;
+            String name5 = UUID.randomUUID() + AppraisalConstants.pdf;
 
             EFileStatus eFileStatus = new EFileStatus();
             eFileStatus.setOffers(offer);
@@ -137,16 +143,47 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
             eFileStatus2.setStatus(AppraisalConstants.PENDING);
             save2 = fileRepo.save(eFileStatus2);
 
+            EFileStatus eFileStatus3 = new EFileStatus();
+            eFileStatus3.setOffers(offer);
+            eFileStatus3.setAppraisalRef(offer.getAppRef());
+            eFileStatus3.setFileName(name3);
+            eFileStatus3.setModule(AppraisalConstants.APPRAISAL_REPORT);
+            eFileStatus3.setStatus(AppraisalConstants.PENDING);
+            save3 = fileRepo.save(eFileStatus3);
+
+            EFileStatus eFileStatus4 = new EFileStatus();
+            eFileStatus4.setOffers(offer);
+            eFileStatus4.setAppraisalRef(offer.getAppRef());
+            eFileStatus4.setFileName(name4);
+            eFileStatus4.setModule(AppraisalConstants.LICENSE_REPORT);
+            eFileStatus4.setStatus(AppraisalConstants.PENDING);
+            save4 = fileRepo.save(eFileStatus4);
+
+            EFileStatus eFileStatus5 = new EFileStatus();
+            eFileStatus5.setOffers(offer);
+            eFileStatus5.setAppraisalRef(offer.getAppRef());
+            eFileStatus5.setFileName(name5);
+            eFileStatus5.setModule(AppraisalConstants.TAX_FORM);
+            eFileStatus5.setStatus(AppraisalConstants.PENDING);
+            save5 = fileRepo.save(eFileStatus5);
+
+
             Map<Integer,String> nameMap= new TreeMap<>();
             nameMap.put(1,name);
             nameMap.put(2,name1);
             nameMap.put(3,name2);
+            nameMap.put(4,name3);
+            nameMap.put(5,name4);
+            nameMap.put(6,name5);
 
             pdfCreation(offer.getAppRef().getId(), offer,nameMap);
             list= new ArrayList<>();
             list.add(save);
             list.add(save1);
             list.add(save2);
+            list.add(save3);
+            list.add(save4);
+            list.add(save5);
 
 
             list1=new ArrayList<>();
@@ -161,6 +198,41 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
         }
         else  {
+
+            if(fileData.size()!=6){
+                String name3 = UUID.randomUUID() + AppraisalConstants.pdf;
+                EFileStatus eFileStatus3 = new EFileStatus();
+                eFileStatus3.setOffers(offer);
+                eFileStatus3.setAppraisalRef(offer.getAppRef());
+                eFileStatus3.setFileName(name3);
+                eFileStatus3.setModule(AppraisalConstants.APPRAISAL_REPORT);
+                eFileStatus3.setStatus(AppraisalConstants.PENDING);
+                save3 = fileRepo.save(eFileStatus3);
+                fileData.add(save3);
+
+                String name4 = UUID.randomUUID() + AppraisalConstants.pdf;
+                EFileStatus eFileStatus4 = new EFileStatus();
+                eFileStatus4.setOffers(offer);
+                eFileStatus4.setAppraisalRef(offer.getAppRef());
+                eFileStatus4.setFileName(name4);
+                eFileStatus4.setModule(AppraisalConstants.LICENSE_REPORT);
+                eFileStatus4.setStatus(AppraisalConstants.PENDING);
+                save4 = fileRepo.save(eFileStatus4);
+                fileData.add(save4);
+
+                String name5 = UUID.randomUUID() + AppraisalConstants.pdf;
+                EFileStatus eFileStatus5 = new EFileStatus();
+                eFileStatus5.setOffers(offer);
+                eFileStatus5.setAppraisalRef(offer.getAppRef());
+                eFileStatus5.setFileName(name5);
+                eFileStatus5.setModule(AppraisalConstants.TAX_FORM);
+                eFileStatus5.setStatus(AppraisalConstants.PENDING);
+                save5 = fileRepo.save(eFileStatus5);
+                fileData.add(save5);
+                
+            }
+
+
             Map<Integer,String> nameMap= new TreeMap<>();
             for (EFileStatus fileStatus:fileData) {
                 if(fileStatus.getModule().equals(AppraisalConstants.ODOMETER)){
@@ -172,6 +244,15 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
                 if(fileStatus.getModule().equals(AppraisalConstants.VEHICLE_REPORT)){
                     nameMap.put(3,fileStatus.getFileName());
                 }
+                if(fileStatus.getModule().equals(AppraisalConstants.APPRAISAL_REPORT)){
+                    nameMap.put(4,fileStatus.getFileName());
+                }
+                if(fileStatus.getModule().equals(AppraisalConstants.LICENSE_REPORT)){
+                    nameMap.put(5,fileStatus.getFileName());
+                }
+                if(fileStatus.getModule().equals(AppraisalConstants.TAX_FORM)){
+                    nameMap.put(6,fileStatus.getFileName());
+              }
             }
 
             list1 = new ArrayList<>();
@@ -216,6 +297,36 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
                             pdfList.setStatus(e.getStatus());
                             break;
                         }
+                        case AppraisalConstants.APPRAISAL_REPORT:{
+                            Map.Entry<Integer, String> firstEntry = nameMap.entrySet().stream().skip(3).findFirst().get();
+                            firstEntryMap.put(firstEntry.getKey(), firstEntry.getValue());
+                            pdfCreation(offer.getAppRef().getId(), offer,firstEntryMap);
+                            pdfList.setId(e.getId());
+                            pdfList.setModule(e.getModule());
+                            pdfList.setFileName(e.getFileName());
+                            pdfList.setStatus(e.getStatus());
+                            break;
+                        }
+                        case AppraisalConstants.LICENSE_REPORT:{
+                            Map.Entry<Integer, String> firstEntry = nameMap.entrySet().stream().skip(4).findFirst().get();
+                            firstEntryMap.put(firstEntry.getKey(), firstEntry.getValue());
+                            pdfCreation(offer.getAppRef().getId(), offer,firstEntryMap);
+                            pdfList.setId(e.getId());
+                            pdfList.setModule(e.getModule());
+                            pdfList.setFileName(e.getFileName());
+                            pdfList.setStatus(e.getStatus());
+                            break;
+                        }
+                        case AppraisalConstants.TAX_FORM:{
+                            Map.Entry<Integer, String> firstEntry = nameMap.entrySet().stream().skip(5).findFirst().get();
+                            firstEntryMap.put(firstEntry.getKey(), firstEntry.getValue());
+                            pdfCreation(offer.getAppRef().getId(), offer,firstEntryMap);
+                            pdfList.setId(e.getId());
+                            pdfList.setModule(e.getModule());
+                            pdfList.setFileName(e.getFileName());
+                            pdfList.setStatus(e.getStatus());
+                            break;
+                        }
                     }
                     list1.add(pdfList);
 
@@ -244,7 +355,9 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
         String pdf2 = whlSlByOdrPdf(pdfDataDto,names.get(2));
         String pdf3 = vehReportPdf(setDataToPdf1(appRef),names.get(3));
-
+        String pdf4 = apprReportPdf(names.get(4));
+        String pdf5 = licenseReportPdf(offer,names.get(5));
+        String pdf6 = taxCertificate(offer,names.get(6));
 
 
 
@@ -269,6 +382,29 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
                 vehReport.setStatus(AppraisalConstants.SUCCESS);
             }
             fileRepo.save(vehReport);
+        }
+        if (null!=pdf4){
+            EFileStatus apprReport = fileRepo.getFileRecrd(offer.getId(),"Appr Report");
+            if (null!=apprReport){
+                apprReport.setStatus(AppraisalConstants.SUCCESS);
+            }
+            fileRepo.save(apprReport);
+        }
+        if (null!=pdf5){
+            EFileStatus licenseReport = fileRepo.getFileRecrd(offer.getId(),"License Report");
+            if (null!=licenseReport){
+                licenseReport.setFileName(pdf5);
+                licenseReport.setStatus(AppraisalConstants.SUCCESS);
+            }
+            fileRepo.save(licenseReport);
+        }
+        if (null!=pdf6){
+            EFileStatus taxForm = fileRepo.getFileRecrd(offer.getId(),"Tax Form");
+            if (null!=taxForm){
+                taxForm.setFileName(pdf6);
+                taxForm.setStatus(AppraisalConstants.SUCCESS);
+            }
+            fileRepo.save(taxForm);
         }
         return AppraisalConstants.PDF_CREATED_SUCCESSFULLY;
 
@@ -336,7 +472,57 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         }
         return null;
     }
-    
+
+    @Override
+    public String apprReportPdf(String name) throws IOException, JRException ,JDOMException{
+
+        ApprFormDto apprFormDto=new ApprFormDto();
+        if(null!=name) {
+            List<ApprFormDto> dataList=new ArrayList();
+            dataList.add(apprFormDto);
+            try {
+                JRBeanCollectionDataSource beanDatasource = new JRBeanCollectionDataSource(dataList);
+                Resource resource = resourceLoader.getResource("classpath:AppraisalFormJR.jrxml");
+                JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath + name);
+            } catch (JRException exception) {
+                log.error(exception.getMessage());
+                return null;
+            }
+            return name;
+        }
+        return  null;
+    }
+
+    @Override
+    public String licenseReportPdf(EOffers offers,String name) throws IOException, JRException, JDOMException {
+        if(null!=name) {
+            try{
+                name=offers.getSellerUserId().getDealer().getDealerLicense();
+            }catch (Exception exception) {
+                log.error(exception.getMessage());
+                return null;
+            }
+            return name;
+        }
+        return null;
+    }
+
+    @Override
+    public String taxCertificate(EOffers offers, String name) throws IOException, JRException, JDOMException {
+        if(null!=name) {
+            try{
+                name=offers.getSellerUserId().getDealer().getTaxCertificate();
+            }catch (Exception exception) {
+                log.error(exception.getMessage());
+                return null;
+            }
+            return name;
+        }
+        return null;
+    }
+
     @Override
     public PdfData setDataOfPdf(Long apprRefId) {
 

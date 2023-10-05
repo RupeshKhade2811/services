@@ -68,4 +68,7 @@ public interface UserRegistrationRepo extends JpaRepository<EUserRegistration,Lo
 
     @Query(value = "select u from EUserRegistration u WHERE u.id =:userId AND u.valid=true")
     EUserRegistration findByUserName(UUID userId);
+
+    @Query(value=" SELECT u FROM EUserRegistration u WHERE u.valid=true AND u.email=:email")
+    EUserRegistration findUserByEmailId(String email);
 }

@@ -1,8 +1,8 @@
 package com.massil.ExceptionHandle;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.UUID;
 
 /**
  * This class is used as return type for every API
@@ -20,6 +20,7 @@ public class Response {
     private String fileName;
     private Long apprId;
     private Long totalVehicles;
+    private UUID userId;
 
 
     public Response(int value, String roleCreated, boolean status) {

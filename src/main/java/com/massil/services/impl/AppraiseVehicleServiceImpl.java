@@ -68,6 +68,15 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     @Value("${saved_pdf_Path}")
     private String pdfpath;
 
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
+
     @Autowired
     public MarketCheckApiServiceImpl marketCheckService;
     @Autowired

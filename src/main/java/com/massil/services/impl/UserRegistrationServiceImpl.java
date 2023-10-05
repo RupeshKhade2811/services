@@ -576,5 +576,104 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     }
 
+    @Override
+    public Response otpGenerator(String email) throws AppraisalException {
+        Response response = new Response();
+        EUserRegistration userByEmail = userRegistrationRepo.findUserByEmailId(email);
+        StringBuilder otp = new StringBuilder();
+        if (null != userByEmail) {
+            Random random = new Random();
+            for (int i = 0; i < 6; i++) {
+                otp.append(OTP_CHARS.charAt(random.nextInt(OTP_CHARS.length())));
+            }
+            ECreateOtp createOtp = new ECreateOtp();
+            createOtp.setUser(userByEmail);
+            createOtp.setEmail(email);
+            createOtp.setOtp(otp.toString());
+            createOtp.setValid(Boolean.TRUE);
+            createOtp.setCreatedOn(new Date());
+            createOtpRepo.save(createOtp);
+            response.setCode(HttpStatus.OK.value());
+            response.setStatus(true);
+            response.setMessage("OTP generated successfully");
+            response.setFileName(otp.toString());
+            response.setUserId(userByEmail.getId());
+        } else throw new AppraisalException("Enter the valid email");
+        return response;
+    }
+
+    @Override
+    public Response sendMailForOtp(String email) throws AppraisalException, MessagingException {
+
+
+        Response response = new Response();
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        Response response1 = otpGenerator(email);
+
+        String mailText = "Hi sir/ma'am,\n \tYour OTP for Reset Password is: \n\t" +
+                "[" + response1.getFileName() + "]" + "\n\nThank You";
+        message.setFrom(fromMail);
+        message.setTo(email);
+        message.setSubject("Password Reset *****OTP*****");
+        message.setText(mailText);
+        sender.send(message);
+
+        response.setCode((HttpStatus.OK.value()));
+        response.setMessage("mail send to : " + email);
+        response.setStatus(Boolean.TRUE);
+        response.setUserId(response1.getUserId());
+        System.out.println(response1.getUserId());
+        log.info("mail send to : {}", email);
+
+        return response;
+    }
+
+    @Override
+    public Response sendMailForPassowrdSuccess(DealerRegistration dealer,UUID d2UserId,String email) throws AppraisalException, IOException {
+        Response response1 = dealerRegistrationService.updateDealer(dealer, d2UserId);
+        if (response1.getCode()==200) {
+            Response response = new Response();
+            SimpleMailMessage helper = new SimpleMailMessage();
+            String mailText = "Hi sir/ma'am,\n \tYour Password  has been updated successfully\n\nThank You";
+            helper.setFrom(fromMail);
+
+            helper.setTo(email);
+            helper.setText(mailText);
+            helper.setSubject("Password Updated..!");
+            sender.send(helper);
+            response.setCode((HttpStatus.OK.value()));
+            response.setMessage("mail send to : " + email);
+            response.setStatus(Boolean.TRUE);
+            response.setFileName(response1.getMessage());
+            log.info("mail send to : {}", email);
+            return response;
+        }else throw new AppraisalException("Password Updation failed");
+    }
+
+    @Override
+    public Response validateOtp(String email, String otp) throws ParseException, AppraisalException {
+        Response response = new Response();
+        ECreateOtp createOtp = createOtpRepo.gettingLatestOtp(email);
+        if (null != createOtp) {
+            System.out.println(createOtp.getCreatedOn());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+            Date parsedGivenTime = dateFormat.parse(createOtp.getCreatedOn().toString());
+            Date currentTime = new Date();
+            long differenceInMillis = currentTime.getTime() - parsedGivenTime.getTime();
+            long differenceInMinutes = differenceInMillis / (60 * 1000);
+            System.out.println(differenceInMinutes);
+            if (otp.equals(createOtp.getOtp())) {
+                if (differenceInMinutes <= 15) {
+                    response.setStatus(Boolean.TRUE);
+                    response.setMessage("Success");
+                    response.setCode(HttpStatus.OK.value());
+                    System.out.println(differenceInMinutes);
+
+                } else throw new AppraisalException("The OTP has expired");
+            } else throw new AppraisalException("Enter the Valid OTP...!");
+        } else throw new AppraisalException("Enter the valid Email id");
+        return response;
+    }
 }
 

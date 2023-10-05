@@ -186,6 +186,9 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         log.info("updating dealer in identity server");
         userRegService.updateUserInIS(updateUserIS, d2UserId);
 
+        eUserReg.setPassword(userById.getPassword());
+        userRegRepo.save(eUserReg);
+
         } else throw new AppraisalException("Invalid Dealer Id");
 
         Response response = new Response();

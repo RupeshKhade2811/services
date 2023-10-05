@@ -218,4 +218,27 @@ public class UserRegControllerController {
         return new ResponseEntity<>(response.getImageBytes(), HttpStatus.OK);
     }
 
+    @PostMapping("/otpMail")
+    public ResponseEntity<Response> generateOtp(@RequestHeader ("email") String email) throws AppraisalException, MessagingException {
+        Response response = userRegistrationService.sendMailForOtp(email);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+    @PostMapping("/passwordUpdated")
+    public ResponseEntity<Response> passwordUpdationMail(
+            @RequestBody DealerRegistration dealer,
+            @RequestHeader ("d2UserId") UUID d2UserId,
+            @RequestHeader ("email") String email
+    ) throws AppraisalException, IOException {
+        Response response = userRegistrationService.sendMailForPassowrdSuccess(dealer,d2UserId,email);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/otpValidation")
+    public ResponseEntity<Response> otpValidation(@RequestHeader ("email") String email,@RequestHeader ("otp") String otp) throws ParseException, AppraisalException {
+        Response response = userRegistrationService.validateOtp(email, otp);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+
 }

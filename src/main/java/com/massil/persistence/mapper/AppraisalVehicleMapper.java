@@ -461,6 +461,18 @@ public interface AppraisalVehicleMapper {
 
     }
 
+    default String customUpdateForPassword(String newValue, String oldValue) {
+
+        if(Boolean.FALSE.equals(compareValuesForPassword(oldValue,newValue))) {
+            log.info("value is change from {} to {}",oldValue,newValue);
+            return newValue;
+        }
+
+        else return oldValue;
+
+
+    }
+
     /**
      * If oldValue and newValue are not same then returns newValue else returns oldValue
      * @param newValue This is new field
@@ -522,6 +534,21 @@ public interface AppraisalVehicleMapper {
         else if(null!=oldValue&& null!=newValue) {
 
             return oldValue.equals(newValue);
+        }
+
+        return false;
+    }
+
+    default Boolean compareValuesForPassword(String oldValue, String newValue){
+        if(null==oldValue && null==newValue){
+            return true;
+        }
+        else if(null!=oldValue&& null!=newValue) {
+
+            return oldValue.equals(newValue);
+        }
+        else if (null==newValue && null!=oldValue){
+            return true;
         }
 
         return false;
@@ -629,6 +656,7 @@ public interface AppraisalVehicleMapper {
     @Mapping(target="streetAddress", expression = "java(customUpdate(userRegistration.getStreetAddress(),user.getStreetAddress()))")
     @Mapping(target = "userName",ignore = true)
     @Mapping(target="zipCode", expression = "java(customUpdate(userRegistration.getZipCode(),user.getZipCode()))")
+    @Mapping(target="profilePicture", expression = "java(customUpdate(userRegistration.getProfilePicture(),user.getProfilePicture()))")
     @Mapping(target = "id" ,ignore = true)
     EUserRegistration updateEUserRegisteration(UserRegistration userRegistration,@MappingTarget EUserRegistration user);
 

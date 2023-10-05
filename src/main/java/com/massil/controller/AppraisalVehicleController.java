@@ -48,6 +48,17 @@ public class AppraisalVehicleController {
     private Long fileSize;
     @Value("${saved_pdf_Path}")
     private String pdfpath;
+
+    @Value("${image_folder_path}")
+    private String imageFolderPath;
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
     @Autowired
     private FilterSpecificationService filterSpec;
 
@@ -468,6 +479,16 @@ public class AppraisalVehicleController {
         log.info("THIS METHOD SHOWS ACCESS TOKEN FROM MARKET CHECK");
         TokenSrvc tokenSrvc = tokenService.getAcessTkn();
         return new ResponseEntity<>(tokenSrvc, HttpStatus.OK);
+    }
+    @PostMapping("/transferringFile")
+    public String transferringFileToAmazonS3(@RequestHeader("filePath") String filePath) throws AppraisalException, IOException {
+
+        if ((null != filePath)) {
+            String strings = service.transferFile(filePath);
+            return strings;
+
+        } else throw new AppraisalException("File Not Found");
+
     }
 
 }
