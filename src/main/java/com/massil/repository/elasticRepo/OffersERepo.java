@@ -1,11 +1,15 @@
 package com.massil.repository.elasticRepo;
 
+import com.google.gson.JsonObject;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.CardsPage;
 import com.massil.persistence.model.EOffers;
 import com.massil.util.CompareUtils;
+import org.hibernate.search.backend.elasticsearch.ElasticsearchExtension;
+import org.hibernate.search.engine.search.aggregation.AggregationKey;
 import org.hibernate.search.engine.search.aggregation.SearchAggregation;
 import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.mapper.orm.scope.SearchScope;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +28,7 @@ public class OffersERepo {
 
     @Autowired
     private CompareUtils compareUtils;
-    @Autowired
-    SearchAggregation termsAggregation;
+
 
     public CardsPage procurementCards(UUID id, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo procurementCards");
@@ -78,7 +81,6 @@ public class OffersERepo {
         cardsPage.setEOffersList(liquidVehicles);
         cardsPage.setTotalRecords(totalRecords);
         cardsPage.setTotalPages(compareUtils.calTotalPages(totalRecords, Long.valueOf(pageSize)));
-
         return cardsPage;
     }
 
