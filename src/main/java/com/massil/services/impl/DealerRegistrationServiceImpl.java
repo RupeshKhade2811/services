@@ -68,7 +68,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
     @Autowired
     private CompanyRepo companyRepo;
     @Autowired
-    private UserRegistrationService userRegService;
+    private UserRegistrationServiceImpl userRegService;
     @Autowired
     private AllDealersViewRepo allDealersViewRepo;
 

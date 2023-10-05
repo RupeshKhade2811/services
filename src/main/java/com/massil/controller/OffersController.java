@@ -7,6 +7,7 @@ import com.massil.dto.CardsPage;
 import com.massil.dto.ListedOffer;
 import com.massil.dto.OfferInfo;
 import com.massil.dto.Offers;
+import com.massil.repository.elasticRepo.OffersERepo;
 import com.massil.services.AutoBidService;
 import com.massil.services.EmailService;
 import com.massil.services.OffersService;
@@ -38,6 +39,8 @@ public class OffersController {
     @Autowired
     private AutoBidService autoBidService;
 
+    @Autowired
+    private OffersERepo offersERepo;
     /**
      * This method sends list of offers procurement cards and pagination information  to ui
      * @param id  This   user id or dealer id coming in header from ui
@@ -276,7 +279,9 @@ public class OffersController {
 
     @PostMapping("/runTheJob")
     public void runTheJob() throws OfferException {
-        autoBidService.sellerAutoBid();
+        offersERepo.liquidationCards(UUID.fromString("76bab2b1-66cc-4556-8941-b3fffe9ed269"),0,4);
+        //autoBidService.sellerAutoBid();
+
     }
 
 
