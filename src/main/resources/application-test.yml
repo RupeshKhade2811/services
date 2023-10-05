@@ -7,8 +7,8 @@ market_check_url: http://api.marketcheck.com/v2/decode/car/neovin/
 market_check_url_suffix: /specs?
 api_key: api_key=hTUx9slxqOdFy4WQG7CRTuAIvC38A5mJ
 host : marketcheck-prod.apigee.net
-image_folder_path: C:/myimage/
-video_folder_path: C:/myVideo/
+image_folder_path: D:/images/
+video_folder_path: D:/images/
 profile_pic_path: C:/profilepics/
 #image_folder_path: /home/factory/images/
 #video_folder_path: /home/factory/videos/
@@ -16,7 +16,7 @@ properties_path : /home/factory/properties/
 #profile_pic_path: /home/factory/profilepics/
 file_size: 500000000
 #saved_pdf_Path: /home/factory/pdf/
-saved_pdf_Path: C:/pdfFiles/
+saved_pdf_Path: D:/pdf/
 get-link: https://services-test.keyassure.live/appraisal/getpic1?pic1=
 appraisal_form_path: src\\main\\resources\\AppraisalFormJR.jrxml
 whlsale_tmp_path: src\\main\\resources\\whlSaleBuyerOdr.jrxml
@@ -74,14 +74,16 @@ spring:
 
   mail:
     host: mail.factorykeyassure.com
-    password: xE8_e]=.*/YS
+    password: TIbMFm(#2Wn.
     port: 465
     properties:
       mail:
         smtp:
           auth: true
-          starttls:
+          ssl:
             enable: true
+        transport: 
+          protocol: smtp
     protocol: smtp
     test-connection: false
     username: system@factorykeyassure.com
