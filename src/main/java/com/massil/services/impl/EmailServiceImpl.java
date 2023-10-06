@@ -16,6 +16,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
+
 import jakarta.mail.internet.MimeMessage;
 import net.sf.jasperreports.engine.JRException;
 import org.jdom2.JDOMException;
@@ -29,7 +30,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -72,6 +72,8 @@ public class EmailServiceImpl implements EmailService {
     private String pdfpath;
     @Value("${image_folder_path}")
     private String imageFolderPath;
+    @Value("${spring.mail.username}")
+    private String senderEmail;
 
     public EmailServiceImpl() {
     }
@@ -131,6 +133,7 @@ public class EmailServiceImpl implements EmailService {
                 String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
 
                 helper.setTo(userById.getEmail());
+                helper.setFrom(senderEmail);
                 helper.setText(html, true);
                 helper.setSubject(AppraisalConstants.SUBJECT);
                 sender.send(message);
@@ -194,6 +197,7 @@ public class EmailServiceImpl implements EmailService {
                 String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
 
                 helper.setTo(email);
+                helper.setFrom(senderEmail);
                 helper.setText(html, true);
                 helper.setSubject(AppraisalConstants.SUBJECT);
 
@@ -212,6 +216,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendMailWithAttachment(Long offerId) throws MessagingException, IOException, AppraisalException, JRException, JDOMException, GlobalException {
         MimeMessage message = sender.createMimeMessage();
+       // SimpleMailMessage helper = new SimpleMailMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
 
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
@@ -228,6 +233,7 @@ public class EmailServiceImpl implements EmailService {
 
             String email = userById.getEmail();
             helper.setTo(email);
+            helper.setFrom(senderEmail);
             helper.setSubject("PDF attachments of Factory key Assure");
             helper.setText("the purchased vehicle details");
 
@@ -289,6 +295,7 @@ public class EmailServiceImpl implements EmailService {
 
 
         helper.setTo(emailList.toArray(new String[0]));
+        helper.setFrom(senderEmail);
         helper.setText(html, true);
         helper.setSubject(AppraisalConstants.DEALERCREATON);
         sender.send(message);
