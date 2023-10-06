@@ -169,35 +169,35 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vehicleYear}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vehicleYear} != null ? $F{vehicleYear} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="186" y="33" width="82" height="30" uuid="a3f01c55-9ea4-4b63-8fda-0afe9bd4db52"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vehicleMake}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vehicleMake} != null ? $F{vehicleMake} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="322" y="33" width="100" height="30" uuid="d0e0b6be-742d-4ebd-9586-8866b32799cf"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vehicleModel}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vehicleModel} != null ? $F{vehicleModel} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="459" y="33" width="100" height="30" uuid="163f48a7-d5c7-4dab-a2a0-cfe8379d347c"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{odometer}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{odometer} != null ? $F{odometer} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="22" y="63" width="116" height="30" uuid="b5141acb-0cb6-4e9a-bd95-502d21b4eb0b"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vinNumber} != null ? $F{vinNumber} : ""]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
 				<reportElement x="172" y="2" width="80" height="13" uuid="0284c49e-6540-4187-905c-4e2d9a539981"/>
@@ -218,7 +218,7 @@
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{checkVin}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{checkVin} != null ? $F{checkVin} : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Opaque" x="-11" y="98" width="118" height="14" backcolor="#8B62DE" uuid="d0d9f18e-b02a-4893-8497-25cac84b8726"/>
@@ -312,56 +312,56 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{batteryVoltage}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{batteryVoltage} != null ? $F{batteryVoltage} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="427" y="118" width="68" height="15" uuid="40d04139-f419-478d-becc-dc3ed8d73f44"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fuelPressure}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fuelPressure} != null ? $F{fuelPressure} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="466" y="153" width="68" height="15" uuid="29fc0486-a7dd-44ba-b414-3f0b2cb2ca4d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{timeSince}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{timeSince} != null ? $F{timeSince} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="69" y="118" width="64" height="16" uuid="09a7b735-ea28-4d14-8654-5623c5dbe6f0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{engineTemp}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{engineTemp} != null ? $F{engineTemp} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="200" y="148" width="64" height="14" uuid="81ece020-2464-4886-902b-4861cdce707f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{warmUps}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{warmUps} != null ? $F{warmUps} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="175" y="169" width="64" height="13" uuid="f2b5acf4-80c7-4b44-af73-c2080f09af86"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{mileSince}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{mileSince} != null ? $F{mileSince} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="150" y="205" width="83" height="15" uuid="9217d6d7-817c-43fe-b86a-114e788b3708"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{currentTroubleCodes}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{currentTroubleCodes} != null ? $F{currentTroubleCodes} : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="442" y="205" width="64" height="16" uuid="074f4030-b6ce-4d82-a73a-6b704a7e5dcf"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pendingTroubleCodes}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pendingTroubleCodes} != null ? $F{pendingTroubleCodes} : ""]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="132">
@@ -457,7 +457,7 @@
 				<textElement textAlignment="Left">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{dataSummary}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dataSummary} != null ? $F{dataSummary} : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Opaque" x="-6" y="4" width="78" height="20" backcolor="#8B62DE" uuid="383dfc8c-08d4-4bbb-9472-62fbf0a681b7"/>
@@ -473,7 +473,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{trCodesSummary}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{trCodesSummary} != null ? $F{trCodesSummary} : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" mode="Opaque" x="-1" y="9" width="120" height="19" backcolor="#8B62DE" uuid="9663aecc-9ada-4ff4-9af2-9e160c9544b2"/>

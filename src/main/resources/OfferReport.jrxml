@@ -12,7 +12,7 @@
 	<field name="miles" class="java.lang.String"/>
 	<field name="searchby" class="java.lang.String"/>
 	<background>
-		<band height="1" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="85" splitType="Stretch">
@@ -62,21 +62,21 @@
 				<text><![CDATA[selling member name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="120" y="7" width="92" height="13" backcolor="#4E8F9C" uuid="88cdf097-0ae9-46ce-b55a-cd0b71236ae7"/>
+				<reportElement mode="Opaque" x="120" y="7" width="141" height="13" backcolor="#4E8F9C" uuid="88cdf097-0ae9-46ce-b55a-cd0b71236ae7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[selling member ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="212" y="7" width="68" height="13" backcolor="#4E8F9C" uuid="9eaa377b-c3de-48c8-b954-06bd421d1c3e"/>
+				<reportElement mode="Opaque" x="261" y="7" width="69" height="13" backcolor="#4E8F9C" uuid="9eaa377b-c3de-48c8-b954-06bd421d1c3e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Miles]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="280" y="7" width="130" height="13" backcolor="#4E8F9C" uuid="20de588b-606d-43d3-9e04-6684f95f710f"/>
+				<reportElement mode="Opaque" x="330" y="7" width="80" height="13" backcolor="#4E8F9C" uuid="20de588b-606d-43d3-9e04-6684f95f710f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
@@ -92,14 +92,14 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="17" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<textField>
-				<reportElement mode="Opaque" x="280" y="0" width="130" height="13" backcolor="#B1DEF0" uuid="9808dda4-9e4a-4a83-8ebe-d8dfa4c75a89"/>
+				<reportElement mode="Opaque" x="330" y="0" width="80" height="13" backcolor="#B1DEF0" uuid="9808dda4-9e4a-4a83-8ebe-d8dfa4c75a89"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{offerCount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="212" y="0" width="68" height="13" backcolor="#B1DEF0" uuid="5646f55a-6022-4907-b38b-34901b8e7f6e"/>
+				<reportElement mode="Opaque" x="261" y="0" width="69" height="13" backcolor="#B1DEF0" uuid="5646f55a-6022-4907-b38b-34901b8e7f6e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{miles}]]></textFieldExpression>
 			</textField>
@@ -109,8 +109,8 @@
 				<textFieldExpression><![CDATA[$F{vin}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="120" y="0" width="92" height="13" backcolor="#B1DEF0" uuid="560bcf29-2c5a-46e0-b1db-a731e4eae85d"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement mode="Opaque" x="120" y="0" width="141" height="13" backcolor="#B1DEF0" uuid="560bcf29-2c5a-46e0-b1db-a731e4eae85d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{sellerId}]]></textFieldExpression>
 			</textField>
 			<textField>

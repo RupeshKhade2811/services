@@ -191,18 +191,18 @@
 				<text><![CDATA[Vin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="400" y="7" width="90" height="13" backcolor="#4E8F9C" uuid="27a8cd96-60b6-4e80-928e-c6f0df2bb4f1"/>
+				<reportElement mode="Opaque" x="400" y="7" width="60" height="13" backcolor="#4E8F9C" uuid="27a8cd96-60b6-4e80-928e-c6f0df2bb4f1"/>
 				<textElement>
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[   Member type]]></text>
+				<text><![CDATA[Member type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="490" y="7" width="80" height="13" backcolor="#4E8F9C" uuid="1fe93b82-b6b9-4a26-a32f-35b68bfb63fa"/>
+				<reportElement mode="Opaque" x="460" y="7" width="110" height="13" backcolor="#4E8F9C" uuid="1fe93b82-b6b9-4a26-a32f-35b68bfb63fa"/>
 				<textElement>
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[    Member ID]]></text>
+				<text><![CDATA[        Member ID]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -252,15 +252,15 @@
 				<textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="400" y="0" width="90" height="12" backcolor="#B1DEF0" uuid="e533d2d5-5049-4c0d-9106-5e7bcbd98fcb"/>
+				<reportElement mode="Opaque" x="400" y="0" width="60" height="12" backcolor="#B1DEF0" uuid="e533d2d5-5049-4c0d-9106-5e7bcbd98fcb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{membertype}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="490" y="0" width="80" height="12" backcolor="#B1DEF0" uuid="ade98c76-b459-4603-8c31-da148bf94f08"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="460" y="0" width="110" height="12" backcolor="#B1DEF0" uuid="ade98c76-b459-4603-8c31-da148bf94f08"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{memberId}]]></textFieldExpression>
