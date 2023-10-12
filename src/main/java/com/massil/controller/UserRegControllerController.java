@@ -6,6 +6,7 @@ import com.massil.ExceptionHandle.Response;
 import com.massil.dto.*;
 import com.massil.services.FilterSpecificationService;
 import com.massil.services.UserRegistrationService;
+import freemarker.template.TemplateException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
@@ -222,7 +223,7 @@ public class UserRegControllerController {
     }
 
     @PostMapping("/otpMail")
-    public ResponseEntity<Response> generateOtp(@RequestHeader ("email") String email) throws AppraisalException, MessagingException {
+    public ResponseEntity<Response> generateOtp(@RequestHeader ("email") String email) throws AppraisalException, MessagingException, TemplateException, IOException {
         Response response = userRegistrationService.sendMailForOtp(email);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
@@ -231,7 +232,7 @@ public class UserRegControllerController {
             @RequestBody DealerRegistration dealer,
             @RequestHeader ("d2UserId") UUID d2UserId,
             @RequestHeader ("email") String email
-    ) throws AppraisalException, IOException {
+    ) throws AppraisalException, IOException, TemplateException {
         Response response = userRegistrationService.sendMailForPassowrdSuccess(dealer,d2UserId,email);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }

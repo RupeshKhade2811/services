@@ -18,6 +18,10 @@ import com.massil.persistence.model.*;
 import com.massil.repository.*;
 import com.massil.services.DealerRegistrationService;
 import com.massil.services.UserRegistrationService;
+import com.massil.util.CompareUtils;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 
 import org.apache.commons.io.FilenameUtils;
@@ -30,11 +34,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +65,28 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     UserRegistrationRepo userRegistrationRepo;
     @Value("${profile_pic_path}")
     private String profilePicPath;
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value("${saved_pdf_Path}")
+    private String pdfpath;
+    @Value("${image_folder_path}")
+    private String imageFolderPath;
+
+    @Autowired
+    private DealerRegistrationRepo dlrRegRepo;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
+
+    @Autowired
+    private CompareUtils utils;
+
+    @Autowired
+    private Configuration config;
     @Autowired
     DealerRegistrationRepo dealerRegistrationRepo;
     @Autowired
@@ -410,7 +437,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public Response deleteUser(UUID userId) throws GlobalException {
         Response response=new Response();
         EUserRegistration userById = userRegistrationRepo.findUserById(userId);
-        if (null!=userById){
+        if (null != userById) {
+            if(null!=userById.getDealer()){
+                EDealerRegistration dealerById = dealerRegistrationRepo.findDealerById(userById.getDealer().getId());
+                dealerById.setValid(Boolean.FALSE);
+                dealerRegistrationRepo.save(dealerById);
+            }
             userById.setValid(Boolean.FALSE);
             ERoleMapping byUserId = roleMappingRepo.findByUserId(userById.getId());
             byUserId.setValid(Boolean.FALSE);
@@ -569,27 +601,33 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (null != extension && (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("jpg"))) {
             String filename = UUID.randomUUID() + "." + extension;
-            Path filePath = Paths.get(profilePicPath + filename);
-            Files.write(filePath, file.getBytes());
-            EUserRegistration userById = userRegistrationRepo.findUserById(userId);
-            if(null!=userById){
-                userById.setProfilePicture(filename);
-                userRegistrationRepo.save(userById);
-                return filename;
+
+            //object to AmazonS3
+            // Create a new temporary file
+            File file1 = File.createTempFile(file.getOriginalFilename(), ".temp");
+            // Transfer the content from the multipart file to the new file
+            file.transferTo(file1);
+            utils.uploadFileInBucket(file1,profilePicPath,filename);
+            ERoleMapping roleMapping = roleMappingRepo.findByUserId(userId);
+            EDealerRegistration dealer = roleMapping.getUser().getDealer();
+            if(roleMapping.getRole().getRoleGroup().equalsIgnoreCase("D") && null!=dealer){
+                dealer.setDealerPic(filename);
+                dlrRegRepo.save(dealer);
             }
-            return "";
+
+            return filename;
         }
         throw new AppraisalException("only .jpeg, .png,.jpg file types are allowed");
 
     }
 
     @Override
-    public VideoAndImageResponse downloadImageFromFileSystem(String imageName) throws IOException, NoSuchFileException {
+    public VideoAndImageResponse downloadImageFromFileSystem(String imageName) throws IOException {
         VideoAndImageResponse responseDTO = new VideoAndImageResponse();
-        byte[] images=null;
-        String filePath = profilePicPath + imageName;
-        images = Files.readAllBytes(new File(filePath).toPath());//Reading from folder
-        responseDTO.setImageBytes(images);
+
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(profilePicPath, imageName);
+        responseDTO.setImageBytes(responseBytes);
         responseDTO.setCode(HttpStatus.OK.value());
         responseDTO.setStatus(true);
         responseDTO.setMessage("Image send successfully");
@@ -624,44 +662,47 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public Response sendMailForOtp(String email) throws AppraisalException, MessagingException {
-
-
+    public Response sendMailForOtp(String email) throws AppraisalException, MessagingException, IOException, TemplateException {
         Response response = new Response();
-
-        SimpleMailMessage message = new SimpleMailMessage();
         Response response1 = otpGenerator(email);
-
-        String mailText = "Hi sir/ma'am,\n \tYour OTP for Reset Password is: \n\t" +
-                "[" + response1.getFileName() + "]" + "\n\nThank You";
-        message.setFrom(fromMail);
-        message.setTo(email);
-        message.setSubject("Password Reset *****OTP*****");
-        message.setText(mailText);
-        sender.send(message);
-
-        response.setCode((HttpStatus.OK.value()));
-        response.setMessage("mail send to : " + email);
+        Template template = config.getTemplate("otp.ftl");
+        Map<String, Object> model = new HashMap<>();
+        model.put("otp", response1.getFileName());  // Assuming response1.getOtp() returns the OTP
+        String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+            messageHelper.setFrom(fromMail);
+            messageHelper.setTo(email);
+            messageHelper.setSubject("KeyAssure - Password Reset | OTP");
+            messageHelper.setText(html, true);
+        };
+        sender.send(preparator);
+        response.setCode(HttpStatus.OK.value());
+        response.setMessage("Mail sent to: " + email);
         response.setStatus(Boolean.TRUE);
         response.setUserId(response1.getUserId());
-        System.out.println(response1.getUserId());
-        log.info("mail send to : {}", email);
+        log.info("Mail sent to: {}", email);
 
         return response;
     }
 
     @Override
-    public Response sendMailForPassowrdSuccess(DealerRegistration dealer,UUID d2UserId,String email) throws AppraisalException, IOException {
+    public Response sendMailForPassowrdSuccess(DealerRegistration dealer,UUID d2UserId,String email) throws AppraisalException, IOException, TemplateException {
         Response response1 = dealerRegistrationService.updateDealer(dealer, d2UserId);
         if (response1.getCode()==200) {
             Response response = new Response();
-            SimpleMailMessage helper = new SimpleMailMessage();
-            String mailText = "Hi sir/ma'am,\n \tYour Password  has been updated successfully\n\nThank You";
-            helper.setFrom(fromMail);
-            helper.setTo(email);
-            helper.setText(mailText);
-            helper.setSubject("Password Updated..!");
-            sender.send(helper);
+            Map<String, Object> model = new HashMap<>();
+            Template template = config.getTemplate("passwordSuccess.ftl");
+            String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            MimeMessagePreparator preparator = mimeMessage -> {
+                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+                messageHelper.setFrom(fromMail);
+                messageHelper.setTo(email);
+                messageHelper.setSubject("KeyAssure - Password Update");
+                messageHelper.setText(html, true);
+            };
+            sender.send(preparator);
+
             response.setCode((HttpStatus.OK.value()));
             response.setMessage("mail send to : " + email);
             response.setStatus(Boolean.TRUE);
@@ -676,19 +717,19 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         Response response = new Response();
         ECreateOtp createOtp = createOtpRepo.gettingLatestOtp(email);
         if (null != createOtp) {
-            System.out.println(createOtp.getCreatedOn());
+            log.info(String.valueOf(createOtp.getCreatedOn()));
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
             Date parsedGivenTime = dateFormat.parse(createOtp.getCreatedOn().toString());
             Date currentTime = new Date();
             long differenceInMillis = currentTime.getTime() - parsedGivenTime.getTime();
             long differenceInMinutes = differenceInMillis / (60 * 1000);
-            System.out.println(differenceInMinutes);
+            log.info(String.valueOf(differenceInMinutes));
             if (otp.equals(createOtp.getOtp())) {
                 if (differenceInMinutes <= 15) {
                     response.setStatus(Boolean.TRUE);
                     response.setMessage("Success");
                     response.setCode(HttpStatus.OK.value());
-                    System.out.println(differenceInMinutes);
+                    log.info(String.valueOf(differenceInMinutes));
 
                 } else throw new AppraisalException("The OTP has expired");
             } else throw new AppraisalException("Enter the Valid OTP...!");

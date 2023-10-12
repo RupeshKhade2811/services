@@ -155,6 +155,11 @@ public class EUserRegistration extends TransactionEntity {
     @IndexedEmbedded(includeDepth = 1)
     private List<EOffers> buyersOffers;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    private List<ECreateOtp> otp;
+
 
 
 

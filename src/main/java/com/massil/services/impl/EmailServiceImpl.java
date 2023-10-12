@@ -1,7 +1,15 @@
 package com.massil.services.impl;
 
 
-
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
@@ -75,8 +83,15 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String senderEmail;
 
-    public EmailServiceImpl() {
-    }
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
+
 
 
     @Override
@@ -92,8 +107,12 @@ public class EmailServiceImpl implements EmailService {
             if(null!=userById.getEmail()) {
                 EAppraiseVehicle apprVehByUserId = appraiseVehicleRepo.getAppraisalDetails(userId);
                 EApprTestDrSts apprTestDrSts = apprVehByUserId.getTdStatus();
-
-                String name = comUtl.checkDbVariable(apprVehByUserId.getClientFirstName()) + " " + comUtl.checkDbVariable(apprVehByUserId.getClientLastName());
+                String name;
+                if (null!=apprVehByUserId.getClientFirstName()&&null!=apprVehByUserId.getClientLastName()) {
+                    name = comUtl.checkDbVariable(apprVehByUserId.getClientFirstName()) + " " + comUtl.checkDbVariable(apprVehByUserId.getClientLastName());
+                }else {
+                    name="-";
+                }
                 String vin = comUtl.checkDbVariable(apprVehByUserId.getVinNumber());
                 String vehYr = comUtl.checkDbVariable(apprVehByUserId.getVehicleYear().toString());
                 String vehSer = comUtl.checkDbVariable(apprVehByUserId.getVehicleSeries());
@@ -147,7 +166,7 @@ public class EmailServiceImpl implements EmailService {
         return response;
     }
     @Override
-    public Response offerUpdateEmail(Long offerId) throws AppraisalException, TemplateException, IOException, MessagingException {
+    public Response offerUpdateEmail(Long offerId) throws AppraisalException, MessagingException, TemplateException, IOException {
 
         Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
         Response response = new Response();
@@ -240,13 +259,12 @@ public class EmailServiceImpl implements EmailService {
             for(int i=0; i<fileDataAfterCreate.size();i++){
 
                 String pdf = comUtl.checkDbVariable(fileDataAfterCreate.get(i).getFileName());
-                String attachmentPath=pdfpath+pdf;
 
-                Path path = Paths.get(attachmentPath);
-                byte[] attachmentBytes = Files.readAllBytes(path);
-                ByteArrayResource attachment = new ByteArrayResource(attachmentBytes);
+                //object from amazons3
+                byte[] responseBytes = comUtl.fileDownloadfromBucket(pdfpath, pdf);
 
-                helper.addAttachment(path.getFileName().toString(), attachment);
+                ByteArrayResource attachment = new ByteArrayResource(responseBytes);
+                helper.addAttachment(pdf, attachment);
             }
             sender.send(message);
 
@@ -286,9 +304,10 @@ public class EmailServiceImpl implements EmailService {
             pdfList.add(dealerReg.getDealerLicense());
         }
         for (int i=0;i<pdfList.size();i++) {
-            Path path = Paths.get(pdfpath+pdfList.get(i));
-            ByteArrayResource attachment = new ByteArrayResource(Files.readAllBytes(path));
-            helper.addAttachment(pdfList.get(i), attachment);
+            //object from amazons3
+            byte[] responseBytes = comUtl.fileDownloadfromBucket(pdfpath, pdfList.get(i));
+            ByteArrayResource attachment = new ByteArrayResource(responseBytes);
+            helper.addAttachment(pdfList.get(i),attachment);
         }
 
         String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);

@@ -361,15 +361,29 @@ public interface OffersMapper {
     List<OfferReport> lOfferPdfToOfferReport(List<OfferPdf> offerList);
 
 
+    default Long daysSinceInv(Date invntryDate){
+        if(null!=invntryDate){
+            return (new Date().getTime() - invntryDate.getTime()) /(24*60*60*1000);
+        }
+      return 0L;
+
+    }
+    @Mapping(target = "daysSinceInventory", expression = "java(daysSinceInv(vehicle.getInvntryDate()))")
     PdfDataDto dlrInvViewToPdfDataDto(DlrInvntryView vehicle);
     List<PdfDataDto> lDlrInvViewToPdfDataDto(List<DlrInvntryView> appraisalList);
 
 
+    @Mapping(target = "saleDate",expression = "java(dateModification(vehicle.getSaleDate()))")
     PdfDataDto dlrSalesViewToPdfDataDto(DlrSalesView vehicle);
     List<PdfDataDto> lDlrSalesViewToPdfDataDto(List<DlrSalesView> offerList);
 
     DlrInvntryPdfFilter dlrInvViewToDlrFilterDto(DlrInvntryView vehicle);
     List<DlrInvntryPdfFilter> lDlrInvViewToDlrFilterDto(List<DlrInvntryView> appraisalList);
 
-    PdfDataDto preStartToPdfDataDto(OBD2_PreStartMeasurement preStart, @MappingTarget PdfDataDto pdfDataDto);
+    PdfDataDto preStartToPdfDataDto(OBD2_PreStartMeasurement preStart,@MappingTarget PdfDataDto pdfDataDto);
+
+    default String dateModification(Date date)  {
+        SimpleDateFormat dateFormat=new SimpleDateFormat("dd MMM yyyy");
+        return dateFormat.format(date);
+    }
 }

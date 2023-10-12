@@ -6,39 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KeyAssure - Reset Password | OTP</title>
   <!--[if mso]><style type="text/css">body, table, td, a { font-family: Arial, Helvetica, sans-serif !important; }</style><![endif]-->
-  <style>
-    .table1{
-    border-collapse: collapse;
-    width: 300px;
-    }
-    .key{
-        font-size: small;
-        color: black;
-        background-color: rgb(171, 223, 251);
-    }
-    .value{
-    
-        text-align:center;
-        font-size: small;
-        color: black;
-    }
-    .heding{
-        padding-left: 80px;
-        color: rgb(100, 91, 91);
-    }
-    .tbl2head{
-        font-size: x-small;
-        background-color: rgb(171, 223, 251);
-        color:black;
-        text-align: center;
-        padding: 10px;
-    }
-    td {
-      border-bottom: 1px solid #ddd;
-      padding: 10px;
-      
-    }
-    </style>
 </head>
 
 <body style="font-family: Helvetica, Arial, sans-serif; margin: 0px; padding: 0px; background-color: #ffffff;">
@@ -60,26 +27,10 @@
                   <div style="padding: 20px; background-color: rgb(255, 255, 255);">
                     <div style="color: rgb(0, 0, 0); text-align: left;">
 					  <p style="padding-bottom: 16px">Hey !</p>
-                      <p style="font-family:verdana",color="black,font-size="50px">Account Has been Up For Acceptance</p>
-                      <table class="table1" border="1">
-                        <tr>
-                        <td class="key"><b>Name</b></td>
-                        <td class="value">${Name}</td>
-                        </tr>
-                        <tr>
-                        <td class="key"><b>DealerShip Name</b></td>
-                        <td class="value">${dealerShpName}</td>
-                        </tr>
-                        <tr>
-                        <td class="key"><b>UserName</b> </td>
-                        <td class="value">${username}</td>
-                        </tr>
-                        <tr>
-                        <td class="key"><b>Street Address</b></td>
-                        <td class="value">${streetAdr}</td>
-                        </tr>
-                        <tr>
-                        </table>				  
+                      <p style="padding-bottom: 16px">Please use the below OTP to complete your Password Reset procedures. OTP is valid for 10 minutes</p>
+                      <p style="padding-bottom: 16px"><strong style="font-size: 130%">${otp}</strong></p>
+                      <p style="padding-bottom: 16px">If you didn’t request this, you can ignore this email.</p>
+					  <p style="padding-bottom: 16px;">Kindly do not share your OTP, as it is confidential.</p>
                       <p style="padding-bottom: 16px">Thanks,<br>Factory KeyAssure LLC.<sup>&copy;</sup></p>
 					  <p style="padding-bottom: 16px; font-size:13px; font-style:italic;">This is an auto generated email. Please do not reply to this email.</p>
                     </div>
@@ -96,4 +47,5 @@
     </tbody>
   </table>
 </body>
+
 </html>

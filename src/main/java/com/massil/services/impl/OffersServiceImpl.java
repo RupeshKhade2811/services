@@ -176,7 +176,7 @@ public class OffersServiceImpl implements OffersService {
 
         if(Boolean.TRUE.equals(checkvalue(offers.getBuyerQuote()))){
             EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(appraisalId);
-            if (Boolean.FALSE.equals(byApprId.getIsHold())) {
+            if (!byApprId.getIsHold()) {
                 EOffers offer = offersRepo.findOffer(appraisalId, buyerUserId);
 
                 if (null != offer) {
@@ -294,8 +294,8 @@ public class OffersServiceImpl implements OffersService {
         Response response = new Response();
 
         if (null != offerById) {
-             offersRepo.updateOfferSetPurchasedSellerAccept(offerId, offerById.getAppRef().getId());
-            offersRepo.updateOfferSetSold(offerId, offerById.getAppRef().getId());
+            int rowUpdated = offersRepo.updateOfferSetPurchasedSellerAccept(offerId, offerById.getAppRef().getId());
+            int rowsUpdated = offersRepo.updateOfferSetSold(offerId, offerById.getAppRef().getId());
             EShipment shipment=new EShipment();
             shipment.setSellerAgreed(true);
             insertShipmentDtls(offerById,shipment);
@@ -320,8 +320,8 @@ public class OffersServiceImpl implements OffersService {
 
             if (null != offers) {
 
-                offersRepo.updateOfferSetPurchasedBuyerAccept(offerId, offers.getAppRef().getId());
-                offersRepo.updateOfferSetSold(offerId, offers.getAppRef().getId());
+                int rowUpdated = offersRepo.updateOfferSetPurchasedBuyerAccept(offerId, offers.getAppRef().getId());
+                int rowsUpdated = offersRepo.updateOfferSetSold(offerId, offers.getAppRef().getId());
                 EShipment shipment=new EShipment();
                 shipment.setBuyerAgreed(true);
                 insertShipmentDtls(offers,shipment);
@@ -343,6 +343,7 @@ public class OffersServiceImpl implements OffersService {
 
             if (null != offerById) {
                 offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.SELLERREJECTED));
+                EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(offerById.getAppRef().getId());
                 offersRepo.save(offerById);
             } else throw new OfferException("Invalid offer id Send..");
 
@@ -360,6 +361,8 @@ public class OffersServiceImpl implements OffersService {
 
             if (null != offerById) {
                 offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.BUYERREJECTED));
+                EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(offerById.getAppRef().getId());
+
                 offersRepo.save(offerById);
             } else throw new OfferException("Invalid offer id Send..");
 
@@ -449,6 +452,7 @@ public class OffersServiceImpl implements OffersService {
     @Override
     public Response myScheduledTask() throws IOException, TemplateException, MessagingException {
         log.info("myScheduledTask() method started..");
+        log.info("myScheduledTask() method started..");
         Logger log = LoggerFactory.getLogger(OffersServiceImpl.class);
         Response response = new Response();
 
@@ -531,7 +535,7 @@ public class OffersServiceImpl implements OffersService {
                 }
         }
         log.info("myScheduledTask() method end..");
-        System.out.println("myScheduledTask() method end..");
+        log.info("myScheduledTask() method end..");
 
         return response;
 
@@ -543,7 +547,7 @@ public class OffersServiceImpl implements OffersService {
         List<OfferList> offerLists=null;
        List<EOffers> offerList = offersRepo.getOfferList(appraisalId,true);
 
-           if (null != offerList && !offerList.isEmpty()) {
+           if (null != offerList && 0 != offerList.size()) {
                offerLists = new ArrayList<>();
                for (EOffers offers : offerList) {
                    OfferList obj = new OfferList();

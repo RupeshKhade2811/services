@@ -5,6 +5,7 @@ import com.massil.dto.*;
 import com.massil.persistence.model.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -129,14 +130,21 @@ public class AppraisalSpecification {
     public static Specification<DlrInvntryView> getDlrInvntryViewSpecification(DlrInvntryPdfFilter filter) {
 
         Specification<DlrInvntryView> spec = Specification.where((root, query, criteriaBuilder) -> null);
-        if (null!= filter.getVehicleMake()) {
-            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MAKE)), filter.getVehicleMake().toLowerCase()));
+        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.INVENTORYSTS), AppraisalConstants.INVENTORY));
+        spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("valid"),Boolean.TRUE)));
+
+        if (null!= filter.getConsumerAskPrice()&& filter.getDelrRetlAskPrice()!=0.0) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(AppraisalConstants.CONSUMER_ASKING_PRICE), filter.getConsumerAskPrice()));
         }
-        if (null!= filter.getConsumerAskPrice()) {
-            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(AppraisalConstants.CONSUMER_ASKING_PRICE), filter.getConsumerAskPrice()));
+        if (null!= filter.getVehicleMake() && !filter.getVehicleMake().equals("")) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MAKE)), filter.getVehicleMake().toLowerCase()));
         }
-        if (null!= filter.getDaysSinceInventory()) {
-            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(AppraisalConstants.INVNTRY_DAYS), filter.getDaysSinceInventory()));
+        if (null!= filter.getDelrRetlAskPrice() && filter.getDelrRetlAskPrice()!=0.0) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(AppraisalConstants.Dealer_ASKING_PRICE), filter.getDelrRetlAskPrice()));
+        }
+        if (null!= filter.getDaysSinceInventory() && filter.getDaysSinceInventory()!=0.0) {
+            Date daysAgo = new Date(System.currentTimeMillis() - (filter.getDaysSinceInventory() * 24 * 60 * 60 * 1000));
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("invntryDate"), daysAgo));
         }
         if(null!=filter.getUsers()){
             spec = spec.and((root, query, criteriaBuilder) -> root.get("user").in(filter.getUsers()));

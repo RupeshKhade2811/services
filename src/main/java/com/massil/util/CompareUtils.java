@@ -1,9 +1,21 @@
 package com.massil.util;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.*;
+
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +27,18 @@ import static java.lang.Math.ceil;
 
 @Component
 public class CompareUtils {
+
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
+
+    @Value("${saved_pdf_Path}")
+    private String pdfpath;
     Logger log= LoggerFactory.getLogger(CompareUtils.class);
 
     /**
@@ -173,19 +197,63 @@ public class CompareUtils {
         dates.add(endDate);
         return dates;
     }
-    public Boolean isDocPresent(String folderPath,String fileName){
-        Path folder = Paths.get(folderPath);
-        Path filePath = folder.resolve(fileName);
-        if (Files.exists(filePath)) {
+    public Boolean isDocPresent(String fileName) throws IOException {
+        byte[] responseBytes = fileDownloadfromBucket(pdfpath, fileName);
+        if (responseBytes!=null) {
             log.info("File exists in the folder.");
             return true;
         }
         log.info("File does not exist in the folder.");
         return false;
     }
+
+    public byte[] fileDownloadfromBucket(String bucketName,String fileName) throws IOException {
+        //object from amazons3
+        ClientConfiguration config = new ClientConfiguration();
+        config.setProtocol(Protocol.HTTPS);
+        AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
+        S3ClientOptions options =  new S3ClientOptions();
+        options.setPathStyleAccess(true);
+        s3.setS3ClientOptions(options);
+        s3.setEndpoint(amazonS3Url);  // ECS IP Address
+        S3Object s3Object = s3.getObject(new GetObjectRequest(bucketName, fileName));
+        S3ObjectInputStream objectContent = s3Object.getObjectContent();
+        byte[] byteArray = new byte[(int) s3Object.getObjectMetadata().getContentLength()];
+        int bytesRead;
+        byte[] responseBytes = new byte[0];
+        try {
+            while ((bytesRead = objectContent.read(byteArray)) != -1) {
+                responseBytes = Arrays.copyOf(responseBytes, responseBytes.length + bytesRead);
+                System.arraycopy(byteArray, 0, responseBytes, responseBytes.length - bytesRead, bytesRead);
+            }
+        } finally {
+            objectContent.close();
+            s3Object.close();
+        }
+        return responseBytes;
+    }
+
+    public String uploadFileInBucket(File file, String bucketName, String fileName)  {
+        //object to AmazonS3
+        ClientConfiguration config = new ClientConfiguration();
+        config.setProtocol(Protocol.HTTPS);
+        AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
+        S3ClientOptions options =  new S3ClientOptions();
+        options.setPathStyleAccess(true);
+        s3.setS3ClientOptions(options);
+        s3.setEndpoint(amazonS3Url);  //ECS IP Address
+        log.info("Listing buckets");
+        PutObjectRequest request=new PutObjectRequest(bucketName,fileName,file);
+        request.setCannedAcl(CannedAccessControlList.PublicRead);
+        s3.putObject(request);
+        return fileName;
+    }
+
     public Long calTotalPages(Long totalRecords,Long pageSize){
         double totalpages = ceil((totalRecords/(pageSize*1.00)));
         return (long) totalpages;
     }
+
+
 
 }

@@ -2,6 +2,9 @@ package com.massil.services.impl;
 
 
 import com.massil.ExceptionHandle.GlobalException;
+import com.amazonaws.Protocol;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
 import com.massil.ExceptionHandle.Response;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.*;
@@ -34,10 +37,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 
@@ -82,6 +82,15 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
     private String pdfpath;
     @Value("${image_folder_path}")
     private String pclink;
+
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
     @Autowired
     private DealersUser dealersUser;
     @Autowired
@@ -92,6 +101,9 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
     private TestDriveMeasurementsRepo testRepo;
     @Autowired
     private PreStartMeasurementRepo preStartRepo;
+
+    @Autowired
+    private CompareUtils utils;
 
     Logger log = LoggerFactory.getLogger(FactoryPdfGeneratorImpl.class);
 
@@ -258,7 +270,7 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
             list1 = new ArrayList<>();
             for (EFileStatus e : fileData) {
                 PdfList pdfList = new PdfList();
-                if (e.getStatus().equals("success") && Boolean.TRUE.equals(compareUtils.isDocPresent(pdfpath,e.getFileName()))) {
+                if (e.getStatus().equals("success") && Boolean.TRUE.equals(compareUtils.isDocPresent(e.getFileName()))) {
                     pdfList.setId(e.getId());
                     pdfList.setFileName(e.getFileName());
                     pdfList.setModule(e.getModule());
@@ -420,7 +432,15 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
                 Resource resource = resourceLoader.getResource("classpath:odometer.jrxml");
                 JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-                JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath + name);
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                JasperExportManager.exportReportToPdfStream(jasperPrint,byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                File tempFile = File.createTempFile("tempFile", ".tmp");
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                fos.write(byteArray);
+                //object storing
+               utils.uploadFileInBucket(tempFile,pdfpath,name);
             } catch (JRException exception) {
                 log.error(exception.getMessage());
                 return null;
@@ -442,7 +462,16 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
                 Resource resource = resourceLoader.getResource("classpath:whlSaleBuyerOdr.jrxml");
                 JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-                JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath + name);
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                JasperExportManager.exportReportToPdfStream(jasperPrint,byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                File tempFile = File.createTempFile("tempFile", ".tmp");
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                fos.write(byteArray);
+                //object storing
+                utils.uploadFileInBucket(tempFile,pdfpath,name);
+                
             } catch (JRException exception) {
                 log.error(exception.getMessage());
                 return null;
@@ -462,7 +491,15 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
                 Resource resource = resourceLoader.getResource("classpath:vehicleReport.jrxml");
                 JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-                JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath + name);
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                JasperExportManager.exportReportToPdfStream(jasperPrint,byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                File tempFile = File.createTempFile("tempFile", ".tmp");
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                fos.write(byteArray);
+                //object store
+                utils.uploadFileInBucket(tempFile,pdfpath,name);
             } catch (JRException exception) {
                 log.error(exception.getMessage());
                 return null;
@@ -485,7 +522,15 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
                 Resource resource = resourceLoader.getResource("classpath:AppraisalFormJR.jrxml");
                 JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-                JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath + name);
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                JasperExportManager.exportReportToPdfStream(jasperPrint,byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                File tempFile = File.createTempFile("tempFile", ".tmp");
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                fos.write(byteArray);
+                //object store
+                utils.uploadFileInBucket(tempFile,pdfpath,name);
             } catch (JRException exception) {
                 log.error(exception.getMessage());
                 return null;
@@ -560,7 +605,7 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
             pdfDataDto1.setTestDriveMes(testDriveMes);
             pdfDataDto1.setTrCodesSummary(setTroubleCodesSummary(pdfDataDto1));
             pdfDataDto1.setDataSummary(getDataSummary(apprRefId));
-            System.out.println(getDataSummary(apprRefId));
+            log.info(getDataSummary(apprRefId));
             if (!preStart.getScannedVin().equals(null) && (byApprId.getVinNumber().equals(preStart.getScannedVin()))) {
                 pdfDataDto1.setCheckVin("Yes");
             } else {
@@ -836,7 +881,8 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         return data;
     }
 
-    public String appraisalList(String start,String end) throws IOException, JRException, ParseException {
+    public byte[] appraisalList(String start,String end) throws IOException, JRException, ParseException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<Date> dates = compareUtils.StringParseToDate(start, end);
         List<AppraisalFormView> appraisalList=appraiseVehiViewRepo.findAllByDate(dates.get(0),dates.get(1));
         List<PdfDataDto> pdfDataDtos = mapper.lApprFormViewToPdfDataDto(appraisalList);
@@ -844,9 +890,12 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         Resource resource = resourceLoader.getResource("classpath:AppraisalForm.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-        String name = UUID.randomUUID() + AppraisalConstants.pdf;
-        JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath+name );
-        return pdfpath+name;
+        if (jasperPrint != null) {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
+
+        }
+        return byteArrayOutputStream.toByteArray();
 
     }
     @Override
@@ -867,11 +916,11 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         return tableList;
     }
     @Override
-    public String offerReport(String start, String end) throws IOException, JRException, JDOMException, ParseException {
+    public byte[] offerReport(String start, String end) throws IOException, JRException, JDOMException, ParseException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<Date> dates = compareUtils.StringParseToDate(start,end);
         List<OfferPdf> offerList = offerPdfRepo.getOfferList(dates.get(0),dates.get(1));
         List<OfferReport> offerReports = mapper.lOfferPdfToOfferReport(offerList);
-        String fileName=pdfpath+ UUID.randomUUID() + AppraisalConstants.pdf;
         JasperPrint jasperPrint = null;
         JasperReport jasperReport = null;
         Resource resource = applicationContext.getResource("classpath:OfferReport.jrxml");
@@ -890,10 +939,10 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         Map<String, Object> parameters = new HashMap<>();
         jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
         if (jasperPrint != null) {
-
-            JasperExportManager.exportReportToPdfFile(jasperPrint,fileName);
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
         }
-        return  fileName;
+        return  byteArrayOutputStream.toByteArray();
 
     }
 
@@ -915,16 +964,19 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
     }
 
 
-    public String totalMemReport() throws IOException, JRException {
+    public byte[] totalMemReport() throws IOException, JRException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<TotalMembersView> membersViews = totalMembersRepo.findAll();
         List<FactoryReport> members = vehicleMapper.totalMembersToFactoryRpt(membersViews);
         JRBeanCollectionDataSource beanDatasource=new JRBeanCollectionDataSource(members);
         Resource resource = resourceLoader.getResource("classpath:totalMember.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-        String name = UUID.randomUUID() + AppraisalConstants.pdf;
-        JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath+name );
-        return pdfpath+name;
+        if (jasperPrint != null) {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
+        }
+        return byteArrayOutputStream.toByteArray();
     }
     @Override
     public TableList totalMemReport(Integer pageNumber, Integer pageSize) {
@@ -941,16 +993,20 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         return tableList;
     }
     @Override
-    public String facSalesReport(UUID fsUserId) throws IOException, JRException {
+    public byte[] facSalesReport(UUID fsUserId) throws IOException, JRException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<MembersByFactorySalesmen> factorySalesmen = salesmenRepo.findByFactorySalesman(fsUserId);
         List<FactoryReport> members = vehicleMapper.membersToFactoryRpt(factorySalesmen);
         JRBeanCollectionDataSource beanDatasource=new JRBeanCollectionDataSource(members);
         Resource resource = resourceLoader.getResource("classpath:factorySalesRep.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-        String name = UUID.randomUUID() + AppraisalConstants.pdf;
-        JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath+name );
-        return pdfpath+name;
+        if (jasperPrint != null) {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
+        }
+        return byteArrayOutputStream.toByteArray();
+
     }
     @Override
     public TableList salesManMemReport(UUID fsUserId,Integer pageNumber, Integer pageSize) {
@@ -968,17 +1024,19 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
     }
 
     @Override
-    public String facMngReport(UUID fmUserId ) throws IOException, JRException {
-
+    public byte[] facMngReport(UUID fmUserId ) throws IOException, JRException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<MembersByFactoryManager> managerRepoAll = managerRepo.findByFactoryManager(fmUserId);
         List<FactoryReport> members = vehicleMapper.managersMembersToFactoryRpt(managerRepoAll);
         JRBeanCollectionDataSource beanDatasource=new JRBeanCollectionDataSource(members);
         Resource resource = resourceLoader.getResource("classpath:factoryMngReport.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanDatasource);
-        String name = UUID.randomUUID() + AppraisalConstants.pdf;
-        JasperExportManager.exportReportToPdfFile(jasperPrint, pdfpath+name );
-        return pdfpath+name;
+        if (jasperPrint != null) {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
+        }
+        return byteArrayOutputStream.toByteArray();
     }
     @Override
     public TableList managersMemReport(UUID fmUserId,Integer pageNumber, Integer pageSize) {
@@ -997,11 +1055,11 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
 
     @Override
-    public String soldPdf(String start, String end) throws IOException, JDOMException, JRException, ParseException {
+    public byte[] soldPdf(String start, String end) throws IOException, JDOMException, JRException, ParseException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<Date> dateList=compareUtils.StringParseToDate(start,end);
         List<TransactionReport> tranList = transReportRepo.getSoldList(dateList.get(0),dateList.get(1));
         List<PdfDataDto> pdfDataDtos1 = mapper.lTransReportToPdfDataDto(tranList);
-        String fileName=pdfpath+ UUID.randomUUID() + AppraisalConstants.pdf;
         JasperPrint jasperPrint = null;
         JasperReport jasperReport = null;
         Resource resource = applicationContext.getResource("classpath:SoldReport.jrxml");
@@ -1020,11 +1078,10 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         Map<String, Object> parameters = new HashMap();
         jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
         if (jasperPrint != null) {
-
-            JasperExportManager.exportReportToPdfFile(jasperPrint,fileName);
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
         }
-        return  fileName;
-
+        return byteArrayOutputStream.toByteArray();
     }
 
     @Override
@@ -1046,11 +1103,11 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
 
     @Override
-    public String trnstionPdf(UUID id,String start, String end) throws IOException, JDOMException, JRException, ParseException {
+    public byte[] trnstionPdf(UUID id,String start, String end) throws IOException, JDOMException, JRException, ParseException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<Date>dateList=compareUtils.StringParseToDate(start,end);
         List<TransactionReport> tranList = transReportRepo.getTranList(id,dateList.get(0),dateList.get(1));
         List<PdfDataDto> pdfDataDtos1 = mapper.lTransReportToPdfDataDto(tranList);
-        String fileName=pdfpath+ UUID.randomUUID() + AppraisalConstants.pdf;
         JasperPrint jasperPrint = null;
         JasperReport jasperReport = null;
         Resource resource = applicationContext.getResource("classpath:TransactionReport.jrxml");
@@ -1069,10 +1126,10 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         Map<String, Object> parameters = new HashMap();
         jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
         if (jasperPrint != null) {
-
-            JasperExportManager.exportReportToPdfFile(jasperPrint,fileName);
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
         }
-        return  fileName;
+        return byteArrayOutputStream.toByteArray();
 
     }
     @Override
@@ -1095,15 +1152,15 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
 
     @Override
-    public String dlrInvtryPdf(UUID userId,Integer daysSinceInventory,String vehicleMake, Double consumerAskPrice) throws IOException, JRException, JDOMException, TemplateException {
-
+    public byte[] dlrInvtryPdf(UUID userId,Long daysSinceInventory,String vehicleMake, Double delrRetlAskPrice,Double consumerAskPrice) throws IOException, JRException, JDOMException, TemplateException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         DlrInvntryPdfFilter dlrInvntryPdfFilter=new DlrInvntryPdfFilter();
         dlrInvntryPdfFilter.setVehicleMake(vehicleMake);
-        dlrInvntryPdfFilter.setConsumerAskPrice(consumerAskPrice);
+        dlrInvntryPdfFilter.setDelrRetlAskPrice(delrRetlAskPrice);
         dlrInvntryPdfFilter.setDaysSinceInventory(daysSinceInventory);
+        dlrInvntryPdfFilter.setConsumerAskPrice(consumerAskPrice);
         TableList tableList = filterSpecificationService.sendDlrFilterListPdf(dlrInvntryPdfFilter,userId);
         List<PdfDataDto> dlrInvntryList = tableList.getDlrInvntryList();
-        String fileName=pdfpath+ UUID.randomUUID() + AppraisalConstants.pdf;
         JasperPrint jasperPrint = null;
         JasperReport jasperReport = null;
         Resource resource = applicationContext.getResource("classpath:DlrInvntryReport.jrxml");
@@ -1122,10 +1179,10 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         Map<String, Object> parameters = new HashMap<>();
         jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
         if (jasperPrint != null) {
-
-            JasperExportManager.exportReportToPdfFile(jasperPrint,fileName);
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
         }
-        return  fileName;
+        return byteArrayOutputStream.toByteArray();
     }
 
 
@@ -1133,13 +1190,12 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
 
     @Override
-    public String purchasePdf(UUID userId,String start, String end) throws IOException, JRException,  JDOMException, ParseException {
+    public byte[] purchasePdf(UUID userId,String start, String end) throws IOException, JRException,  JDOMException, ParseException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<Date> dates = compareUtils.StringParseToDate(start, end);
         List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
         List<DlrSalesView> appraisalList= dlrSalesRepo.findByPrchase(allUsersUnderDealer,dates.get(0),dates.get(1));
         List<PdfDataDto> pdfDataDtos = mapper.lDlrSalesViewToPdfDataDto(appraisalList);
-        String fileName=pdfpath+ UUID.randomUUID() + AppraisalConstants.pdf;
-
         JasperPrint jasperPrint = null;
         JasperReport jasperReport = null;
         Resource resource = applicationContext.getResource("classpath:PrchseReport.jrxml");
@@ -1158,9 +1214,10 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         Map<String, Object> parameters = new HashMap();
         jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
         if (jasperPrint != null) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint,fileName);
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
         }
-        return  fileName;
+        return byteArrayOutputStream.toByteArray();
     }
 
     @Override
@@ -1183,14 +1240,13 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
 
     @Override
-    public String salesPdf(UUID userId,String start, String end) throws IOException, JRException, JDOMException, TemplateException, ParseException {
-
+    public byte[] salesPdf(UUID userId,String start, String end) throws IOException, JRException, JDOMException, ParseException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
         List<Date> dates = compareUtils.StringParseToDate(start, end);
         List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
         List<DlrSalesView> appraisalList=dlrSalesRepo.findBySellerUserIdSold(allUsersUnderDealer,dates.get(0),dates.get(1));
         List<PdfDataDto> pdfDataDtos = mapper.lDlrSalesViewToPdfDataDto(appraisalList);
 
-        String fileName=pdfpath+ UUID.randomUUID() + AppraisalConstants.pdf;
         JasperPrint jasperPrint = null;
         JasperReport jasperReport = null;
         Resource resource = applicationContext.getResource("classpath:SalesReport.jrxml");
@@ -1209,10 +1265,10 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         Map<String, Object> parameters = new HashMap<>();
         jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
         if (jasperPrint != null) {
-
-            JasperExportManager.exportReportToPdfFile(jasperPrint,fileName);
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
         }
-        return  fileName;
+        return byteArrayOutputStream.toByteArray();
     }
 
     @Override

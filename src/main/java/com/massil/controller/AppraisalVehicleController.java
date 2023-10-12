@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.PathResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
@@ -46,27 +46,11 @@ public class AppraisalVehicleController {
     Logger log = LoggerFactory.getLogger(AppraisalVehicleController.class);
     @Value("${file_size}")
     private Long fileSize;
-    @Value("${saved_pdf_Path}")
-    private String pdfpath;
-
-    @Value("${image_folder_path}")
-    private String imageFolderPath;
-    @Value("${access_key}")
-    private String accesskey;
-
-    @Value(("${secret}"))
-    private String secret;
-
-    @Value(("${amazonS3_url}"))
-    private String amazonS3Url;
     @Autowired
     private FilterSpecificationService filterSpec;
 
     @Autowired
     private AppraiseVehicleService service;
-
-    @Autowired
-    private AppraiseVehicleServiceImpl service1;
 
     @Autowired
     private EmailService emailService;
@@ -410,9 +394,9 @@ public class AppraisalVehicleController {
 
     @GetMapping("/apprFormPdf")
     public ResponseEntity<Resource> vehRepPdf(@RequestParam("apprId") Long apprId) throws IOException, TemplateException, JRException, JDOMException {
-        String  filePath = apprForm.apprFormPdf(apprForm.setDataToPdf(apprId));
+        byte[] bytes = apprForm.apprFormPdf(apprForm.setDataToPdf(apprId));
 
-        Resource resource = new PathResource(filePath);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= AppraisalForm.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -423,11 +407,9 @@ public class AppraisalVehicleController {
     }
 
     @GetMapping("/keyAssureDownload")
-    public ResponseEntity<Resource> keyAssureVehReport(@RequestParam ("apprId") Long apprId) throws JRException, IOException, JDOMException {
-
-        EAppraiseVehicle appraisalById = repo.getAppraisalById(apprId);
-        String filePath = pdfpath+appraisalById.getTdStatus().getKeyAssureFiles();
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> keyAssureVehReport(@RequestParam ("apprId") Long apprId) throws IOException {
+        byte[] bytes = service.keyAssureReport(apprId);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= keyAssureVehicleReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -437,31 +419,23 @@ public class AppraisalVehicleController {
     }
 
     @GetMapping("/keyAssurePreview")
-    public ResponseEntity<byte[]> servePdf(@RequestParam ("apprId") Long apprId) throws IOException {
-        EAppraiseVehicle appraisalById = repo.getAppraisalById(apprId);
-
-        File file = new File(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
-
-        if (file.exists()) {
-            InputStream inputStream = new FileInputStream(file);
-            byte[] pdfBytes = IOUtils.toByteArray(inputStream);
+    public ResponseEntity<Resource> servePdf(@RequestParam ("apprId") Long apprId) throws IOException {
+        byte[] bytes = service.servePdf(apprId);
+        Resource resource=new ByteArrayResource(bytes);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDisposition(ContentDisposition.parse("inline; filename=" + appraisalById.getTdStatus().getKeyAssureFiles()));
-            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            headers.setContentDisposition(ContentDisposition.parse("inline; filename=KeyAssureFiles.pdf" ));
+            return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
     @GetMapping("/pdfViewer")
-    public ResponseEntity<byte[]> previewPdf(@RequestParam ("fileName") String name) throws IOException {
-        File file = new File(pdfpath, name);
-        if (file.exists()) {
-            InputStream inputStream = new FileInputStream(file);
-            byte[] pdfBytes = IOUtils.toByteArray(inputStream);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDisposition(ContentDisposition.parse("inline; filename=" + name));
-            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Resource> previewPdf(@RequestParam ("fileName") String name) throws IOException {
+        byte[] bytes=service.previewPdf(name);
+        Resource resource=new ByteArrayResource(bytes);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.parse("inline; filename=" + name));
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+
     }
     @PostMapping("/getTotalVehiclesInSystem")
     public ResponseEntity<Response> getTotalVehiclesInSystem(){
@@ -480,15 +454,6 @@ public class AppraisalVehicleController {
         TokenSrvc tokenSrvc = tokenService.getAcessTkn();
         return new ResponseEntity<>(tokenSrvc, HttpStatus.OK);
     }
-    @PostMapping("/transferringFile")
-    public String transferringFileToAmazonS3(@RequestHeader("filePath") String filePath) throws AppraisalException, IOException {
 
-        if ((null != filePath)) {
-            String strings = service.transferFile(filePath);
-            return strings;
-
-        } else throw new AppraisalException("File Not Found");
-
-    }
 
 }

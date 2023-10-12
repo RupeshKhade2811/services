@@ -300,11 +300,13 @@ public class AppraisalConstants {
     public static final String APPRAISAL_REPORT="Appr Report";
     public static final String LICENSE_REPORT="License Report";
     public static final String TAX_FORM="Tax Form";
-  public static final String INVNTRY_DAYS="daysSinceInventory";
+  public static final String INVNTRY_DATE="invntryDate";
   public static final String CONSUMER_ASKING_PRICE="consumerAskPrice";
   public static final String SALE_FEE="SALE_FEE";
   public static final String BUY_FEE="BUY_FEE";
   public static final String VIDEO_FOR_PU="PU";
   public static final String VIDEO_FOR_D="D";
+
+  public static final String Dealer_ASKING_PRICE="delrRetlAskPrice";
 
 }

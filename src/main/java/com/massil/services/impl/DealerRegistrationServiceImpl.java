@@ -6,6 +6,14 @@ package com.massil.services.impl;
  */
 
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
@@ -29,10 +37,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,6 +64,15 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
     @Value("${saved_pdf_Path}")
     private String pdfpath;
 
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
+
     @Autowired
     private RoleRepo roleRepo;
 
@@ -68,7 +87,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
     @Autowired
     private CompanyRepo companyRepo;
     @Autowired
-    private UserRegistrationServiceImpl userRegService;
+    private UserRegistrationService userRegService;
     @Autowired
     private AllDealersViewRepo allDealersViewRepo;
 
@@ -150,6 +169,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
 
     }
 
+    @Transactional
     @Override
     public Response updateDealer(DealerRegistration newDealer, UUID d2UserId) throws AppraisalException, IOException {
         log.info("Dealer update method is triggered **Service IMPL**");
@@ -158,6 +178,8 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         EDealerRegistration eDealerReg=null;
         if(null!=d2UserId){
             EUserRegistration userById = userRegRepo.findUserById(d2UserId);
+            if(newDealer.getPassword()==null||newDealer.getPassword().equals("")) newDealer.setPassword(userById.getPassword());
+
             if(null!=userById.getDealer()){
                 oldDealer = userById.getDealer();
                 updateUserIS = forUserUpdateIS(newDealer, oldDealer);
@@ -170,6 +192,9 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         EUserRegistration eUserReg = apprVehMapper.updateEUserReg(eDealerReg, userById);
         ERoleMapping byUserId = roleMapRepo.findByUserId(userById.getId());
 
+        if(null!=newDealer.getRoleId()){
+            byUserId.setRole(roleRepo.findByRole(newDealer.getRoleId()));
+        }
         if(null!=newDealer.getFactoryManager()){
             byUserId.setFactoryManager(userRegRepo.findUserById(newDealer.getFactoryManager()));
         }
@@ -182,9 +207,9 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
 
         roleMapRepo.save(byUserId);
         eUserReg.setModifiedOn(new Date());
-        
 
-        log.info("updating dealer in identity server");
+
+        log.info("updating user in identity server");
         userRegService.updateUserInIS(updateUserIS, d2UserId);
 
         eUserReg.setPassword(userById.getPassword());
@@ -236,10 +261,13 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         if (null != dealerById) {
             dealerById.setValid(Boolean.FALSE);
             EUserRegistration eUserRegistration = userRegRepo.checkUserNamePresent(dealerById.getName());
+            ERoleMapping byUserId = roleMapRepo.findByUserId(eUserRegistration.getId());
+            byUserId.setValid(Boolean.FALSE);
             eUserRegistration.setValid(Boolean.FALSE);
             response.setStatus(Boolean.TRUE);
             response.setMessage("dealer deleted successfully");
             response.setCode(HttpStatus.OK.value());
+            roleMapRepo.save(byUserId);
             userRegRepo.save(eUserRegistration);
             dlrRegRepo.save(dealerById);
         } else throw new GlobalException("Dealer not found");
@@ -371,8 +399,15 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (null != extension && (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("pdf"))) {
             String filename = UUID.randomUUID() + "." + extension;
-            Path filePath = Paths.get(pdfpath + filename);
-            Files.write(filePath, file.getBytes());
+
+            //object to AmazonS3
+            // Create a new temporary file
+            File file1 = File.createTempFile(file.getOriginalFilename(), ".temp");
+            // Transfer the content from the multipart file to the new file
+            file.transferTo(file1);
+
+            compareUtils.uploadFileInBucket(file1,pdfpath,filename);
+
             return filename;
         }
         throw new AppraisalException("only .pdf, .doc, .docx file types are allowed");

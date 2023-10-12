@@ -1,5 +1,14 @@
 package com.massil.services.impl;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
@@ -37,6 +46,14 @@ public class ShipmentImpl implements ShipmentService {
 
     @Value("${image_folder_path}")
     private String imageFolderPath;
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
     @Autowired
     private UserRegistrationRepo userRepo;
     @Autowired
@@ -202,11 +219,11 @@ public class ShipmentImpl implements ShipmentService {
 
     public String imageUpload(byte[] file) throws IOException {
          String filename = UUID.randomUUID() + "." + "png";
-         Path filePath = Paths.get(imageFolderPath + filename);
-            Files.write(filePath, file);
-            if( compareUtils.isDocPresent(imageFolderPath,filename)) {
-               return filename;
-           }
+        //object from amazons3
+        byte[] responseBytes = compareUtils.fileDownloadfromBucket(imageFolderPath, filename);
+        if(responseBytes!=null){
+            return filename;
+        }
            return null;
     }
 

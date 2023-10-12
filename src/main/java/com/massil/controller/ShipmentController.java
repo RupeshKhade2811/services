@@ -1,5 +1,10 @@
 package com.massil.controller;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
@@ -8,6 +13,7 @@ import com.massil.services.FactoryPdfGenerator;
 import com.massil.services.FilterSpecificationService;
 import com.massil.services.ShipmentService;
 import com.massil.services.impl.EmailServiceImpl;
+import com.massil.util.CompareUtils;
 import freemarker.template.TemplateException;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.PathResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,8 +57,20 @@ public class ShipmentController {
     @Autowired
     private FilterSpecificationService specService;
 
+    @Autowired
+    private CompareUtils utils;
+
     @Value("${saved_pdf_Path}")
     private String pdfpath;
+
+    @Value("${access_key}")
+    private String accesskey;
+
+    @Value(("${secret}"))
+    private String secret;
+
+    @Value(("${amazonS3_url}"))
+    private String amazonS3Url;
     @Autowired
     private FactoryPdfGenerator pdfGeneratorSrvc;
 
@@ -90,7 +108,7 @@ public class ShipmentController {
 
 
     @PostMapping("/pdf")
-    public ResponseEntity<Response> pdfGen(@RequestHeader("offerId") Long offerId) throws IOException, JRException, JDOMException, GlobalException {
+    public ResponseEntity<Response> pdfGen(@RequestHeader("offerId") Long offerId) throws IOException, JRException, JDOMException, GlobalException, GlobalException {
         Response response1 = pdfGenerator.pdfTable(offerId);
         return new ResponseEntity<>(response1, HttpStatus.ACCEPTED);
 
@@ -100,7 +118,7 @@ public class ShipmentController {
         return new ResponseEntity<>(service.buyerAgreedService(shipment,shipId),HttpStatus.OK);
     }
     @PostMapping("/sellerAgreed")
-    public ResponseEntity<Response> sellerShipmentDet(@RequestBody Shipment shipment,@RequestHeader ("shipmentId") Long shipId) throws GlobalException, AppraisalException, IOException {
+    public ResponseEntity<Response> sellerShipmentDet(@RequestBody Shipment shipment,@RequestHeader ("shipmentId") Long shipId) throws GlobalException, AppraisalException, IOException, AppraisalException {
         return new ResponseEntity<>(service.sellerAgreedService(shipment,shipId),HttpStatus.OK);
     }
 
@@ -116,72 +134,79 @@ public class ShipmentController {
 
 
     @GetMapping("/odometerPdf")
-    public ResponseEntity<Resource> vehRepPdf(@RequestParam("fileName") String filename)  {
-        String filePath = pdfpath+filename;
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> vehRepPdf(@RequestParam("fileName") String filename) throws IOException {
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(pdfpath, filename);
+        Resource resource=new ByteArrayResource(responseBytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=odometer.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
 
     @GetMapping("/buyerOrderPdf")
-    public ResponseEntity<Resource> buyrOdrPdf(@RequestParam("fileName") String filename)  {
-        String filePath = pdfpath+filename;
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> buyrOdrPdf(@RequestParam("fileName") String filename) throws IOException {
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(pdfpath, filename);
+        Resource resource=new ByteArrayResource(responseBytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename= buyerOrder.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
     @GetMapping("/vehRepPdf")
-    public ResponseEntity<Resource> vehRepotPdf(@RequestParam("fileName") String filename)  {
-        String filePath = pdfpath+filename;
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> vehRepotPdf(@RequestParam("fileName") String filename) throws IOException {
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(pdfpath, filename);
+        Resource resource=new ByteArrayResource(responseBytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename= VehicleReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
     @GetMapping("/apprReportPdf")
-    public ResponseEntity<Resource> apprReportPdf(@RequestParam("fileName") String filename)  {
-        String filePath = pdfpath+filename;
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> apprReportPdf(@RequestParam("fileName") String filename) throws IOException {
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(pdfpath, filename);
+        Resource resource=new ByteArrayResource(responseBytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=apprReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
     @GetMapping("/licenseReportPdf")
-    public ResponseEntity<Resource> licenseReportPdf(@RequestParam("fileName") String filename)  {
-        String filePath = pdfpath+filename;
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> licenseReportPdf(@RequestParam("fileName") String filename) throws IOException {
+
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(pdfpath, filename);
+        Resource resource=new ByteArrayResource(responseBytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename= licenseReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
     @GetMapping("/taxReportPdf")
-    public ResponseEntity<Resource> taxReportPdf(@RequestParam("fileName") String filename)  {
-        String filePath = pdfpath+filename;
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> taxReportPdf(@RequestParam("fileName") String filename) throws IOException {
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(pdfpath, filename);
+        Resource resource=new ByteArrayResource(responseBytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename=taxReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
     @GetMapping("/apprPdf")
     public ResponseEntity<Resource>  apprPdf(@RequestParam String start,@RequestParam String end) throws JRException, IOException, ParseException {
-        String  filePath = pdfGenerator.appraisalList(start, end);
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGenerator.appraisalList(start, end);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ApprForm.pdf");
         headers.setContentType(MediaType.APPLICATION_PDF);
 
         return ResponseEntity.ok().headers(headers).body(resource);
@@ -190,10 +215,10 @@ public class ShipmentController {
     @GetMapping("/offerReportPdf")
     public ResponseEntity<Resource> offerPdf(@RequestParam String start,@RequestParam String end) throws JRException, IOException, JDOMException, ParseException {
 
-        String  filePath = pdfGeneratorSrvc.offerReport(start, end);
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGeneratorSrvc.offerReport(start, end);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= OfferReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
 
         return ResponseEntity.ok().headers(headers).body(resource);
@@ -208,30 +233,30 @@ public class ShipmentController {
     @GetMapping("/totalmemReport")
     public ResponseEntity<Resource> totalMemPdf() throws JRException, IOException {
 
-        String  filePath =  pdfGenerator.totalMemReport();
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGenerator.totalMemReport();
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=totalMemPdf.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
     @GetMapping("/facSalesRep")
     public ResponseEntity<Resource>  facSaleRepPdf(@RequestParam UUID fsUserId) throws JRException, IOException {
 
-        String  filePath =  pdfGenerator.facSalesReport(fsUserId);
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGenerator.facSalesReport(fsUserId);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= facSalesReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
     @GetMapping("/facMngReport")
     public  ResponseEntity<Resource> facMngRepPdf(@RequestParam UUID fmUserId) throws JRException, IOException {
 
-        String  filePath =  pdfGenerator.facMngReport(fmUserId);
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGenerator.facMngReport(fmUserId);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facMngReport.pdf");
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
 
@@ -242,11 +267,10 @@ public class ShipmentController {
     @GetMapping("/soldReportPdf")
     public ResponseEntity<Resource> genSoldReport(@RequestParam String start,@RequestParam String end) throws IOException, JRException, JDOMException, ParseException {
 
-        String  filePath = pdfGeneratorSrvc.soldPdf(start, end);
-
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGeneratorSrvc.soldPdf(start, end);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= soldReport.pdf");
         headers.setContentType(MediaType.APPLICATION_PDF);
 
         return ResponseEntity.ok().headers(headers).body(resource);
@@ -260,11 +284,11 @@ public class ShipmentController {
 
 
     @GetMapping("/genDlrInvntryReport")
-    public ResponseEntity<Resource> dlrInvntryReport(@RequestParam("userId") UUID userId, @RequestParam(name = "daysSinceInventory",defaultValue = "0") Integer daysSinceInventory,@RequestParam(required = false) String vehicleMake,@RequestParam(name = "consumerAskPrice",defaultValue = "-1") Double consumerAskPrice) throws IOException, TemplateException, JRException, JDOMException {
-        String  filePath = pdfGeneratorSrvc.dlrInvtryPdf(userId,daysSinceInventory,vehicleMake,consumerAskPrice);
-        Resource resource = new PathResource(filePath);
+    public ResponseEntity<Resource> dlrInvntryReport(@RequestParam("userId") UUID userId, @RequestParam(name = "daysSinceInventory",defaultValue = "0") Long daysSinceInventory,@RequestParam(required = false) String vehicleMake,@RequestParam(name = "delrRetlAskPrice",defaultValue = "0") Double delrRetlAskPrice,@RequestParam(name = "consumerAskPrice",defaultValue = "0") Double consumerAskPrice) throws IOException, TemplateException, JRException, JDOMException {
+        byte[] bytes = pdfGeneratorSrvc.dlrInvtryPdf(userId, daysSinceInventory, vehicleMake, delrRetlAskPrice,consumerAskPrice);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= dlrInvReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
@@ -274,13 +298,18 @@ public class ShipmentController {
         return new ResponseEntity<>(sellingDealerList,HttpStatus.OK);
     }
 
+    @PostMapping("/dlrInvVehMakeDropDown")
+    public ResponseEntity<FilterDropdowns> dlrInvVehMakeDropDown(@RequestHeader("userId") UUID userId){
+        FilterDropdowns makeDropDown = specService.makeDropDown(userId);
+        return new ResponseEntity<>(makeDropDown,HttpStatus.OK);
+    }
 
     @GetMapping("/genSalesReport")
     public ResponseEntity<Resource> genSalesReport(@RequestParam("userId") UUID userId,@RequestParam String start, @RequestParam String end) throws IOException, TemplateException, JRException, JDOMException, ParseException {
-        String  filePath = pdfGeneratorSrvc.salesPdf(userId,start,end);
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGeneratorSrvc.salesPdf(userId, start, end);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=salesReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
@@ -294,11 +323,10 @@ public class ShipmentController {
     @GetMapping("/genPurchaseReport")
     public ResponseEntity<Resource> genPurchaseReport(@RequestParam("userId") UUID userId,@RequestParam String start, @RequestParam String end) throws IOException, TemplateException, JRException, JDOMException, ParseException {
 
-        String  filePath = pdfGeneratorSrvc.purchasePdf(userId,start,end);
-
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGeneratorSrvc.purchasePdf(userId, start, end);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= purchaseReport.pdf" );
         headers.setContentType(MediaType.APPLICATION_PDF);
 
         return ResponseEntity.ok().headers(headers).body(resource);
@@ -313,10 +341,10 @@ public class ShipmentController {
     @GetMapping("/transacReportPdf")
     public ResponseEntity<Resource> genTrnsReport(@RequestParam("userId") UUID userId,@RequestParam String start, @RequestParam String end) throws IOException, TemplateException, JRException, JDOMException, ParseException {
 
-        String  filePath = pdfGeneratorSrvc.trnstionPdf(userId,start,end);
-        Resource resource = new PathResource(filePath);
+        byte[] bytes = pdfGeneratorSrvc.trnstionPdf(userId, start, end);
+        Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" +filePath);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transactionReport.pdf");
         headers.setContentType(MediaType.APPLICATION_PDF);
         return ResponseEntity.ok().headers(headers).body(resource);
     }

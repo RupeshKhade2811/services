@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public interface ApprFormService {
 
-    public String apprFormPdf(ApprFormDto apprFormDto) throws IOException, JRException, JDOMException, JRException, JDOMException;
+    public byte[] apprFormPdf(ApprFormDto apprFormDto) throws IOException, JRException, JDOMException;
 
     public ApprFormDto setDataToPdf(Long apprRefId) throws IOException, TemplateException;
 

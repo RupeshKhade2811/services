@@ -101,7 +101,14 @@ public class DealerRegistrationController {
         return new ResponseEntity<>(dealerRegistrationService.deleteDealer(dealerId),HttpStatus.OK);
     }
 
-
+    /**
+     * This method sends all dealers whose company is null
+     * @param pageNo
+     * @param pageSize
+     * @return
+     * @throws AppraisalException
+     * @throws GlobalException
+     */
     @Operation(summary = "show Dealer List")
     @PostMapping("/showDealerList")
     public ResponseEntity<DlrList> showDlrDetails(@RequestParam Integer pageNo, @RequestParam Integer pageSize) throws AppraisalException, GlobalException {

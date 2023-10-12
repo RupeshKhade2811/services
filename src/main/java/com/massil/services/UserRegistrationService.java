@@ -4,6 +4,7 @@ import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.dto.*;
+import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -72,9 +73,9 @@ public interface UserRegistrationService {
      VideoAndImageResponse downloadImageFromFileSystem(String imageName) throws IOException, NoSuchFileException;
 
      Response otpGenerator(String email) throws AppraisalException;
-     Response sendMailForOtp(String email) throws AppraisalException, MessagingException;
+     Response sendMailForOtp(String email) throws AppraisalException, MessagingException, IOException, TemplateException;
 
-     Response sendMailForPassowrdSuccess(DealerRegistration dealer,UUID d2UserId,String email) throws AppraisalException, IOException;
+     Response sendMailForPassowrdSuccess(DealerRegistration dealer,UUID d2UserId,String email) throws AppraisalException, IOException, TemplateException;
 
      Response validateOtp(String email,String otp) throws ParseException, AppraisalException, java.text.ParseException;
 

@@ -13,8 +13,9 @@ import java.util.UUID;
 public class DlrInvntryPdfFilter {
 
     private String vehicleMake;
-    private Integer daysSinceInventory;
+    private Long daysSinceInventory;
     private Double consumerAskPrice;
+    private Double delrRetlAskPrice;
     private List<UUID> users;
 
 }

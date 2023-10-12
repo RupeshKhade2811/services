@@ -263,7 +263,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
                     .collect(Collectors.toList());
 
             dealerList.setSlrDlrList(filterList);
-            System.out.println(dealerList.getSlrDlrList());
+            log.info(dealerList.getSlrDlrList().toString());
         }else throw new AppraisalException("No such Dealer Found");
         dealerList.setCode(HttpStatus.OK.value());
         dealerList.setMessage("dealerList found");
@@ -359,6 +359,18 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
     }
 
     @Override
+    public FilterDropdowns makeDropDown(UUID userId) {
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
+        List<String> makeDropDown =dlrInvntryViewRepo.dlrInvntryVehMakeDropDown(allUsersUnderDealer);
+        FilterDropdowns filterDropdowns = new FilterDropdowns();
+        filterDropdowns.setMake(makeDropDown);
+        filterDropdowns.setMessage("vehicle make dropdown list");
+        filterDropdowns.setStatus(true);
+        filterDropdowns.setCode(HttpStatus.OK.value());
+        return filterDropdowns;
+    }
+
+    @Override
     public List<Company> searchCompany(String name) {
         int pageSize = 5; // Number of items to return per page
         int startIndex = 0; // Calculate the start index for the current page
@@ -394,6 +406,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
         tableList.setCode(HttpStatus.OK.value());
         tableList.setMessage("dealerList found");
         tableList.setStatus(true);
+        log.info("inventoryPdfData send to jasper");
         return  tableList;
     }
 

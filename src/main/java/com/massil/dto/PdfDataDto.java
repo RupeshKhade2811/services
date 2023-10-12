@@ -42,7 +42,7 @@ public class PdfDataDto  {
     private Double price;
     private String offerStatus;
     private Double consumerAskPrice;
-    private Integer daysSinceInventory;
+    private Long daysSinceInventory;
     private Double daysInInvntry;
     private Double wholesalePrice;
     private Double saleFee;
@@ -55,6 +55,9 @@ public class PdfDataDto  {
     private Boolean buyerAgreed;
     private Boolean sellerAgreed;
     private String picLink;
+    private String saleDate;
+    private Double appraisedValue;
+    private Double delrRetlAskPrice;
 
 
     //prestart measurement

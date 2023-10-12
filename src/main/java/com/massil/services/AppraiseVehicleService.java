@@ -148,6 +148,12 @@ public interface AppraiseVehicleService {
  String vehReportPdf(PdfDataDto pdfDataDto) throws JRException, IOException, JDOMException;
  Long getTotalVehiclesInSystem();
 
- String transferFile(String fileName) throws IOException;
+
+
+ byte[] keyAssureReport(Long apprId) throws IOException;
+
+ byte[] servePdf(Long apprId) throws IOException;
+
+ byte[] previewPdf(String name) throws IOException;
 
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "dlr_sales_view")
+@Table(name = "dlr_sales_views")
 @Data
 @Immutable
 public class DlrSalesView {
@@ -53,6 +53,7 @@ public class DlrSalesView {
 
     private Date createdOn;
 
+    private Date saleDate;
 
 
 }

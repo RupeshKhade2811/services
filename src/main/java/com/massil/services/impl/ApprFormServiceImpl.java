@@ -69,9 +69,10 @@ public class ApprFormServiceImpl implements ApprFormService {
 
 
     @Override
-    public String apprFormPdf(ApprFormDto apprFormDto) throws IOException, JRException, JDOMException {
-        String fileName=pdfpath+ UUID.randomUUID() + AppraisalConstants.pdf;
-        List<ApprFormDto> dataList=new ArrayList();
+    public byte[] apprFormPdf(ApprFormDto apprFormDto) throws IOException, JRException, JDOMException {
+        ByteArrayOutputStream byteArrayOutputStream=null;
+        String fileName = UUID.randomUUID() + AppraisalConstants.pdf;
+        List<ApprFormDto> dataList = new ArrayList();
         apprFormDto.setPicLink(this.pllink);
         dataList.add(apprFormDto);
 
@@ -94,11 +95,11 @@ public class ApprFormServiceImpl implements ApprFormService {
 
         jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
         if (jasperPrint != null) {
+             byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
 
-            JasperExportManager.exportReportToPdfFile(jasperPrint,fileName);
         }
-
-        return  fileName;
+        return byteArrayOutputStream.toByteArray();
     }
 
 

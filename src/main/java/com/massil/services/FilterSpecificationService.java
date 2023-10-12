@@ -54,4 +54,6 @@ public interface FilterSpecificationService {
     DlrList searchDealers(DealerRegistration filter) throws AppraisalException;
 
     List<D2DlrList> sendDlrD2(SellingDealer filter) throws AppraisalException;
+
+    FilterDropdowns makeDropDown(UUID userId);
 }

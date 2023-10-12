@@ -30,7 +30,7 @@ public class DlrInvntryView {
     private String vehicleMake;
     @Column(name = "EXTR_COLOR")
     private String vehExtColor;
-    @Column(name = "INTR_COLOR")
+    @JoinColumn(name = "INTR_COLOR")
     private String intrColor;
 
     @Column(name = "USER_ID")
@@ -44,8 +44,12 @@ public class DlrInvntryView {
     private Double consumerAskPrice;
     @Column(name="INVENTORY_DATE")
     private Date invntryDate;
-    @Column(name = "days_since_inventory")
-    private Integer daysSinceInventory;
+
+    @Column(name="APPR_VALUE")
+    private Double appraisedValue;
+
+    @Column(name = "DLR_ASK_PRICE")
+    private Double delrRetlAskPrice ;
 
 
 }

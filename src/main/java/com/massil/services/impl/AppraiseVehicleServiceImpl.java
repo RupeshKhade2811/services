@@ -85,6 +85,8 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     @Value(("${amazonS3_url}"))
     private String amazonS3Url;
 
+    @Value("${profile_pic_path}")
+    private String profilePicPath;
     @Autowired
     public MarketCheckApiServiceImpl marketCheckService;
     @Autowired
@@ -720,11 +722,12 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (null!=extension && (extension.equalsIgnoreCase("mp4")||extension.equalsIgnoreCase("webm")||extension.equalsIgnoreCase("mov"))) {
             String filename = UUID.randomUUID().toString() + "." + extension;
-            Path filePath = Paths.get(videoFolderPath + filename);
 
-                Files.write(filePath, file.getBytes());
+            //object to AmazonS3
+            File file1 = File.createTempFile(file.getOriginalFilename(), ".temp");// Create a new temporary file
+            file.transferTo(file1);// Transfer the content from the multipart file to the new file
 
-            return filename;
+            return utils.uploadFileInBucket(file1,videoFolderPath,filename);
         }else throw new AppraisalException("Wrong file type, use only extension with mp4,webm and mov");
     }
 
@@ -732,29 +735,25 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     public VideoAndImageResponse videoDownload(String videoName) throws IOException {
         
         VideoAndImageResponse responseDTO = new VideoAndImageResponse();
-           String filePath = videoFolderPath + videoName;
-           byte[] videoBytes = Files.readAllBytes(new File(filePath).toPath());//Reading from folder
-
-            responseDTO.setVideoBytes(videoBytes);
-            responseDTO.setCode(HttpStatus.OK.value());
-            responseDTO.setStatus(true);
-            responseDTO.setMessage("Video send successfully");
-            return responseDTO;
-
+        //object from amazons3
+        byte[] responseBytes = utils.fileDownloadfromBucket(videoFolderPath, videoName);
+        responseDTO.setImageBytes(responseBytes);
+        responseDTO.setCode(HttpStatus.OK.value());
+        responseDTO.setStatus(true);
+        responseDTO.setMessage("Video send successfully");
+        return responseDTO;
     }
 
 
     @Override
-    public VideoAndImageResponse downloadImageFromFileSystem(String imageName) throws IOException, NoSuchFileException {
+    public VideoAndImageResponse downloadImageFromFileSystem(String imageName) throws IOException{
         VideoAndImageResponse responseDTO = new VideoAndImageResponse();
-        byte[] images=null;
-        String filePath = imageFolderPath + imageName;
-           images = Files.readAllBytes(new File(filePath).toPath());//Reading from folder
-            responseDTO.setImageBytes(images);
-            responseDTO.setCode(HttpStatus.OK.value());
-            responseDTO.setStatus(true);
-            responseDTO.setMessage("Image send successfully");
-            return responseDTO;
+        byte[] responseBytes = utils.fileDownloadfromBucket(imageFolderPath,imageName );
+        responseDTO.setImageBytes(responseBytes);
+        responseDTO.setCode(HttpStatus.OK.value());
+        responseDTO.setStatus(true);
+        responseDTO.setMessage("Image send successfully");
+        return responseDTO;
 
     }
 
@@ -766,9 +765,13 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if(null!=extension && (extension.equalsIgnoreCase("jpeg")|| extension.equalsIgnoreCase("png")|| extension.equalsIgnoreCase("jpg")||extension.equalsIgnoreCase("pdf"))) {
             String filename = UUID.randomUUID().toString() + "." + extension;
-            Path filePath = Paths.get(imageFolderPath + filename);
-            Files.write(filePath, file.getBytes());
-            return filename;
+
+            //object to AmazonS3
+            // Create a new temporary file
+            File file1 = File.createTempFile(file.getOriginalFilename(), ".temp");
+            // Transfer the content from the multipart file to the new file
+            file.transferTo(file1);
+            return utils.uploadFileInBucket(file1, imageFolderPath, filename);
         }throw new AppraisalException("only jpeg, png, pdf and jpg extensions are allowed");
 
     }
@@ -1426,8 +1429,15 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         Map<String, Object> parameters = new HashMap<>();
         jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
         if (jasperPrint != null) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint,pdfpath+fileName);
-            return fileName;
+            //creating temp file
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint,byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            File tempFile = File.createTempFile("tempFile", ".tmp");
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            fos.write(byteArray);
+            //object storing
+            return utils.uploadFileInBucket(tempFile,pdfpath,fileName);
         }
         return "";
     }
@@ -1540,49 +1550,23 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     }
 
     @Override
-    public String transferFile(String file) throws IOException {
+    public byte[] keyAssureReport(Long apprId) throws IOException {
+        EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(apprId);
+        //object from amazons3
+        return utils.fileDownloadfromBucket(pdfpath,appraisalById.getTdStatus().getKeyAssureFiles());
+    }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-//            List<String> fileName= new ArrayList<>();
-            while ((line = reader.readLine()) != null) {
-                //               fileName.add(line);
-                //           }
-//            for (String imageName:fileName) {
-                String bucket="";
-                int lastDotIndex = line.lastIndexOf('.');
-                String substring = line.substring(lastDotIndex + 1);
-                if(substring.equalsIgnoreCase("jpg") || substring.equalsIgnoreCase("jpeg")){
-                    bucket="images";
-                }else if(substring.equalsIgnoreCase("pdf")){
-                    bucket="pdf";
-                }else if(substring.equalsIgnoreCase("mp4") || substring.equalsIgnoreCase("mov")){
-                    bucket="videos";
-                }
-                byte[] images = null;
-                String filePath = videoFolderPath + line;
-                images = Files.readAllBytes(new File(filePath).toPath());//Reading from folder
+    @Override
+    public byte[] servePdf(Long apprId) throws IOException {
+        EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(apprId);
+        //object from amazons3
+        return utils.fileDownloadfromBucket(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
+    }
 
-
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(images);
-
-                ClientConfiguration config = new ClientConfiguration();
-                config.setProtocol(Protocol.HTTPS);
-                AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
-                S3ClientOptions options = new S3ClientOptions();
-                options.setPathStyleAccess(true);
-                s3.setS3ClientOptions(options);
-                s3.setEndpoint(amazonS3Url);  //ECS IP Address
-
-                System.out.println("Listing buckets");
-                PutObjectRequest request = new PutObjectRequest(bucket, line, inputStream, null);
-                request.setCannedAcl(CannedAccessControlList.PublicRead);
-                s3.putObject(request);
-                //           }
-            }
-
-            return "success";
-        }
+    @Override
+    public byte[] previewPdf(String name) throws IOException {
+        //object from amazons3
+        return utils.fileDownloadfromBucket(pdfpath,name);
     }
 
 
