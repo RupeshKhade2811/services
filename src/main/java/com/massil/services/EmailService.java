@@ -32,7 +32,7 @@ public interface EmailService {
     Response offerUpdateEmail(Long offerId) throws AppraisalException, MessagingException, TemplateException, IOException, MessagingException;
 
 
-    public void sendMailWithAttachment(Long offerId) throws MessagingException, IOException, AppraisalException, JRException, JDOMException, GlobalException;
+    public void sendMailWithAttachment(Long offerId) throws MessagingException, IOException, AppraisalException, JRException, JDOMException, GlobalException, TemplateException;
 
     Response sendToDealer(DealerRegistration dealerRegistration) throws MessagingException, IOException, TemplateException;
 }

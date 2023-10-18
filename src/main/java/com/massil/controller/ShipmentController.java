@@ -5,10 +5,16 @@ import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.massil.ExceptionHandle.AppraisalException;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+
 import com.massil.ExceptionHandle.GlobalException;
-import com.massil.ExceptionHandle.Response;
 import com.massil.dto.*;
+
+import com.massil.ExceptionHandle.AppraisalException;
+import com.massil.ExceptionHandle.Response;
 import com.massil.services.FactoryPdfGenerator;
 import com.massil.services.FilterSpecificationService;
 import com.massil.services.ShipmentService;
@@ -26,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,8 +41,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -83,7 +94,7 @@ public class ShipmentController {
      */
     @Operation(summary = "get My Sold car cards by user id and dealer id")
     @PostMapping("/getSoldCarCards")
-    public ResponseEntity<CardsPage> soldCarCards(@RequestHeader("id") UUID id, @RequestParam Integer pageNo, @RequestParam Integer pageSize) throws AppraisalException {
+    public ResponseEntity<CardsPage> soldCarCards(@RequestHeader("id") UUID id, @RequestParam Integer pageNo, @RequestParam Integer pageSize) throws AppraisalException, AppraisalException {
         log.info("GETTING MY SOLD CARS CARDS");
         CardsPage apv = service.mySellsCards(id, pageNo, pageSize);
         return new ResponseEntity<CardsPage>(apv, HttpStatus.OK);
@@ -108,17 +119,17 @@ public class ShipmentController {
 
 
     @PostMapping("/pdf")
-    public ResponseEntity<Response> pdfGen(@RequestHeader("offerId") Long offerId) throws IOException, JRException, JDOMException, GlobalException, GlobalException {
+    public ResponseEntity<Response> pdfGen(@RequestHeader("offerId") Long offerId) throws IOException, JRException, JDOMException, GlobalException, TemplateException, GlobalException {
         Response response1 = pdfGenerator.pdfTable(offerId);
         return new ResponseEntity<>(response1, HttpStatus.ACCEPTED);
 
     }
     @PostMapping("/buyerAgreed")
-    public ResponseEntity<Response> buyerShipmentDet(@RequestBody Shipment shipment,@RequestHeader ("shipmentId") Long shipId) throws GlobalException, IOException {
+    public ResponseEntity<Response> buyerShipmentDet(@RequestBody Shipment shipment, @RequestHeader ("shipmentId") Long shipId) throws GlobalException, IOException {
         return new ResponseEntity<>(service.buyerAgreedService(shipment,shipId),HttpStatus.OK);
     }
     @PostMapping("/sellerAgreed")
-    public ResponseEntity<Response> sellerShipmentDet(@RequestBody Shipment shipment,@RequestHeader ("shipmentId") Long shipId) throws GlobalException, AppraisalException, IOException, AppraisalException {
+    public ResponseEntity<Response> sellerShipmentDet(@RequestBody Shipment shipment, @RequestHeader ("shipmentId") Long shipId) throws GlobalException, AppraisalException, IOException, AppraisalException {
         return new ResponseEntity<>(service.sellerAgreedService(shipment,shipId),HttpStatus.OK);
     }
 
@@ -293,9 +304,12 @@ public class ShipmentController {
         return ResponseEntity.ok().headers(headers).body(resource);
     }
     @PostMapping("/dlrInvntryTableList")
-    public ResponseEntity<TableList> getSellingDealer(@RequestBody DlrInvntryPdfFilter filter,@RequestHeader("userId") UUID userId, @RequestParam Integer pageNo, @RequestParam Integer pageSize){
-        TableList sellingDealerList = specService.sendDlrFilterList(filter,userId,pageNo,pageSize);
-        return new ResponseEntity<>(sellingDealerList,HttpStatus.OK);
+    public ResponseEntity<TableList> getSellingDealer(@RequestBody(required = true) DlrInvntryPdfFilter filter, @RequestHeader("userId") UUID userId, @RequestParam Integer pageNo, @RequestParam Integer pageSize){
+        if(null != filter.getDaysSinceInventory() || null!=filter.getDelrRetlAskPrice() || null!=filter.getVehicleMake() || null!=filter.getConsumerAskPrice()){
+            TableList sellingDealerList = specService.sendDlrFilterList(filter,userId,pageNo,pageSize);
+            return new ResponseEntity<>(sellingDealerList,HttpStatus.OK);
+        }else throw new RuntimeException("All Fields are empty, at least fill one field");
+
     }
 
     @PostMapping("/dlrInvVehMakeDropDown")

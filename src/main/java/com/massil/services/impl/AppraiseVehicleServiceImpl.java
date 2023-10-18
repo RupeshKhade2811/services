@@ -488,7 +488,10 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
             }else{
                 appraisalById.getTdStatus().setKeyAssureYes("NO");
             }
-            if ((appraisalById.getTdStatus().getKeyAssureYes().equalsIgnoreCase("yes")&&appraisalById.getTdStatus().getKeyAssureFiles()==null)||(appraisalById.getTdStatus().getKeyAssureYes().equalsIgnoreCase("yes")&&appraisalById.getTdStatus().getKeyAssureFiles().equals(""))) {
+            String keyAssureYes=appraisalById.getTdStatus().getKeyAssureYes();
+            String keyAssureFiles=appraisalById.getTdStatus().getKeyAssureFiles();
+
+            if ((keyAssureYes.equalsIgnoreCase("yes")&&keyAssureFiles==null)||(keyAssureYes.equalsIgnoreCase("yes")&& keyAssureFiles.equals("")||Boolean.FALSE.equals(utils.isDocPresent(keyAssureFiles)))) {
                 appraisalById.getTdStatus().setKeyAssureFiles(vehReportPdf(setDataToPdf(appraisalId)));
             }
             eAppraiseVehicleRepo.save(appraisalById);

@@ -650,7 +650,7 @@ public interface AppraisalVehicleMapper {
     @Mapping(target="email", expression = "java(customUpdate(userRegistration.getEmail(),user.getEmail()))")
     @Mapping(target="firstName", expression = "java(customUpdate(userRegistration.getFirstName(),user.getFirstName()))")
     @Mapping(target="lastName",expression = "java(customUpdate(userRegistration.getLastName(),user.getLastName()))")
-    @Mapping(target="password", expression = "java(customUpdate(userRegistration.getPassword(),user.getPassword()))")
+    @Mapping(target="password", expression = "java(customUpdateForPassword(userRegistration.getPassword(),user.getPassword()))")
     @Mapping(target="phoneNumber", expression = "java(customUpdate(userRegistration.getPhoneNumber(),user.getPhoneNumber()))")
     @Mapping(target="state", expression = "java(customUpdate(userRegistration.getState(),user.getState()))")
     @Mapping(target="streetAddress", expression = "java(customUpdate(userRegistration.getStreetAddress(),user.getStreetAddress()))")

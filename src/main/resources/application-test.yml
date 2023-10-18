@@ -7,16 +7,12 @@ market_check_url: http://api.marketcheck.com/v2/decode/car/neovin/
 market_check_url_suffix: /specs?
 api_key: api_key=hTUx9slxqOdFy4WQG7CRTuAIvC38A5mJ
 host : marketcheck-prod.apigee.net
-image_folder_path: D:/images/
-video_folder_path: D:/images/
-profile_pic_path: C:/profilepics/
-#image_folder_path: /home/factory/images/
-#video_folder_path: /home/factory/videos/
+image_folder_path: images
+video_folder_path: videos
+profile_pic_path: profilepics
 properties_path : /home/factory/properties/
-#profile_pic_path: /home/factory/profilepics/
 file_size: 500000000
-#saved_pdf_Path: /home/factory/pdf/
-saved_pdf_Path: D:/pdf/
+saved_pdf_Path: pdf
 get-link: https://services-test.keyassure.live/appraisal/getpic1?pic1=
 appraisal_form_path: src\\main\\resources\\AppraisalFormJR.jrxml
 whlsale_tmp_path: src\\main\\resources\\whlSaleBuyerOdr.jrxml
@@ -26,6 +22,7 @@ paramValue: 3be77329-6d2d-4a72-a6a1-a6fbb02d0809
 access_key: IJNKK0VI1KN7268AVRH2
 secret : q4M7yWvLhpkpIameiiMB6PmmphcEjACOUAbv1oBs
 amazonS3_url : dal-storage.hostwinds.net/keyassure-test/
+jrXmlPics: https://dal-storage.hostwinds.net/swift/v1/c652a066a7e14f32b4dfd9981ccac3ce/keyassure-test/images/
 
 
 cron.schedule.expression: "0 */50 * * * *"
@@ -38,13 +35,13 @@ spring:
     cache: false
     prefix: file:src/main/resources/templates/
   datasource:
-    password: 12345
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-#    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
-#    driver-class-name: org.postgresql.Driver
-#    username: testuser
-#    password: 9Nh@mErlU10s
+#    password: 12345
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: postgres
+    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
+    driver-class-name: org.postgresql.Driver
+    username: keyassuredeveloper
+    password: v!Smj3k5tJ7!
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -52,7 +49,7 @@ spring:
       use-new-id-generator-mappings: false
       ddl-auto: none
       id:
-        new_generator_mappings: false
+        new_generator_mappings: true
     properties:
       hibernate:
         default_schema: factory_db
@@ -77,9 +74,13 @@ spring:
     password: TIbMFm(#2Wn.
     port: 465
     properties:
+      "mail.smtp.ssl.enable": true
       mail:
         smtp:
           auth: true
+          starttls:
+            enable: true
+            required: true
           ssl:
             enable: true
         transport: 

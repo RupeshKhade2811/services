@@ -678,10 +678,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         };
         sender.send(preparator);
         response.setCode(HttpStatus.OK.value());
-        response.setMessage("Mail sent to: " + email);
+        response.setMessage("OTP sent to: " + email);
         response.setStatus(Boolean.TRUE);
         response.setUserId(response1.getUserId());
-        log.info("Mail sent to: {}", email);
+        log.info("OTP sent to: {}", email);
 
         return response;
     }
@@ -704,7 +704,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             sender.send(preparator);
 
             response.setCode((HttpStatus.OK.value()));
-            response.setMessage("mail send to : " + email);
+            response.setMessage("Password Updated Successfully!!!");
             response.setStatus(Boolean.TRUE);
             response.setFileName(response1.getMessage());
             log.info("mail send to : {}", email);
@@ -713,7 +713,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public Response validateOtp(String email, String otp) throws AppraisalException, ParseException {
+    public Response validateOtp(String email, String otp) throws ParseException, AppraisalException {
         Response response = new Response();
         ECreateOtp createOtp = createOtpRepo.gettingLatestOtp(email);
         if (null != createOtp) {
@@ -727,7 +727,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             if (otp.equals(createOtp.getOtp())) {
                 if (differenceInMinutes <= 15) {
                     response.setStatus(Boolean.TRUE);
-                    response.setMessage("Success");
+                    response.setMessage("Verified");
                     response.setCode(HttpStatus.OK.value());
                     log.info(String.valueOf(differenceInMinutes));
 

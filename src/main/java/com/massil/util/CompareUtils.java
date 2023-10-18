@@ -39,6 +39,10 @@ public class CompareUtils {
 
     @Value("${saved_pdf_Path}")
     private String pdfpath;
+    @Value("${image_folder_path}")
+    private String imageFolderPath;
+    @Value("${video_folder_path}")
+    private String videoFolderPath;
     Logger log= LoggerFactory.getLogger(CompareUtils.class);
 
     /**
@@ -198,17 +202,18 @@ public class CompareUtils {
         return dates;
     }
     public Boolean isDocPresent(String fileName) throws IOException {
-        byte[] responseBytes = fileDownloadfromBucket(pdfpath, fileName);
-        if (responseBytes!=null) {
-            log.info("File exists in the folder.");
-            return true;
-        }
-        log.info("File does not exist in the folder.");
-        return false;
+        return doesObjectExist(pdfpath, fileName);
+    }
+    public Boolean isImagePresent(String fileName) throws IOException {
+        return doesObjectExist(imageFolderPath, fileName);
+    }
+    public Boolean isVideoPresent(String fileName) throws IOException {
+        return doesObjectExist(videoFolderPath, fileName);
     }
 
     public byte[] fileDownloadfromBucket(String bucketName,String fileName) throws IOException {
         //object from amazons3
+        byte[] responseBytes = new byte[0];
         ClientConfiguration config = new ClientConfiguration();
         config.setProtocol(Protocol.HTTPS);
         AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
@@ -216,20 +221,25 @@ public class CompareUtils {
         options.setPathStyleAccess(true);
         s3.setS3ClientOptions(options);
         s3.setEndpoint(amazonS3Url);  // ECS IP Address
-        S3Object s3Object = s3.getObject(new GetObjectRequest(bucketName, fileName));
-        S3ObjectInputStream objectContent = s3Object.getObjectContent();
-        byte[] byteArray = new byte[(int) s3Object.getObjectMetadata().getContentLength()];
-        int bytesRead;
-        byte[] responseBytes = new byte[0];
-        try {
-            while ((bytesRead = objectContent.read(byteArray)) != -1) {
-                responseBytes = Arrays.copyOf(responseBytes, responseBytes.length + bytesRead);
-                System.arraycopy(byteArray, 0, responseBytes, responseBytes.length - bytesRead, bytesRead);
+        if(Boolean.TRUE.equals(s3.doesObjectExist(bucketName, fileName))) {
+
+            S3Object s3Object = s3.getObject(new GetObjectRequest(bucketName, fileName));
+
+            S3ObjectInputStream objectContent = s3Object.getObjectContent();
+            byte[] byteArray = new byte[(int) s3Object.getObjectMetadata().getContentLength()];
+            int bytesRead;
+
+            try {
+                while ((bytesRead = objectContent.read(byteArray)) != -1) {
+                    responseBytes = Arrays.copyOf(responseBytes, responseBytes.length + bytesRead);
+                    System.arraycopy(byteArray, 0, responseBytes, responseBytes.length - bytesRead, bytesRead);
+                }
+            } finally {
+                objectContent.close();
+                s3Object.close();
             }
-        } finally {
-            objectContent.close();
-            s3Object.close();
         }
+
         return responseBytes;
     }
 
@@ -252,6 +262,21 @@ public class CompareUtils {
     public Long calTotalPages(Long totalRecords,Long pageSize){
         double totalpages = ceil((totalRecords/(pageSize*1.00)));
         return (long) totalpages;
+    }
+
+    public Boolean doesObjectExist(String bucketName,String fileName){
+
+        ClientConfiguration config = new ClientConfiguration();
+        config.setProtocol(Protocol.HTTPS);
+        AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
+        S3ClientOptions options =  new S3ClientOptions();
+        options.setPathStyleAccess(true);
+        s3.setS3ClientOptions(options);
+        s3.setEndpoint(amazonS3Url);  // ECS IP Address
+        if(Boolean.TRUE.equals(s3.doesObjectExist(bucketName, fileName))) {
+            return true;
+        }
+        return false;
     }
 
 

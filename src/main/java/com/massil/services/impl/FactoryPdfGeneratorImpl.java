@@ -16,9 +16,11 @@ import com.massil.services.FactoryPdfGenerator;
 import com.massil.services.FilterSpecificationService;
 import com.massil.util.CompareUtils;
 import com.massil.util.DealersUser;
+import com.massil.services.ApprFormService;
 import freemarker.template.TemplateException;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRSaver;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -30,16 +32,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -80,7 +92,7 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
     private TroubleCodesRepo troubleCodesRepo;
     @Value("${saved_pdf_Path}")
     private String pdfpath;
-    @Value("${image_folder_path}")
+    @Value("${jrXmlPics}")
     private String pclink;
 
     @Value("${access_key}")
@@ -105,11 +117,14 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
     @Autowired
     private CompareUtils utils;
 
+    @Autowired
+    private ApprFormService apprForm;
+
     Logger log = LoggerFactory.getLogger(FactoryPdfGeneratorImpl.class);
 
 
     @Override
-    public Response pdfTable(Long offerId) throws JRException, IOException, JDOMException, GlobalException {
+    public Response pdfTable(Long offerId) throws JRException, IOException, JDOMException, GlobalException, TemplateException {
 
         List<EFileStatus> fileData = fileRepo.findByAppId(offerId);
         PdfDto pdfDto= new PdfDto();
@@ -359,7 +374,7 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
 
     @Async
-    public String pdfCreation(Long appRef,EOffers offer,Map<Integer,String> names) throws IOException, GlobalException, JRException, JDOMException {
+    public String pdfCreation(Long appRef,EOffers offer,Map<Integer,String> names) throws IOException, GlobalException, JRException, JDOMException, TemplateException {
         PdfData pdfData = setDataOfPdf(appRef);
         String pdf1 = odometerJrXmlToPdf(pdfData, names.get(1));
 
@@ -367,7 +382,10 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
         String pdf2 = whlSlByOdrPdf(pdfDataDto,names.get(2));
         String pdf3 = vehReportPdf(setDataToPdf1(appRef),names.get(3));
-        String pdf4 = apprReportPdf(names.get(4));
+
+        ApprFormDto apprFormDto=apprForm.setDataToPdf(appRef);
+        String pdf4 = apprReportPdf(apprFormDto,names.get(4));
+
         String pdf5 = licenseReportPdf(offer,names.get(5));
         String pdf6 = taxCertificate(offer,names.get(6));
 
@@ -511,11 +529,11 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
     }
 
     @Override
-    public String apprReportPdf(String name) throws IOException, JRException ,JDOMException{
+    public String apprReportPdf(ApprFormDto apprFormDto,String name) throws IOException, JRException ,JDOMException{
 
-        ApprFormDto apprFormDto=new ApprFormDto();
         if(null!=name) {
             List<ApprFormDto> dataList=new ArrayList();
+            apprFormDto.setPicLink(this.pclink);
             dataList.add(apprFormDto);
             try {
                 JRBeanCollectionDataSource beanDatasource = new JRBeanCollectionDataSource(dataList);
@@ -578,13 +596,23 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         return data;
     }
     @Override
-    public PdfDataDto setDataToPdf(Long apprRefId)  {
+    public PdfDataDto setDataToPdf(Long apprRefId) throws IOException {
 
         EAppraiseVehicle byApprId = appraiseVehicleRepo.getAppraisalById(apprRefId);
         EOffers offers = offersRepo.findByApprId(apprRefId,AppraisalConstants.BUYERACCEPTED,AppraisalConstants.SELLERACCEPTED);
         EShipment shipment=shipmentRepo.findByApprId(apprRefId);
         PdfDataDto pdfDataDto = mapper.apprToPdfData(byApprId);
         pdfDataDto = mapper.offersToPdf(offers,shipment,pdfDataDto);
+        if(pdfDataDto.getBuyerSign() != null){
+            if(!compareUtils.isImagePresent(pdfDataDto.getBuyerSign())) {
+                pdfDataDto.setBuyerSign(null);
+            }
+        }
+        if(pdfDataDto.getSellerSign() != null){
+            if(!compareUtils.isImagePresent(pdfDataDto.getSellerSign())) {
+                pdfDataDto.setSellerSign(null);
+            }
+        }
         return pdfDataDto;
     }
     @Override

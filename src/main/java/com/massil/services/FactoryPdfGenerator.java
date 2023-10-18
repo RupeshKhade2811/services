@@ -2,6 +2,7 @@ package com.massil.services;
 
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
+import com.massil.dto.ApprFormDto;
 import com.massil.dto.PdfData;
 import com.massil.dto.PdfDataDto;
 import com.massil.dto.TableList;
@@ -19,14 +20,14 @@ public interface FactoryPdfGenerator {
     public String whlSlByOdrPdf(PdfDataDto pdfDataDto,String name) throws IOException, JRException;
 
     public String vehReportPdf(PdfDataDto pdfDataDto,String name) throws IOException, JRException, JDOMException;
-    public String apprReportPdf(String name)throws IOException,JRException,JDOMException;
-    public String licenseReportPdf(EOffers offers, String name)throws IOException,JRException,JDOMException;
+    public String apprReportPdf(ApprFormDto apprFormDto, String name)throws IOException,JRException,JDOMException;
+    public String licenseReportPdf(EOffers offers,String name)throws IOException,JRException,JDOMException;
     public String taxCertificate(EOffers offers,String name)throws IOException,JRException,JDOMException;
     public PdfData setDataOfPdf(Long apprRefId);
 
-    public PdfDataDto setDataToPdf(Long apprRefId);
+    public PdfDataDto setDataToPdf(Long apprRefId) throws IOException;
 
-    public Response pdfTable(Long offerId) throws JRException, IOException, JDOMException, GlobalException;
+    public Response pdfTable(Long offerId) throws JRException, IOException, JDOMException, GlobalException, TemplateException;
 
     public byte[] purchasePdf(UUID userId,String start, String end) throws IOException, JRException, JDOMException, TemplateException, ParseException;
     public TableList purchaseList(UUID userId, Integer pageNumber, Integer pageSize, String start, String end) throws ParseException;

@@ -233,7 +233,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendMailWithAttachment(Long offerId) throws MessagingException, IOException, AppraisalException, JRException, JDOMException, GlobalException {
+    public void sendMailWithAttachment(Long offerId) throws MessagingException, IOException, AppraisalException, JRException, JDOMException, GlobalException, TemplateException {
         MimeMessage message = sender.createMimeMessage();
        // SimpleMailMessage helper = new SimpleMailMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);

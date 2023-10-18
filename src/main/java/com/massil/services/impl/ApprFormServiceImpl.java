@@ -111,6 +111,31 @@ public class ApprFormServiceImpl implements ApprFormService {
         EAppraiseVehicle byApprId = appraiseVehicleRepo.getAppraisalById(apprRefId);
         ApprFormDto apprFormPdf = mapper.apprToPdf(byApprId);
         apprFormPdf=mapper.apprToPdfSlctMny(setSelectManyData(byApprId),apprFormPdf);
+        if(apprFormPdf.getVehiclePic1() != null){
+            if(!comUtl.isImagePresent(apprFormPdf.getVehiclePic1())) {
+                apprFormPdf.setVehiclePic1(null);
+            }
+        }
+        if(apprFormPdf.getFrDrSideDmgPic() != null){
+            if(!comUtl.isImagePresent(apprFormPdf.getFrDrSideDmgPic())){
+                apprFormPdf.setFrDrSideDmgPic(null);
+            }
+        }
+        if(apprFormPdf.getFrPassenSideDmgPic() != null){
+            if(!comUtl.isImagePresent(apprFormPdf.getFrPassenSideDmgPic())){
+                apprFormPdf.setFrPassenSideDmgPic(null);
+            }
+        }
+        if(apprFormPdf.getRearDrSideDmgPic() != null){
+            if(!comUtl.isImagePresent(apprFormPdf.getRearDrSideDmgPic())){
+                apprFormPdf.setRearDrSideDmgPic(null);
+            }
+        }
+        if(apprFormPdf.getRearPassenSideDmgPic() != null){
+            if(!comUtl.isImagePresent(apprFormPdf.getRearPassenSideDmgPic())){
+                apprFormPdf.setRearPassenSideDmgPic(null);
+            }
+        }
         return apprFormPdf;
     }
 
