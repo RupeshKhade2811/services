@@ -47,12 +47,12 @@ public interface OffersRepo extends JpaRepository<EOffers,Long> {
     Page<EOffers> findByBuyerDealerIdJPQL(@Param("dealerId") Long dealerId, @Param("inventory") String inventory, @Param("valid") boolean valid, @Param("isTradeBuy") boolean isTradeBuy, Pageable pageable);
 
     /**
-     * this will send mail to user u have make offer less then 24 houra
+     * this will send mail to user u have make offer less than 24 hours
      * @return list of EOffers
      */
 
-    String jpql = "SELECT e FROM EOffers e WHERE FUNCTION('epoch', (CURRENT_TIMESTAMP - e.modifiedOn)) <= 24*60*60 " +
-            "AND FUNCTION('epoch', (CURRENT_TIMESTAMP - e.modifiedOn)) >= 22*60*60 " +
+    String jpql = "SELECT e FROM EOffers e WHERE ( EXTRACT(epoch from (CURRENT_TIMESTAMP)) - EXTRACT(epoch from (e.modifiedOn)) )<= 24*60*60 " +
+            "AND (EXTRACT(epoch from (CURRENT_TIMESTAMP ))- EXTRACT(epoch from ( e.modifiedOn)) )>= 22*60*60 " +
             "AND (e.status.statusCode = 's001' OR e.status.statusCode = 's002' OR e.status.statusCode = 's003')";
 /*    @Query(value = "SELECT e FROM EOffers e WHERE EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - e.modifiedOn))<=24*60*60 AND EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - e.modifiedOn))>=22*60*60 AND (e.status.statusCode='s001' OR e.status.statusCode='s002' OR e.status.statusCode='s003')")
     List<EOffers>  listOfMakeOfferLessThn24hrs();*/

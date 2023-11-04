@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface AutoBidJobsRepo extends JpaRepository<EAutoBidJobs,Long> {
 
-    @Query("select e from EAutoBidJobs e where e.valid=true and e.status= 0 and FUNCTION('epoch', (CURRENT_TIMESTAMP - e.createdOn)) >=2*60")
+    @Query("select e from EAutoBidJobs e where e.valid=true and e.status= 0 and (EXTRACT(epoch from (CURRENT_TIMESTAMP)) - EXTRACT(epoch from (e.createdOn))) >=2*60")
     List<EAutoBidJobs> findPendingJobs();
     @Query("update EAutoBidJobs o set o.status=1 where o.id in(:jobIds) ")
     @Modifying

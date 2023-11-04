@@ -37,7 +37,8 @@ public class TransactionEntity extends IdEntity {
 
 
     @CreatedDate
-    @GenericField(sortable = Sortable.YES,aggregable = Aggregable.YES)
+    @GenericField(aggregable = Aggregable.YES,sortable = Sortable.YES)
+    //@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
     private Date createdOn;
 
 
@@ -46,7 +47,8 @@ public class TransactionEntity extends IdEntity {
     private String modifiedBy;
 
     @LastModifiedDate
-    @GenericField(sortable = Sortable.YES,aggregable = Aggregable.YES)
+    @GenericField(aggregable = Aggregable.YES,sortable = Sortable.YES)
+    //@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
     private Date modifiedOn;
 
 

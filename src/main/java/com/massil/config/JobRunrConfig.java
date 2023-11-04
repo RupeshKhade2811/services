@@ -2,6 +2,8 @@ package com.massil.config;
 
 
 
+import com.massil.services.AutoBidService;
+import com.massil.services.OffersService;
 import jakarta.annotation.PostConstruct;
 import org.jobrunr.jobs.mappers.JobMapper;
 import org.jobrunr.scheduling.JobScheduler;
@@ -25,12 +27,12 @@ public class JobRunrConfig {
 
     @PostConstruct
     public void scheduleRecurrently() {
-   /*     jobScheduler.<OffersService>scheduleRecurrently(cronExpression, x -> x.myScheduledTask());
+      jobScheduler.<OffersService>scheduleRecurrently(cronExpression, x -> x.myScheduledTask());
 
-        jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), x -> x.sellerAutoBid());*/
+        jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), x -> x.sellerAutoBid());
 
     }
-/*    @Bean
+   /*@Bean
     public StorageProvider storageProvider(JobMapper jobMapper) {
         InMemoryStorageProvider storageProvider = new InMemoryStorageProvider();
         storageProvider.setJobMapper(jobMapper);
