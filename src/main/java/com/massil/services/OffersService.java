@@ -3,10 +3,7 @@ package com.massil.services;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.OfferException;
 import com.massil.ExceptionHandle.Response;
-import com.massil.dto.CardsPage;
-import com.massil.dto.ListedOffer;
-import com.massil.dto.OfferInfo;
-import com.massil.dto.Offers;
+import com.massil.dto.*;
 import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
@@ -123,6 +120,7 @@ public interface OffersService {
      */
     ListedOffer getOfferList(Long appraisalId) throws OfferException;
 
+    HighReserveValuePop isReserveHigh(Long appraisalId, Double newDealerReserve) throws AppraisalException;
 
 
 

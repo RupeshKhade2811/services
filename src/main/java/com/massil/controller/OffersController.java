@@ -3,10 +3,7 @@ package com.massil.controller;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.OfferException;
 import com.massil.ExceptionHandle.Response;
-import com.massil.dto.CardsPage;
-import com.massil.dto.ListedOffer;
-import com.massil.dto.OfferInfo;
-import com.massil.dto.Offers;
+import com.massil.dto.*;
 import com.massil.repository.elasticRepo.OffersERepo;
 import com.massil.services.AutoBidService;
 import com.massil.services.EmailService;
@@ -15,6 +12,7 @@ import freemarker.template.TemplateException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
+import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -282,6 +280,13 @@ public class OffersController {
         offersERepo.liquidationCards(UUID.fromString("76bab2b1-66cc-4556-8941-b3fffe9ed269"),0,4);
         //autoBidService.sellerAutoBid();
 
+    }
+
+    @PostMapping("/isReserveHigh")
+    public ResponseEntity<HighReserveValuePop> isReserveHigh(@RequestHeader("appraisalId") Long appraisalId, @RequestHeader
+            ("newDealerReserve") @Min(value = 1,message = "value must be > 0") Double newDealerReserve) throws AppraisalException {
+        HighReserveValuePop reserveHigh = service.isReserveHigh(appraisalId, newDealerReserve);
+        return new ResponseEntity<>(reserveHigh,HttpStatus.OK);
     }
 
 

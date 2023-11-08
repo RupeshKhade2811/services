@@ -5,6 +5,7 @@ package com.massil.config;
 import com.massil.services.AutoBidService;
 import com.massil.services.OffersService;
 import jakarta.annotation.PostConstruct;
+import org.jobrunr.jobs.JobId;
 import org.jobrunr.jobs.mappers.JobMapper;
 import org.jobrunr.scheduling.JobScheduler;
 import org.jobrunr.scheduling.cron.Cron;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class JobRunrConfig {
@@ -29,7 +32,13 @@ public class JobRunrConfig {
     public void scheduleRecurrently() {
       jobScheduler.<OffersService>scheduleRecurrently(cronExpression, x -> x.myScheduledTask());
 
-        jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), x -> x.sellerAutoBid());
+       jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), x -> x.sellerAutoBid());
+
+       jobScheduler.schedule(LocalDateTime.now().plusMinutes(1), () -> {
+            System.out.println("new job started");
+        });
+
+
 
     }
    /*@Bean

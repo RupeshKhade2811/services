@@ -225,7 +225,15 @@ List<EOffers>  listOfMakeOfferLessThn24hrs();
     @Query(value = "select e from EOffers e where e.valid= true and e.id=:offerId and e.status.statusCode in ('s004','s005')")
     EOffers findByOfferId(Long offerId);
 
-    @Query("select o from EOffers o where o.valid=true and o.status.statusCode in ('s001','s003') and o.appRef.id=:appRefId")
+    @Query("select o from EOffers o where o.valid=true and o.status.statusCode in ('s001','s003') and o.appRef.id=:appRefId and o.appRef.dealerReserve>0 order by o.createdOn")
     List<EOffers> findOffersPendingForSellerCounter(Long appRefId);
+    @Query(value = "select  count(*)  from EOfferQuotes oq,EAppraiseVehicle av  where oq.createdOn in(" +
+            "            select max(q.createdOn)FROM EOfferQuotes q where q.offers.id in" +
+            "            (select o.id from EOffers o  where o.status.id not in(4,5,8) and o.appRef.id=:appRefId and o.valid=true) and q.valid=true" +
+            "    group by q.offers.id ) and av.id =:appRefId and av.valid=true and oq.valid=true  and oq.buyerQuote < :newReservePrice")
+    Integer anyOfferLowerThanReserve(Long appRefId,Double newReservePrice);
+
+
+
 
 }

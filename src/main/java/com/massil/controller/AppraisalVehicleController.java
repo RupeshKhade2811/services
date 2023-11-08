@@ -67,6 +67,7 @@ public class AppraisalVehicleController {
     private AppraiseVehicleRepo repo;
 
 
+
     /**
      * This method creates new Appraisal of vehicles
      * @param apprCreaPage This is model of AppraisalCreation page coming from ui
@@ -454,6 +455,7 @@ public class AppraisalVehicleController {
         TokenSrvc tokenSrvc = tokenService.getAcessTkn();
         return new ResponseEntity<>(tokenSrvc, HttpStatus.OK);
     }
+
 
 
 }

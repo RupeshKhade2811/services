@@ -370,6 +370,7 @@ public interface AppraisalVehicleMapper {
     @Mapping(target = "vehicleSeries",ignore = true)
     @Mapping(target = "vehicleYear",ignore = true)
     @Mapping(target = "vinNumber",ignore = true)
+
     EAppraiseVehicle updateEAppraiseVehicle(ApprCreaPage page, @MappingTarget EAppraiseVehicle vehicle);
 
 

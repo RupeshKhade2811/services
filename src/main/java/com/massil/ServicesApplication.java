@@ -14,6 +14,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 @SpringBootApplication
 public class ServicesApplication {
@@ -38,9 +43,10 @@ public class ServicesApplication {
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(ServicesApplication.class, args);
-
 	}
+
+
 
 }

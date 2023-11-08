@@ -87,6 +87,8 @@ public class OffersServiceImpl implements OffersService {
     private OffersERepo offersERepo;
     @Autowired
     private ConfigCodesRepo configCodesRepo;
+    @Autowired
+    private ECountdownClockHighBidRepo clockHighBidRepo;
 
 
     @Override
@@ -211,6 +213,7 @@ public class OffersServiceImpl implements OffersService {
     }
 
     @Override
+    @Transactional
     public Response sellerCounter(Long offerId, Offers offers) throws OfferException {
 
 
@@ -251,8 +254,6 @@ public class OffersServiceImpl implements OffersService {
         Response response = new Response();
         EOfferQuotes latestQuo = offerQuotesRepo.getLatestQuo(offerId);
 
-
-
         if(Boolean.TRUE.equals(checkvalue(offers.getBuyerQuote()))){
             if (null != offerById) {
                 if (offers.getBuyerQuote()>latestQuo.getBuyerQuote()) {
@@ -266,13 +267,15 @@ public class OffersServiceImpl implements OffersService {
                 offerQuotes.setOffers(saveOffer);
                 offerQuotesRepo.save(offerQuotes);
 
-                    EAutoBidJobs autoBidJobs=new EAutoBidJobs();
-                    autoBidJobs.setAppraisalRef(offerById.getAppRef());
-                    autoBidJobs.setStatus(0);
-                    EAutoBidBump bump = autoBidBumpRepo.findBump(offers.getBuyerQuote());
-                    autoBidJobs.setBump(bump);
-                    autoBidJobs.setOfferId(saveOffer);
-                    autoBidJobsRepo.save(autoBidJobs);
+                    if(null!= saveOffer.getAppRef().getDealerReserve() && saveOffer.getAppRef().getDealerReserve()>0) {
+                        EAutoBidJobs autoBidJobs = new EAutoBidJobs();
+                        autoBidJobs.setAppraisalRef(offerById.getAppRef());
+                        autoBidJobs.setStatus(0);
+                        EAutoBidBump bump = autoBidBumpRepo.findBump(offers.getBuyerQuote());
+                        autoBidJobs.setBump(bump);
+                        autoBidJobs.setOfferId(saveOffer);
+                        autoBidJobsRepo.save(autoBidJobs);
+                    }
                 }else throw new OfferException("Buyer cannot quote less than previous quoted value");
             } else throw new OfferException("Offer not available");
         }else throw new OfferException("give quote more then 0");
@@ -335,6 +338,7 @@ public class OffersServiceImpl implements OffersService {
     }
 
     @Override
+    @Transactional
     public Response sellerRejected(Long offerId) throws OfferException {
 
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
@@ -373,6 +377,7 @@ public class OffersServiceImpl implements OffersService {
     }
 
     @Override
+    @Transactional
     public OfferInfo procurementOfferInfo(Long offerId) throws OfferException {
         OfferInfo offerInfo=null;
         EOffers info = offersRepo.findById(offerId).orElse(null);
@@ -409,6 +414,7 @@ public class OffersServiceImpl implements OffersService {
         return offerInfo;
     }
     @Override
+    @Transactional
     public OfferInfo liquidationOfferInfo(Long offerId) throws OfferException {
         OfferInfo offerInfo = null;
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
@@ -604,26 +610,34 @@ public class OffersServiceImpl implements OffersService {
         offerQuotes.setBuyerQuote(offers.getBuyerQuote());
         offerQuotesRepo.save(offerQuotes);
 
-        EAutoBidProcess autoBidProcess=new EAutoBidProcess();
-        autoBidProcess.setAppraisalRef(byApprId);
-        autoBidProcess.setLastOfferID(save);
-        autoBidProcess.setRcvHighestBid(offers.getBuyerQuote());
-        autoBidProcess.setCounterdHighestBid(0.0);
-        autoBidProcess.setReservePrice(byApprId.getDealerReserve());
-        autoBidProcess.setAutoBidStatus(true);
-        autoBidProRepo.save(autoBidProcess);
-
-        EAutoBidJobs autoBidJobs=new EAutoBidJobs();
-        autoBidJobs.setAppraisalRef(byApprId);
-        autoBidJobs.setStatus(0);
-        EAutoBidBump bump = autoBidBumpRepo.findBump(offers.getBuyerQuote());
-        autoBidJobs.setBump(bump);
-        autoBidJobs.setOfferId(save);
-        autoBidJobsRepo.save(autoBidJobs);
+        setBidProcess(byApprId, offers, save);
 
 
         return "Offer Made and quotes saved successfully";
     }
+
+    private void setBidProcess(EAppraiseVehicle byApprId, Offers offers, EOffers save) {
+
+        if(null!= byApprId.getDealerReserve() && byApprId.getDealerReserve()>0) {
+            EAutoBidProcess autoBidProcess = new EAutoBidProcess();
+            autoBidProcess.setAppraisalRef(byApprId);
+            autoBidProcess.setLastOfferID(save);
+            autoBidProcess.setRcvHighestBid(offers.getBuyerQuote());//no use
+            autoBidProcess.setCounterdHighestBid(0.0); //no use
+            autoBidProcess.setReservePrice(byApprId.getDealerReserve());
+            autoBidProcess.setAutoBidStatus(true);
+            autoBidProRepo.save(autoBidProcess);
+
+            EAutoBidJobs autoBidJobs = new EAutoBidJobs();
+            autoBidJobs.setAppraisalRef(byApprId);
+            autoBidJobs.setStatus(0);
+            EAutoBidBump bump = autoBidBumpRepo.findBump(offers.getBuyerQuote());
+            autoBidJobs.setBump(bump);
+            autoBidJobs.setOfferId(save);
+            autoBidJobsRepo.save(autoBidJobs);
+        }
+    }
+
     public String updatPrevOffer(Long appraisalId,EOffers offers1, EOffers offer,Offers offers){
         Double price = offers.getBuyerQuote();
         offer.setPrice(price);
@@ -651,4 +665,25 @@ public class OffersServiceImpl implements OffersService {
         shipmentRepo.save(shipment);
     }
 
+
+    @Override
+    @Transactional
+    public HighReserveValuePop isReserveHigh(Long appraisalId, Double newDealerReserve) throws AppraisalException {
+        EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(appraisalId);
+        HighReserveValuePop reserveValuePop = new HighReserveValuePop();
+        if(null!= appraisalById) {
+            if (null != appraisalById.getDealerReserve()){
+                reserveValuePop.setIsNewReserveHigh(appraisalById.getDealerReserve() < newDealerReserve);
+            }else {
+                reserveValuePop.setIsNewReserveHigh(true);
+            }
+            if(Boolean.TRUE.equals(reserveValuePop.getIsNewReserveHigh())) {
+                Integer rows = offersRepo.anyOfferLowerThanReserve(appraisalId, newDealerReserve);
+                reserveValuePop.setAreBidsLTNewReserve(rows != 0);
+            }
+            reserveValuePop.setStatus(true);
+            reserveValuePop.setCode(HttpStatus.OK.value());
+        }else throw new AppraisalException("Appraisal not found");
+        return reserveValuePop;
+    }
 }

@@ -29,4 +29,11 @@ public interface OfferQuotesRepo extends JpaRepository<EOfferQuotes,Long> {
             + "SELECT MAX(e1.createdOn) FROM EOfferQuotes e1 WHERE e1.offers.id=:offerId)")
     Long getLatestQuotID(Long offerId);
 
+    @Query(value = "select max(oq.buyerQuote) from EOfferQuotes oq where oq.createdOn in(" +
+            "select max(q.createdOn)FROM EOfferQuotes q where q.offers.id in(" +
+            "select o.id from EOffers o where o.valid =true and o.appRef.valid=true and o.status.statusCode in ('s001','s003') and o.appRef.id = :appRefId and o.appRef.dealerReserve >0) " +
+            "group by q.offers.id ) and oq.valid =true")
+    Double highestBidForAppraisalByBuyer(Long appRefId);
+
+
 }

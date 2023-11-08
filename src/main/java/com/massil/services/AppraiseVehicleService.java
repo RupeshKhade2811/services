@@ -3,12 +3,10 @@ package com.massil.services;
 
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.Response;
-import com.massil.dto.ApprCreaPage;
-import com.massil.dto.CardsPage;
-import com.massil.dto.PdfDataDto;
-import com.massil.dto.VideoAndImageResponse;
+import com.massil.dto.*;
 import net.sf.jasperreports.engine.JRException;
 import org.jdom2.JDOMException;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -155,5 +153,8 @@ public interface AppraiseVehicleService {
  byte[] servePdf(Long apprId) throws IOException;
 
  byte[] previewPdf(String name) throws IOException;
+
+
+
 
 }

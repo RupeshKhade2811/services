@@ -59,4 +59,5 @@ public class AppraisalVehicleCard {
     private Boolean sellerAgreed;
     private Role role;     //newly added
     private Boolean isPrivateParty;
+    private Double dealerReserve;
 }

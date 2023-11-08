@@ -54,6 +54,7 @@ public interface OffersMapper {
     @Mapping(source = "shipment.id", target = "shipmentId")
     @Mapping(source = "shipment.buyerAgreed", target = "buyerAgreed")
     @Mapping(source = "shipment.sellerAgreed", target = "sellerAgreed")
+    @Mapping(source = "appRef.dealerReserve",target = "dealerReserve")
     AppraisalVehicleCard eoffersToOffersCards(EOffers eOffers);
 
 

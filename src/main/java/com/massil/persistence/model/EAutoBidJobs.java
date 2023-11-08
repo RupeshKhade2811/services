@@ -63,7 +63,6 @@ public class EAutoBidJobs extends TransactionEntity{
     @IndexedEmbedded(includeDepth = 1)
     @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EAppraiseVehicle appraisalRef;
-
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(targetEntity = EAutoBidBump.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "bump ", nullable = false)
@@ -71,5 +70,12 @@ public class EAutoBidJobs extends TransactionEntity{
     @IndexedEmbedded(includeDepth = 1)
     @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EAutoBidBump bump;
+
+    @IndexedEmbedded(includeDepth = 1)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToOne(mappedBy = "autoBidJobs",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    private ECountdownClockHighBid clockHighBid;
+
 
 }

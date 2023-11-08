@@ -1,9 +1,10 @@
 package com.massil.persistence.model;
 
-import com.massil.constants.AppraisalConstants;
 import com.massil.persistence.generator.CustomIDGenerator;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,17 +13,16 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.AuditOverrides;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
-import jakarta.persistence.*;
+import org.hibernate.search.engine.backend.types.Aggregable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
-/**
- * This is Entity class EOfferQuotes
- */
+import java.util.UUID;
 
-
+@Indexed(index = "countdownclock_highbid")
+@Entity
+@Table(name = "countdownclock_highbid")
 @Audited
 @AuditOverrides({
         @AuditOverride(forClass=TransactionEntity.class, name="createdBy", isAudited=true),
@@ -33,46 +33,44 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
         @AuditOverride(forClass=IdEntity.class, name="sourceSystem", isAudited=true),
         @AuditOverride(forClass= IdEntity.class, name="valid", isAudited=true)
 })
-@Entity
-@Indexed(index = "OFFER_QUOTES")
-@Table(name = "OFFER_QUOTES")
-@Data
-@EqualsAndHashCode(callSuper = true)
 @DynamicUpdate
 @DynamicInsert
-@AttributeOverride(name = "id", column = @Column(name = "QUOTE_ID"))
+@Getter
+@Setter
+@NoArgsConstructor
+@AttributeOverride(name = "id", column = @Column(name = "clock_highbid_id"))
 @AttributeOverride(name = "valid", column = @Column(name = "IS_ACTIVE"))
-public class EOfferQuotes extends TransactionEntity {
-
+public class ECountdownClockHighBid extends TransactionEntity{
     @Id
-    @GenericField
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "OFFER_QUOTES_SEQ")
-    @GenericGenerator(name = "OFFER_QUOTES_SEQ", type = CustomIDGenerator.class)
+    @GenericField(aggregable = Aggregable.YES)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clock_highbid_seq")
+    @GenericGenerator(name = "clock_highbid_seq", type = CustomIDGenerator.class)
     private Long id;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @OneToOne(targetEntity = EOffers.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "OFFER_ID", nullable = false)
-    @Where(clause = "IS_ACTIVE=true")
-    @IndexedEmbedded(includeDepth = 1)
-    private EOffers offers;
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(targetEntity = EAppraiseVehicle.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "APPR_REF_ID", nullable = false)
+    @JoinColumn(name = "APPR_REF_ID ", nullable = false)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private EAppraiseVehicle appraisalRef;
+    @GenericField
+    private Integer timer=30;
+    @GenericField
+    private Double highBid;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToOne(targetEntity = EOfferQuotes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "QUOTE_ID", nullable = false)
     @Where(clause = "IS_ACTIVE=true")
     @IndexedEmbedded(includeDepth = 1)
-    private EAppraiseVehicle appRef;
-    @GenericField
-    private Double sellerQuote;
-    @GenericField
-    private Double buyerQuote;
-
-    @IndexedEmbedded(includeDepth = 1)
+    private EOfferQuotes offersQuotes;
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @OneToOne(mappedBy = "offersQuotes",cascade = CascadeType.ALL)
-    @Where(clause = "IS_ACTIVE = true")
-    private ECountdownClockHighBid clockHighBid;
-
-
+    @OneToOne(targetEntity = EAutoBidJobs.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "JOB_ID", nullable = false)
+    @Where(clause = "IS_ACTIVE=true")
+    @IndexedEmbedded(includeDepth = 1)
+    private EAutoBidJobs autoBidJobs;
+    @GenericField
+    @Column(name = "job_runr_job_id")
+    private UUID jobRunRTimerId;
 
 }
