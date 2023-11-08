@@ -15,6 +15,7 @@ import org.jobrunr.scheduling.JobScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +42,8 @@ public class AutoBidServiceImpl implements AutoBidService {
     private JobScheduler jobScheduler;
     Logger log = LoggerFactory.getLogger(AutoBidServiceImpl.class);
 
-    @Job(name = "The AutoBid job", retries = 1)
+//    @Job(name = "The AutoBid job", retries = 1)
+   // @Scheduled(fixedDelay = 1*60*1000)
     @Override
     public void sellerAutoBid() throws OfferException {
         log.info("*****Auto bid start******");

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
@@ -21,6 +22,7 @@ import java.util.TimerTask;
 
 
 @SpringBootApplication
+@EnableScheduling
 public class ServicesApplication {
 
 /*

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 public interface StatusRepo extends JpaRepository<EStatus,Long> {
@@ -23,7 +25,7 @@ public interface StatusRepo extends JpaRepository<EStatus,Long> {
      * @param status this is the status code
      * @return EStatus
      */
-
+    @Query(value = "select e from EStatus e where e.valid=true and e.statusCode=:status")
     EStatus findByStatusCode(String status);
 
 }

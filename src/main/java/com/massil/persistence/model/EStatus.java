@@ -20,6 +20,8 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
+import java.util.List;
+
 /**
  * This EStatus class which will give information about
  * buying or selling status of user or dealer
@@ -70,9 +72,9 @@ public class EStatus extends TransactionEntity{
     @IndexedEmbedded(includeDepth = 1)
     private ENotificationTable notification;
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @OneToOne(mappedBy = "status",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "status",cascade = CascadeType.ALL)
     @Where(clause = "IS_ACTIVE = true")
     @IndexedEmbedded(includeDepth = 1)
-    private EOffers offers;
+    private List<EOffers> offers;
 
 }
