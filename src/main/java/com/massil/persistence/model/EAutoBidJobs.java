@@ -39,7 +39,6 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 @AttributeOverride(name = "id", column = @Column(name = "job_id"))
 @AttributeOverride(name = "valid", column = @Column(name = "IS_ACTIVE"))
 public class EAutoBidJobs extends TransactionEntity{
-
     @Id
     @GenericField
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AUTO_BID_JOBS_SEQ")
@@ -47,7 +46,6 @@ public class EAutoBidJobs extends TransactionEntity{
     private Long id;
     @GenericField
     private Integer status;
-
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(targetEntity = EOffers.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "OFFER_ID", nullable = false)
@@ -70,7 +68,6 @@ public class EAutoBidJobs extends TransactionEntity{
     @IndexedEmbedded(includeDepth = 1)
     @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EAutoBidBump bump;
-
     @IndexedEmbedded(includeDepth = 1)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(mappedBy = "autoBidJobs",cascade = CascadeType.ALL)
