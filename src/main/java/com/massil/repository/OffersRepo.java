@@ -54,6 +54,7 @@ public interface OffersRepo extends JpaRepository<EOffers,Long> {
     String jpql = "SELECT e FROM EOffers e WHERE ( EXTRACT(epoch from (CURRENT_TIMESTAMP)) - EXTRACT(epoch from (e.modifiedOn)) )<= 24*60*60 " +
             "AND (EXTRACT(epoch from (CURRENT_TIMESTAMP ))- EXTRACT(epoch from ( e.modifiedOn)) )>= 22*60*60 " +
             "AND (e.status.statusCode = 's001' OR e.status.statusCode = 's002' OR e.status.statusCode = 's003')";
+
 /*    @Query(value = "SELECT e FROM EOffers e WHERE EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - e.modifiedOn))<=24*60*60 AND EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - e.modifiedOn))>=22*60*60 AND (e.status.statusCode='s001' OR e.status.statusCode='s002' OR e.status.statusCode='s003')")
     List<EOffers>  listOfMakeOfferLessThn24hrs();*/
 @Query(value = jpql)
@@ -232,6 +233,10 @@ List<EOffers>  listOfMakeOfferLessThn24hrs();
             "            (select o.id from EOffers o  where o.status.id not in(4,5,8) and o.appRef.id=:appRefId and o.valid=true) and q.valid=true" +
             "    group by q.offers.id ) and av.id =:appRefId and av.valid=true and oq.valid=true  and oq.buyerQuote < :newReservePrice")
     Integer anyOfferLowerThanReserve(Long appRefId,Double newReservePrice);
+
+    @Query(value = "select e from EOffers e where e.valid= true and e.id=:offerId")
+    EOffers findOfferByOfferId(Long offerId);
+
 
 
 

@@ -35,23 +35,17 @@ public class JobRunrConfig {
 
 
     @PostConstruct
-    public void scheduleRecurrently() {
-      jobScheduler.<OffersService>scheduleRecurrently(cronExpression, x -> x.myScheduledTask());
+    public void scheduleRecurrently() throws InterruptedException {
+        jobScheduler.<OffersService>scheduleRecurrently(cronExpression, x -> x.myScheduledTask());
 
-       //jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), x -> x.sellerAutoBid());
+        //jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), x -> x.sellerAutoBid());
 
-       jobScheduler.schedule(LocalDateTime.now().plusMinutes(1), () -> {
-            log.info("new job started {}", new Date());
-        });
-
-
-
-    }
    /*@Bean
     public StorageProvider storageProvider(JobMapper jobMapper) {
         InMemoryStorageProvider storageProvider = new InMemoryStorageProvider();
         storageProvider.setJobMapper(jobMapper);
         return storageProvider;
     }*/
+    }
 
 }

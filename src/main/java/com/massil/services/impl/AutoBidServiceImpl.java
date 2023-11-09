@@ -1,11 +1,9 @@
 package com.massil.services.impl;
 
 import com.massil.ExceptionHandle.OfferException;
+import com.massil.constants.AppraisalConstants;
 import com.massil.dto.Offers;
-import com.massil.persistence.model.EAppraiseVehicle;
-import com.massil.persistence.model.EAutoBidJobs;
-import com.massil.persistence.model.ECountdownClockHighBid;
-import com.massil.persistence.model.EOfferQuotes;
+import com.massil.persistence.model.*;
 import com.massil.repository.*;
 import com.massil.services.AutoBidService;
 import com.massil.services.OffersService;
@@ -40,6 +38,8 @@ public class AutoBidServiceImpl implements AutoBidService {
     private ECountdownClockHighBidRepo clockHighBidRepo;
     @Autowired
     private JobScheduler jobScheduler;
+    @Autowired
+    private OffersRepo offersRepo;
     Logger log = LoggerFactory.getLogger(AutoBidServiceImpl.class);
 
 //    @Job(name = "The AutoBid job", retries = 1)
@@ -57,10 +57,11 @@ public class AutoBidServiceImpl implements AutoBidService {
                 //List<EOfferQuotes> listOfferQuotes=new ArrayList<>();  //other buyer's quotes
                 Long runningOfferQuotesId = offerQuotesRepo.getLatestQuotID(job.getOfferId().getId());
                 Optional<EOfferQuotes> runningLatestQuo = offerQuotesRepo.findById(runningOfferQuotesId);
-                String statusCode=job.getOfferId().getStatus().getStatusCode();
                 EAppraiseVehicle appraisalRef = job.getAppraisalRef();
+                EOffers dbOffer = offersRepo.findOfferByOfferId(job.getOfferId().getId());
+                String statusCode=dbOffer.getStatus().getStatusCode();
 
-                if(!(statusCode.equals("s004")||statusCode.equals("s005") ||statusCode.equals("s008")) && (runningLatestQuo.isPresent())) {
+                if(!(statusCode.equals(AppraisalConstants.SELLERACCEPTED)||statusCode.equals(AppraisalConstants.BUYERACCEPTED) ||statusCode.equals(AppraisalConstants.SOLD)) && (runningLatestQuo.isPresent())) {
 
                         runningOfferQuotes = runningLatestQuo.get();
                         ECountdownClockHighBid oldClockHighBid = clockHighBidRepo.findByAppRefId(appraisalRef.getId());
@@ -73,7 +74,7 @@ public class AutoBidServiceImpl implements AutoBidService {
                                 clockHighBid.setHighBid(runningOfferQuotes.getBuyerQuote());
 
                                 //start timerClock
-                                JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(3), x -> setCountDownClock(appraisalRef.getId()));//send here apprId using that apprId find EClockhighbid
+                                JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(5), x -> setCountDownClock(appraisalRef.getId()));//send here apprId using that apprId find EClockhighbid
                                 clockHighBid.setJobRunRTimerId(jobId.asUUID());
                                 clockHighBid.setOffersQuotes(runningOfferQuotes);
                                 clockHighBid.setAutoBidJobs(job);
@@ -106,9 +107,9 @@ public class AutoBidServiceImpl implements AutoBidService {
                                     oldClockHighBid.setHighBid(runningOfferQuotes.getBuyerQuote());
                                     //stop old timer
                                     if (null != oldClockHighBid.getJobRunRTimerId())
-                                        jobScheduler.delete(oldClockHighBid.getJobRunRTimerId());
+                                        jobScheduler.delete(oldClockHighBid.getJobRunRTimerId(),"got a new HighBid ");
                                     //start new timerClock
-                                    JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(3), x -> setCountDownClock(appraisalRef.getId()));
+                                    JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(5), x -> setCountDownClock(appraisalRef.getId()));
                                     oldClockHighBid.setJobRunRTimerId(jobId.asUUID());
 
                                     //giving bump to oldHighBid
@@ -153,10 +154,11 @@ public class AutoBidServiceImpl implements AutoBidService {
     public void setCountDownClock(Long appraisalId){
        ECountdownClockHighBid clockHighBid = clockHighBidRepo.findByAppRefId(appraisalId);
                 clockHighBid.setTimer(0);
-              ECountdownClockHighBid save = clockHighBidRepo.save(clockHighBid);
-               jobScheduler.delete(save.getJobRunRTimerId());
+                clockHighBidRepo.save(clockHighBid);
                 log.info("CountDownClock stopped after finishing the task");
 
     }
+
+
 
 }

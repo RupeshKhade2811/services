@@ -109,9 +109,11 @@ management:
 org:
   jobrunr:
     background-job-server:
+      poll-interval-in-seconds: 5
       enabled: true
     dashboard:
       enabled: true
+
 
 #hibernate:
 #  search:
