@@ -2,8 +2,10 @@ package com.massil.services.impl;
 
 import com.massil.ExceptionHandle.OfferException;
 import com.massil.constants.AppraisalConstants;
+import com.massil.dto.AutoBidBumps;
 import com.massil.dto.AutoBidMethodArgs;
 import com.massil.dto.Offers;
+import com.massil.persistence.mapper.AutoBidMapper;
 import com.massil.persistence.model.*;
 import com.massil.repository.*;
 import com.massil.services.AutoBidService;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,6 +44,8 @@ public class AutoBidServiceImpl implements AutoBidService {
     private JobScheduler jobScheduler;
     @Autowired
     private OffersRepo offersRepo;
+    @Autowired
+    private AutoBidMapper autoBidMapper;
     Logger log = LoggerFactory.getLogger(AutoBidServiceImpl.class);
 
 //    @Job(name = "The AutoBid job", retries = 1)
@@ -172,6 +177,155 @@ public class AutoBidServiceImpl implements AutoBidService {
         log.info("Seller countered");
     }
 
+    @Override
+    public String  addBumpsAndRange() {
+       List<EAutoBidBump> list=new ArrayList<>();
+       EAutoBidBump eAutoBidBump1=new EAutoBidBump();
+       eAutoBidBump1.setStartPrice((double) 0);
+       eAutoBidBump1.setEndPrice(1000.0);
+       eAutoBidBump1.setBump(100.0);
+       list.add(eAutoBidBump1);
+        EAutoBidBump eAutoBidBump2=new EAutoBidBump();
+        eAutoBidBump2.setStartPrice(1000.0);
+        eAutoBidBump2.setEndPrice(3000.0);
+        eAutoBidBump2.setBump(100.0);
+        list.add(eAutoBidBump2);
+        EAutoBidBump eAutoBidBump3=new EAutoBidBump();
+        eAutoBidBump3.setStartPrice(3000.0);
+        eAutoBidBump3.setEndPrice(6000.0);
+        eAutoBidBump3.setBump(100.0);
+        list.add(eAutoBidBump3);
+        EAutoBidBump eAutoBidBump4=new EAutoBidBump();
+        eAutoBidBump4.setStartPrice(6000.0);
+        eAutoBidBump4.setEndPrice(10000.0);
+        eAutoBidBump4.setBump(100.0);
+        list.add(eAutoBidBump4);
+        EAutoBidBump eAutoBidBump5=new EAutoBidBump();
+        eAutoBidBump5.setStartPrice(10000.0);
+        eAutoBidBump5.setEndPrice(15000.0);
+        eAutoBidBump5.setBump(100.0);
+        list.add(eAutoBidBump5);
+        EAutoBidBump eAutoBidBump6=new EAutoBidBump();
+        eAutoBidBump6.setStartPrice(15000.0);
+        eAutoBidBump6.setEndPrice(20000.0);
+        eAutoBidBump6.setBump(100.0);
+        list.add(eAutoBidBump6);
+        EAutoBidBump eAutoBidBump7=new EAutoBidBump();
+        eAutoBidBump7.setStartPrice(20000.0);
+        eAutoBidBump7.setEndPrice(30000.0);
+        eAutoBidBump7.setBump(100.0);
+        list.add(eAutoBidBump7);
+        EAutoBidBump eAutoBidBump8=new EAutoBidBump();
+        eAutoBidBump8.setStartPrice(30000.0);
+        eAutoBidBump8.setEndPrice(40000.0);
+        eAutoBidBump8.setBump(100.0);
+        list.add(eAutoBidBump8);
+        EAutoBidBump eAutoBidBump9=new EAutoBidBump();
+        eAutoBidBump9.setStartPrice(40000.0);
+        eAutoBidBump9.setEndPrice(50000.0);
+        eAutoBidBump9.setBump(100.0);
+        list.add(eAutoBidBump9);
+        EAutoBidBump eAutoBidBump10=new EAutoBidBump();
+        eAutoBidBump10.setStartPrice(50000.0);
+        eAutoBidBump10.setEndPrice(70000.0);
+        eAutoBidBump10.setBump(100.0);
+        list.add(eAutoBidBump10);
+        EAutoBidBump eAutoBidBump11=new EAutoBidBump();
+        eAutoBidBump11.setStartPrice(70000.0);
+        eAutoBidBump11.setEndPrice(90000.0);
+        eAutoBidBump11.setBump(100.0);
+        list.add(eAutoBidBump11);
+        EAutoBidBump eAutoBidBump12=new EAutoBidBump();
+        eAutoBidBump12.setStartPrice(90000.0);
+        eAutoBidBump12.setEndPrice(130000.0);
+        eAutoBidBump12.setBump(100.0);
+        list.add(eAutoBidBump12);
+        EAutoBidBump eAutoBidBump13=new EAutoBidBump();
+        eAutoBidBump13.setStartPrice(130000.0);
+        eAutoBidBump13.setEndPrice(200000.0);
+        eAutoBidBump13.setBump(100.0);
+        list.add(eAutoBidBump13);
+        EAutoBidBump eAutoBidBump14=new EAutoBidBump();
+        eAutoBidBump14.setStartPrice(200000.0);
+        eAutoBidBump14.setEndPrice(500000.0);
+        eAutoBidBump14.setBump(100.0);
+        list.add(eAutoBidBump14);
+        EAutoBidBump eAutoBidBump15=new EAutoBidBump();
+        eAutoBidBump15.setStartPrice(500000.0);
+        eAutoBidBump15.setEndPrice(1000000.0);
+        eAutoBidBump15.setBump(100.0);
+        list.add(eAutoBidBump15);
+        List<EAutoBidBump> saveSAutoBidBumps = autoBidBumpRepo.saveAll(list);
+        return !saveSAutoBidBumps.isEmpty() ? "Saved":  "Failed";
 
 
+    }
+
+    @Override
+    public void updateBumpsAndRange() {
+        List<EAutoBidBump> all = autoBidBumpRepo.findAll();
+        for (EAutoBidBump bidBump: all) {
+            if (bidBump.getEndPrice() == 1000.0) {
+                bidBump.setBump(250.0);
+            }
+            if (bidBump.getEndPrice() == 3000.0) {
+                bidBump.setBump(400.0);
+            }
+            if (bidBump.getEndPrice() == 6000.0) {
+                bidBump.setBump(500.0);
+            }
+            if (bidBump.getEndPrice() == 10000.0) {
+                bidBump.setBump(750.0);
+            }
+            if (bidBump.getEndPrice() == 15000.0) {
+                bidBump.setBump(1000.0);
+            }
+            if (bidBump.getEndPrice() == 20000.0) {
+                bidBump.setBump(1200.0);
+            }
+            if (bidBump.getEndPrice() == 30000.0) {
+                bidBump.setBump(1500.0);
+            }
+            if (bidBump.getEndPrice() == 40000.0) {
+                bidBump.setBump(2000.0);
+            }
+            if (bidBump.getEndPrice() == 50000.0) {
+                bidBump.setBump(2500.0);
+            }
+            if (bidBump.getEndPrice() == 70000.0) {
+                bidBump.setBump(3000.0);
+            }
+            if (bidBump.getEndPrice() == 90000.0) {
+                bidBump.setBump(4000.0);
+            }
+            if (bidBump.getEndPrice() == 130000.0) {
+                bidBump.setBump(6000.0);
+            }
+            if (bidBump.getEndPrice() == 200000.0) {
+                bidBump.setBump(8000.0);
+            }
+            if (bidBump.getEndPrice() == 500000.0) {
+                bidBump.setBump(10000.0);
+            }
+            if (bidBump.getEndPrice() == 1000000.0) {
+                bidBump.setBump(15000.0);
+            }
+
+        }
+
+        autoBidBumpRepo.saveAll(all);
+        log.info("bumps values updated");
+
+
+    }
+
+    @Override
+    public void deleteBumpsAndRange() {
+
+    }
+
+    @Override
+    public List<AutoBidBumps> getAllBumpsAndRange() {
+        return autoBidMapper.lEAutoBidToLAutoBid(autoBidBumpRepo.findAll());
+    }
 }

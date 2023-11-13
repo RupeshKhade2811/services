@@ -308,5 +308,4 @@ public class AppraisalConstants {
   public static final String VIDEO_FOR_D="D";
 
   public static final String Dealer_ASKING_PRICE="delrRetlAskPrice";
-
 }

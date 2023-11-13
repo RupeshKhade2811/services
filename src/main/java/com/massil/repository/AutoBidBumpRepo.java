@@ -13,4 +13,6 @@ public interface AutoBidBumpRepo extends JpaRepository<EAutoBidBump,Long> {
 
     @Query("select e from EAutoBidBump e where e.startPrice< :buyerQuote and e.endPrice>= :buyerQuote and valid =true")
     EAutoBidBump findBump(Double buyerQuote);
+
+
 }
