@@ -30,7 +30,8 @@ jrXmlPics: https://dal-storage.hostwinds.net/swift/v1/c652a066a7e14f32b4dfd9981c
 
 
 cron.schedule.expression: "0 */50 * * * *"
-cron.schedule.expression.autoBid: "0 */50 * * * *"
+cron.schedule.everyDay: "0 0 20 * * *"
+cron.schedule.onceInMonth: "0 0 0 6 * *"
 
 spring:
   autoconfigure:
@@ -79,9 +80,12 @@ spring:
     port: 465
     properties:
       mail:
+        debug: true
         smtp:
           auth: true
           ssl:
+            enable: false
+          starttls:
             enable: true
         transport: 
           protocol: smtp

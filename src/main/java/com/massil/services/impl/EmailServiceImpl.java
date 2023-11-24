@@ -15,6 +15,7 @@ import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.DealerRegistration;
+import com.massil.dto.MailTeamSprt;
 import com.massil.persistence.model.*;
 import com.massil.repository.*;
 import com.massil.services.EmailService;
@@ -45,6 +46,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static org.springframework.ui.freemarker.FreeMarkerTemplateUtils.processTemplateIntoString;
+
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -58,6 +61,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private OffersRepo offersRepo;
+    @Autowired
+    private UserRegistrationRepo userRepo;
 
     @Autowired
     private FileStatusRepo fileRepo;
@@ -81,7 +86,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("${image_folder_path}")
     private String imageFolderPath;
     @Value("${spring.mail.username}")
-    private String senderEmail;
+    private String fromMail;
 
     @Value("${access_key}")
     private String accesskey;
@@ -149,10 +154,11 @@ public class EmailServiceImpl implements EmailService {
                 model1.put(AppraisalConstants.FRONT_PASSENGER_SIDE_PAINTWORK_STATUS, frPsSdPaWkSts);
                 model1.put(AppraisalConstants.REAR_PASSENGER_SIDE_PAINTWORK_STATUS, rrPsSdPaWkSts);
 
-                String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
+                String html = processTemplateIntoString(t, model1);
 
+                helper.setFrom(fromMail);
                 helper.setTo(userById.getEmail());
-                helper.setFrom(senderEmail);
+                
                 helper.setText(html, true);
                 helper.setSubject(AppraisalConstants.SUBJECT);
                 sender.send(message);
@@ -170,42 +176,43 @@ public class EmailServiceImpl implements EmailService {
 
         Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
         Response response = new Response();
-        MimeMessage message = sender.createMimeMessage();
-
-            MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
-
-
+//        MimeMessage message = sender.createMimeMessage();
+//            MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
             EOffers offerById = offersRepo.findById(offerId).orElse(null);
             if(null!=offerById) {
 
                 String statusCode = offerById.getStatus().getStatusCode();
 
                 EUserRegistration userById = userRegistrationRepo.findUserById(offerById.getBuyerUserId().getId());
-                String email = userById.getEmail();
+                String buyerEmail = userById.getEmail();
 
                 EAppraiseVehicle apprVeh = appraiseVehicleRepo.getAppraisalDetails(offerById.getSellerUserId().getId());
+                String sellerEmail = apprVeh.getUser().getEmail();
 
                 String message1 = "";
                 String price = "";
+                String message2="";
                 if (statusCode.equals(AppraisalConstants.BUYERACCEPTED)) {
-                    message1 = "Your offer has been accepted successfully. ";
+                    message1 = "Please Note, Your offer has been accepted successfully. ";
+                    message2 = "Please Note, Buyer Accepted your vehicle";
                     price = offerById.getPrice().toString();
+
                 } else if (statusCode.equals(AppraisalConstants.SELLERREJECTED)) {
-                    message1 = "Your offer has been rejected by the seller. ";
+                    message1 = "Please Note, Your offer has been rejected by the seller. ";
+                    message2 = "Please Note, You Rejected your vehicle to sell to Buyer";
                     price = offerById.getPrice().toString();
                 } else if (statusCode.equals(AppraisalConstants.BUYERREJECTED)) {
-                    message1 = "Your offer has been rejected . ";
+                    message1 = "Please Note, Your offer has been rejected . ";
+                    message2 = "Please Note, Buyer Rejected your vehicle";
                     price = offerById.getPrice().toString();
                 } else if (statusCode.equals(AppraisalConstants.SELLERACCEPTED)) {
-                    message1 = "Your offer has been accepted successfully by the seller. ";
+                    message1 = "Please Note, Your offer has been accepted successfully by the seller. ";
+                    message2 = "Please Note, you Accepted your vehicle to the Buyer";
                     price = offerById.getPrice().toString();
                 }
 
-
-                String name = comUtl.checkDbVariable(apprVeh.getClientFirstName()) + " " + comUtl.checkDbVariable(apprVeh.getClientLastName());
+                String name = comUtl.checkDbVariable(apprVeh.getUser().getFirstName()) + " " + comUtl.checkDbVariable(apprVeh.getUser().getLastName());
                 String vin = comUtl.checkDbVariable(apprVeh.getVinNumber());
-
-                Template t = config.getTemplate("offerEmail.ftl");
 
                 Map<String, Object> model1 = new HashMap<>();
                 model1.put(AppraisalConstants.SELLERNAME, name);
@@ -213,24 +220,98 @@ public class EmailServiceImpl implements EmailService {
                 model1.put(AppraisalConstants.MESSAGE, message1);
                 model1.put(AppraisalConstants.VALUE, price);
 
-                String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
+                Map<String, Object> model2 = new HashMap<>();
+                model2.put(AppraisalConstants.SELLERNAME, name);
+                model2.put(AppraisalConstants.VIN, vin);
+                model2.put(AppraisalConstants.MESSAGE, message2);
+                model2.put(AppraisalConstants.VALUE, price);
 
+                mailCall(model1,buyerEmail);
+                mailCall(model2,sellerEmail);
+
+                response.setCode((HttpStatus.OK.value()));
+                response.setMessage("mail send to : " + buyerEmail + " and " +sellerEmail);
+                response.setStatus(Boolean.TRUE);
+                log.info("mail send to : {}" ,buyerEmail,sellerEmail);
+            } else throw new AppraisalException("invalid offer id");
+
+        return response;
+    }
+
+    public void mailCall (Map model1,String email) throws IOException, TemplateException, MessagingException {
+
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
+
+        Template t = config.getTemplate("offerEmail.ftl");
+        String html = processTemplateIntoString(t, model1);
+
+                helper.setFrom(fromMail);
                 helper.setTo(email);
-                helper.setFrom(senderEmail);
+                
                 helper.setText(html, true);
                 helper.setSubject(AppraisalConstants.SUBJECT);
 
-                sender.send(message);
-                response.setCode((HttpStatus.OK.value()));
-                response.setMessage("mail send to : " + email);
-                response.setStatus(Boolean.TRUE);
-                log.info("mail send to : {}" ,email);
-            } else throw new AppraisalException("invalid offer id");
+        sender.send(message);
+    }
+
+
+    @Override
+    public Response mailToSprtTeam(MailTeamSprt mailTeamSprt, UUID userId) throws AppraisalException, TemplateException, MessagingException, IOException {
+
+        Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
+        Response response = new Response();
+
+        EUserRegistration usrId = userRepo.findUserById(userId);
+        if(null!=usrId) {
+
+            String usrEmail = usrId.getEmail();
+            String userName = usrId.getUserName();
+
+            String message = mailTeamSprt.getSprtWithIssue();
+
+            Map<String, Object> model = new HashMap<>();
+            model.put(AppraisalConstants.MESSAGE, message);
+            model.put(AppraisalConstants.USERNAME,userName);
+
+            mailToTeam(model, usrEmail);
+
+            response.setCode((HttpStatus.OK.value()));
+            response.setMessage("mail send to : " + usrEmail);
+            response.setStatus(Boolean.TRUE);
+            log.info("mail send to : {}" ,usrEmail);
+        } else throw new AppraisalException("invalid user id");
 
 
 
         return response;
     }
+
+
+    public void mailToTeam (Map model, String email)  {
+        try {
+            MimeMessage message = sender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message,StandardCharsets.UTF_8.name());
+
+            Template u = config.getTemplate("mailSupport.ftl");
+            String html = processTemplateIntoString(u, model);
+
+            helper.setTo(email);
+            helper.setFrom(fromMail);
+            helper.setText(html, true);
+            helper.setSubject("KeyAssure Message");
+
+
+            sender.send(message);
+        }
+        catch (Exception e){
+            log.info("unable to send the mail please contact the admin");
+        }
+
+    }
+
+
+
 
     @Override
     public void sendMailWithAttachment(Long offerId) throws MessagingException, IOException, AppraisalException, JRException, JDOMException, GlobalException, TemplateException {
@@ -251,8 +332,8 @@ public class EmailServiceImpl implements EmailService {
             EUserRegistration userById = userRegistrationRepo.findUserById(offerById.getSellerUserId().getId());
 
             String email = userById.getEmail();
+            helper.setFrom(fromMail);
             helper.setTo(email);
-            helper.setFrom(senderEmail);
             helper.setSubject("PDF attachments of Factory key Assure");
             helper.setText("the purchased vehicle details");
 
@@ -310,11 +391,11 @@ public class EmailServiceImpl implements EmailService {
             helper.addAttachment(pdfList.get(i),attachment);
         }
 
-        String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
+        String html = processTemplateIntoString(t, model1);
 
 
+        helper.setFrom(fromMail);
         helper.setTo(emailList.toArray(new String[0]));
-        helper.setFrom(senderEmail);
         helper.setText(html, true);
         helper.setSubject(AppraisalConstants.DEALERCREATON);
         sender.send(message);

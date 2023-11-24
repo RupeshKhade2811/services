@@ -9,6 +9,7 @@ package com.massil.services.impl;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
+import com.massil.config.AuditConfiguration;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.*;
 import com.massil.dto.UserRegistration;
@@ -72,6 +73,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private String pdfpath;
     @Value("${image_folder_path}")
     private String imageFolderPath;
+    @Value("${identityServerAuth}")
+    private String identityServerAuth;
+
+    @Autowired
+    private PaymentDetailsRepo paymentDetailsRepo;
+
 
     @Autowired
     private DealerRegistrationRepo dlrRegRepo;
@@ -101,6 +108,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private FactoryManagementRepo managementRepo;
     @Autowired
     private SubscriptionRepo subscriptionRepo;
+    @Autowired
+    private AuditConfiguration auditConfiguration;
 
     @Autowired
     private CreateOtpRepo createOtpRepo;
@@ -126,7 +135,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Transactional
     public Response createUser(UserRegistration userRegistration, Long dealerId) throws AppraisalException {
         log.info("User Creation method is triggered **Service IMPL**");
-        EUserRegistration eUserRegistration=null;
+        EUserRegistration eUserRegistration = null;
+        auditConfiguration.setAuditorName(userRegistration.getUserName());
         eUserRegistration = appraisalVehicleMapper.userRegisToEUserRegis(userRegistration);
         String value = callTheUrl(eUserRegistration);
         if(null!=value){
@@ -197,14 +207,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public SendingRole sendJsonResponse(Users users) {
         log.debug("User details sending to identity server **triggered**");
         SendingRole role = null;
-        UserExist userExist=null;
-        try{
-        RestTemplate restTemplate = new RestTemplate();
-        // Set the request headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("accept", "application/scim+json");
-        headers.set("Content-Type", "application/scim+json");
-        headers.set("Authorization", "Basic YWRtaW46YWRtaW4=");
+        UserExist userExist = null;
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            // Set the request headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("accept", "application/scim+json");
+            headers.set("Content-Type", "application/scim+json");
+            headers.set("Authorization", "Basic "+identityServerAuth);
 
         // Create the request entity with the JSON payload and headers
         HttpEntity<Users> requestEntity = new HttpEntity<>(users, headers);
@@ -258,9 +268,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         RestTemplate restTemplate = new RestTemplate();
         // Set the request headers
         HttpHeaders headers = new HttpHeaders();
-        headers.set("accept","application/scim+json");
-        headers.set("Content-Type","application/scim+json");
-        headers.set("Authorization","Basic YWRtaW46YWRtaW4=");
+        headers.set("accept", "application/scim+json");
+        headers.set("Content-Type", "application/scim+json");
+        headers.set("Authorization", "Basic "+identityServerAuth);
 
         UserExist userExist= new UserExist();
         userExist.setFilter("userName Eq "+userName);
@@ -314,9 +324,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private String sendingJsonPatchReq(SendingRole role) {
         // Set the request headers
         HttpHeaders headers = new HttpHeaders();
-        headers.set("accept","application/scim+json");
-        headers.set("Content-Type","application/scim+json");
-        headers.set("Authorization","Basic YWRtaW46YWRtaW4=");
+        headers.set("accept", "application/scim+json");
+        headers.set("Content-Type", "application/scim+json");
+        headers.set("Authorization", "Basic "+identityServerAuth);
 
         RestTemplate restTemplate = restTemplate();
 
@@ -332,9 +342,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public String updateUserInIS(UpdateUserIS updateUserIS,UUID dealerD2UserId) {
         // Set the request headers
         HttpHeaders headers = new HttpHeaders();
-        headers.set("accept","application/scim+json");
-        headers.set("Content-Type","application/scim+json");
-        headers.set("Authorization","Basic YWRtaW46YWRtaW4=");
+        headers.set("accept", "application/scim+json");
+        headers.set("Content-Type", "application/scim+json");
+
+        headers.set("Authorization", "Basic "+identityServerAuth);
 
         RestTemplate restTemplate = restTemplate();
 
@@ -352,40 +363,51 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public UserRegistration showInEditPage(UUID userId) throws AppraisalException {
         log.info("Showing user in edit page is triggered **Service IMPL**");
 
-            EUserRegistration user = userRegistrationRepo.findUserById(userId);
-            if (null!=user){
-                UserRegistration userRegistration = appraisalVehicleMapper.eUserRegisToUserRegis(user);
-                userRegistration.setRoleOfUser(appraisalVehicleMapper.eRoleToRole(roleMappingRepo.findByUserId(userId).getRole()));
-                if(null!=user.getDealer()) {
-                    userRegistration.setDealershipNames(user.getDealer().getDealershipNames());
-                }
-                userRegistration.setPassword(null);
-                userRegistration.setMessage("Successfully showing users in edit page");
-                userRegistration.setCode(HttpStatus.OK.value());
-                userRegistration.setStatus(true);
-                log.debug("Object Showing in UI {}",userRegistration);
-                return userRegistration;
+        EUserRegistration user = userRegistrationRepo.findUserById(userId);
+        if (null != user) {
+            auditConfiguration.setAuditorName(user.getUserName());
+            UserRegistration userRegistration = appraisalVehicleMapper.eUserRegisToUserRegis(user);
+            userRegistration.setRoleOfUser(appraisalVehicleMapper.eRoleToRole(roleMappingRepo.findByUserId(userId).getRole()));
+            if (null != user.getDealer()) {
+                userRegistration.setDealershipNames(user.getDealer().getDealershipNames());
             }
-            else throw new AppraisalException("Invalid user Id");
+            userRegistration.setPassword(null);
+            userRegistration.setMessage("Successfully showing users in edit page");
+            userRegistration.setCode(HttpStatus.OK.value());
+            userRegistration.setStatus(true);
+            log.debug("Object Showing in UI {}", userRegistration);
+            return userRegistration;
+        } else throw new AppraisalException("Invalid user Id");
 
     }
 
     @Override
+    @Transactional
     public Response updateUser(UserRegistration newUser, UUID userId) throws AppraisalException {
         log.info("User Update method is Triggered **Service IMPL**");
         EUserRegistration user = userRegistrationRepo.findUserById(userId);
+        auditConfiguration.setAuditorName(user.getUserName());
         ERoleMapping roleMapping = roleMappingRepo.findByUserId(userId);
         EUserRegistration manager = userRegistrationRepo.findUserById(newUser.getManagerId());
         EUserRegistration factoryManager =  userRegistrationRepo.findUserById(newUser.getFactoryManager());
         EUserRegistration factorySalesman = userRegistrationRepo.findUserById(newUser.getFactorySalesman());
         ECompany companyId = compayRepo.findByCompanyId(newUser.getCompanyId());
 
-        if (null!=user) {
-                user = appraisalVehicleMapper.updateEUserRegisteration(newUser, user);
-                log.debug("object coming after update {}",user);
-                user.setModifiedOn(new Date());
-                userRegistrationRepo.save(user);
-            }else throw new AppraisalException("invalid userId");
+        if (null != user) {
+            EDealerRegistration oldUser = appraisalVehicleMapper.eUserRegToEDealer(user);
+            if(null==newUser.getPassword() || ""==newUser.getPassword()){
+                newUser.setPassword(user.getPassword());
+            }
+            user = appraisalVehicleMapper.updateEUserRegisteration(newUser, user);
+            log.debug("object coming after update {}", user);
+            user.setModifiedOn(new Date());
+
+            DealerRegistration newUsr = appraisalVehicleMapper.userToDealer(newUser);
+//            if(newUser.getPassword()==null||newUser.getPassword().equals("")) newUser.setPassword(user.getPassword());
+            updateUserInIS(dealerRegistrationService.forUserUpdateIS(newUsr, oldUser),userId);
+
+            userRegistrationRepo.save(user);
+        } else throw new AppraisalException("invalid userId");
 
         if(null!=manager){
             roleMapping.setManager(manager);
@@ -437,6 +459,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public Response deleteUser(UUID userId) throws GlobalException {
         Response response=new Response();
         EUserRegistration userById = userRegistrationRepo.findUserById(userId);
+        auditConfiguration.setAuditorName(userById.getUserName());
         if (null != userById) {
             if(null!=userById.getDealer()){
                 EDealerRegistration dealerById = dealerRegistrationRepo.findDealerById(userById.getDealer().getId());
@@ -575,7 +598,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public UserRegistration getUserinfo(UUID userId) throws AppraisalException {
         log.info("finding user is available or not base on userID");
         EUserRegistration byUserName = userRegistrationRepo.findByUserName(userId);
-        if(null!=byUserName){
+        ERoleMapping roleMapping = roleMappingRepo.findByUserId(userId);
+
+        if (null != byUserName) {
             UserRegistration userRegistration = appraisalVehicleMapper.eUserRegisToUserRegis(byUserName);
             List<ERoleMapping> rolemap = roleMappingRepo.findByUserRoll(userRegistration.getId());
             for (ERoleMapping role:rolemap) {
@@ -584,6 +609,27 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             }
             if(null!=byUserName.getDealer()) {
                 userRegistration.setDealershipNames(byUserName.getDealer().getDealershipNames());
+            }
+            if(null!=byUserName && null!= roleMapping) {
+                if ((roleMapping.getRole().getRole().equals("D2") || roleMapping.getRole().getRole().equals("D3") || roleMapping.getRole().getRole().equals("S1") || roleMapping.getRole().getRole().equals("M1"))) {
+                    UUID dealerId = roleMapping.getDealerAdmin();
+                    PaymentDetails user1 = paymentDetailsRepo.getUser(dealerId);
+                    if(null!=user1 && null!=user1.getTransacId()){
+                        userRegistration.setSubscription(Boolean.TRUE);
+                    }else {
+                        userRegistration.setSubscription(Boolean.FALSE);
+                    }
+                } else if (roleMapping.getRole().getRole().equals("P1") || roleMapping.getRole().getRole().equals("D1")){
+                    PaymentDetails user1 = paymentDetailsRepo.getUser(userId);
+                    if(null!=user1 && null!=user1.getTransacId()){
+                        userRegistration.setSubscription(Boolean.TRUE);
+                    }else {
+                        userRegistration.setSubscription(Boolean.FALSE);
+                    }
+                }
+                else{
+                    userRegistration.setSubscription(Boolean.TRUE);
+                }
             }
             userRegistration.setPassword(null);
             userRegistration.setCode(HttpStatus.OK.value());
@@ -596,6 +642,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     }
     @Override
+    @Transactional
     public String profilePicUpload(MultipartFile file, UUID userId) throws AppraisalException, IOException {
 
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
@@ -610,6 +657,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             utils.uploadFileInBucket(file1,profilePicPath,filename);
             ERoleMapping roleMapping = roleMappingRepo.findByUserId(userId);
             EDealerRegistration dealer = roleMapping.getUser().getDealer();
+            auditConfiguration.setAuditorName(dealer.getName());
             if(roleMapping.getRole().getRoleGroup().equalsIgnoreCase("D") && null!=dealer){
                 dealer.setDealerPic(filename);
                 dlrRegRepo.save(dealer);
@@ -636,8 +684,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
+    @Transactional
     public Response otpGenerator(String email) throws AppraisalException {
         Response response = new Response();
+        auditConfiguration.setAuditorName("System");
         EUserRegistration userByEmail = userRegistrationRepo.findUserByEmailId(email);
         StringBuilder otp = new StringBuilder();
         if (null != userByEmail) {

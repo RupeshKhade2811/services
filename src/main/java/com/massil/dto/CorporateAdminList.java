@@ -10,7 +10,8 @@ import java.util.List;
 
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class CorporateAdminList extends Response {
     List<CorporateAdminView> CorAdminList;

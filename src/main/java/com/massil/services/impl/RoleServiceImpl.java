@@ -2,6 +2,7 @@ package com.massil.services.impl;
 
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
+import com.massil.config.AuditConfiguration;
 import com.massil.dto.Role;
 import com.massil.dto.RoleDropDowns;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
@@ -11,6 +12,7 @@ import com.massil.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -18,12 +20,15 @@ import java.util.Date;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     RoleRepo roleRepo;
+    @Autowired
+    private AuditConfiguration auditConfiguration;
 
     @Autowired
     private AppraisalVehicleMapper mapper;
 
     @Override
     public Response addRole(Role role){
+        auditConfiguration.setAuditorName("System");
            Response response=new Response();
                 response.setCode(HttpStatus.OK.value());
                 response.setMessage("Role saved successfully");
@@ -33,8 +38,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Response updateRole(Role role, Long roleId) throws GlobalException {
         Response response=new Response();
+        auditConfiguration.setAuditorName("System");
         ERole byRole = roleRepo.findByRole(roleId);
         if (null!=byRole){
             byRole.setModifiedOn(new Date());
@@ -47,8 +54,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Response deleteRole(Long roleId) throws GlobalException {
         Response response=new Response();
+        auditConfiguration.setAuditorName("System");
         ERole byRole = roleRepo.findByRole(roleId);
         if (null!=byRole){
             byRole.setValid(Boolean.FALSE);

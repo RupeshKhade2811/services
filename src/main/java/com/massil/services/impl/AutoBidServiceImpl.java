@@ -1,5 +1,6 @@
 package com.massil.services.impl;
 
+import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.OfferException;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.AutoBidBumps;
@@ -51,7 +52,7 @@ public class AutoBidServiceImpl implements AutoBidService {
 //    @Job(name = "The AutoBid job", retries = 1)
    @Scheduled(fixedDelay = 60 * 1000)
     @Override
-    public void sellerAutoBid() throws OfferException {
+    public void sellerAutoBid() throws OfferException, AppraisalException {
         log.info("*****Auto bid start******");
 
         List<EAutoBidJobs> pendingJobs = autoBidJobsRepo.findPendingJobs();
@@ -158,7 +159,7 @@ public class AutoBidServiceImpl implements AutoBidService {
         }
 
     }
-    void acceptHighBid(AutoBidMethodArgs args) throws OfferException {
+    void acceptHighBid(AutoBidMethodArgs args) throws OfferException, AppraisalException {
         if (Boolean.TRUE.equals(isBuyerCounterHigher(args.getHighestBidByBuyer(), args.getRunningOfferQuotes().getBuyerQuote())) && args.getRunningOfferQuotes().getBuyerQuote() > args.getDealerReserve() && args.getOldClockHighBid().getTimer() == 0) {
             offersService.sellerAccept(args.getJob().getOfferId().getId());
             //job completed

@@ -3,6 +3,7 @@ package com.massil.services;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.dto.*;
 import com.massil.persistence.model.D2DlrList;
+import com.massil.persistence.model.FactoryPersonnel;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,13 +48,15 @@ public interface FilterSpecificationService {
 
     public List<Company> searchCompany(String name);
 
-    public CorporateAdminList sendCorporateList(SellingDealer filter) throws AppraisalException;
+    public CorporateAdminList sendCorporateList() throws AppraisalException;
 
-    public List<UserRegistration> getUserList(String roleGroup,String name);
+    public List<UserRegistration> getUserList(String roleGroup);
 
     DlrList searchDealers(DealerRegistration filter) throws AppraisalException;
 
-    List<D2DlrList> sendDlrD2(SellingDealer filter) throws AppraisalException;
+    List<D2DlrList> sendDlrD2(UUID userId) throws AppraisalException;
 
     FilterDropdowns makeDropDown(UUID userId);
+
+    public List<FactoryPersonnel> sendFctryPrsnl(SellingDealer filter) throws AppraisalException;
 }

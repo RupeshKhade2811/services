@@ -2,6 +2,7 @@ package com.massil.services.impl;
 
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.Response;
+import com.massil.config.AuditConfiguration;
 import com.massil.dto.Status;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.model.EStatus;
@@ -25,11 +26,14 @@ public class StatusServiceImpl implements StatusService {
     private StatusRepo statusRepo;
     @Autowired
     private AppraisalVehicleMapper mapper;
+    @Autowired
+    private AuditConfiguration auditConfiguration;
 
     @Override
     public String addStatus(List<Status> statuses) {
 
         List<EStatus> sts = mapper.lStatusToEStatus(statuses);
+        auditConfiguration.setAuditorName("System");
 
 
         statusRepo.saveAll(sts);
@@ -45,6 +49,7 @@ public class StatusServiceImpl implements StatusService {
                 sts = mapper.updateOfferStatus(status, sts);
                 log.debug("object coming after update",sts);
                 sts.setModifiedOn(new Date());
+                auditConfiguration.setAuditorName("System");
                 statusRepo.save(sts);
             }else throw new AppraisalException("invalid statusId");
 
@@ -64,7 +69,7 @@ public class StatusServiceImpl implements StatusService {
         Response response=new Response();
 
             if (null!= sts && sts.getValid()) {
-
+                auditConfiguration.setAuditorName("System");
                 sts.setValid(false);
                 statusRepo.save(sts);
 

@@ -4,6 +4,8 @@ import lombok.Data;
 import org.hibernate.annotations.Immutable;
 
 import jakarta.persistence.*;
+
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -22,4 +24,6 @@ public class MembersByFactoryManager {
     private String compName;
     private String fmFirstName;
     private String  fmLastName;
+    private Date signupDate;
+    private Double totalRevenue;
 }

@@ -85,7 +85,18 @@ public interface AppraisalVehicleMapper {
     @Mapping(source = "tdStatus.aprVehImg.vehiclePic1", target = "vehiclePic1" )
     @Mapping(target = "titleSts",expression = "java(setTitelStsConfig(eAppraiseVehicle))")
     @Mapping(target="isSold",expression = "java(isShAvlbl(eAppraiseVehicle.getShipment()))")
+    @Mapping (target = "dsName",source = "dlrsUserNames.userName")
+    @Mapping(target = "role",expression = "java(setRoleOfCreator(eAppraiseVehicle.getUser().getRoleMapping()))")
     AppraisalVehicleCard eApprVehiToApprVehiCard(EAppraiseVehicle eAppraiseVehicle);
+
+    default Role setRoleOfCreator(List<ERoleMapping> roleMapping){
+        if(!roleMapping.isEmpty()){
+            ERoleMapping eRoleMapping = roleMapping.get(0);
+            ERole role = eRoleMapping.getRole();
+            return eRoleToRole(role);
+        }
+        return null;
+    }
 
     default Boolean checkIsOfferMade(EAppraiseVehicle eAppraiseVehicle,UUID userId){
         if(null!=eAppraiseVehicle && null!=eAppraiseVehicle.getOffers()) {
@@ -632,11 +643,14 @@ public interface AppraisalVehicleMapper {
 
 
     default String customDate(Date date)  {
-        SimpleDateFormat dateFormat=new SimpleDateFormat("dd MMM yyyy");
-        String format = dateFormat.format(date);
-        SimpleDateFormat timeFormat=new SimpleDateFormat("hh:mm a");
-        String format1 = timeFormat.format(date);
-        return format+" "+format1;
+        if(null != date) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+            String format = dateFormat.format(date);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+            String format1 = timeFormat.format(date);
+            return format + " " + format1;
+        }
+        return "";
     }
 
     /**
@@ -811,30 +825,27 @@ public interface AppraisalVehicleMapper {
     @Mapping(source = "userId",target = "memberId")
     @Mapping(target = "memberName",expression = "java(concatName(membersView.getMemberFirstName(),membersView.getMemberLastName()))")
     @Mapping(source = "streetAddress",target = "location")
-    @Mapping(target = "signUpDate",constant = "")
     @Mapping(source = "role",target = "memberType")
     @Mapping(target = "factorySalesMan",expression = "java(concatName(membersView.getFactorySalesmanFirstName(),membersView.getFactorySalesmanLastName()))")
     @Mapping(target = "factoryMgr",expression = "java(concatName(membersView.getFactoryManagerFirstName(),membersView.getFactoryManagerLastName()))")
-    @Mapping(target = "totalRev",constant = "")
+    @Mapping(target = "signupDate", expression = "java(customDate(membersView.getSignupDate()))")
     FactoryReport totalMembersToFactoryRpt( TotalMembersView membersView);
     List< FactoryReport> totalMembersToFactoryRpt( List<TotalMembersView> membersView);
 
     @Mapping(source = "userId",target = "memberId")
     @Mapping(target = "memberName",expression = "java(concatName(membersView.getFirstName(),membersView.getLastName()))")
     @Mapping(source = "streetAddress",target = "location")
-    //@Mapping(source = "signFrom",target = "signUpDate")
-    //@Mapping(source = "amount",target = "totalRev")
+    @Mapping(target = "signupDate", expression = "java(customDate(membersView.getSignupDate()))")
     FactoryReport membersToFactoryRpt( MembersByFactorySalesmen membersView);
     List< FactoryReport> membersToFactoryRpt(List< MembersByFactorySalesmen> membersView);
     @Mapping(source = "userId",target = "memberId")
     @Mapping(target = "memberName",expression = "java(concatName(membersView.getFirstName(),membersView.getLastName()))")
     @Mapping(source = "streetAddress",target = "location")
-    //@Mapping(source = "signFrom",target = "signUpDate")
-    //@Mapping(source = "amount",target = "totalRev")
+    @Mapping(target = "signupDate", expression = "java(customDate(membersView.getSignupDate()))")
     FactoryReport managersMembersToFactoryRpt( MembersByFactoryManager membersView);
     List< FactoryReport> managersMembersToFactoryRpt(List< MembersByFactoryManager> membersView);
     default String concatName(String first, String last){
-        if(first==null && last ==null) {first="";}
+        if(first==null && last ==null) {first="";last="";}
         return first+" "+last;
     }
     @Mapping(target = "userId", source = "userId")
@@ -946,4 +957,17 @@ public interface AppraisalVehicleMapper {
     @Mapping(target = "name",source = "userName")
     @Mapping(target = "id",ignore = true)
     EDealerRegistration eUserToEdealer(EUserRegistration userById);
+
+    DealerRegistration userToDealer(UserRegistration userReg);
+
+    @Mapping(target = "id",ignore = true)
+    @Mapping(target = "city",ignore = true)
+    @Mapping(target = "phoneNumber",ignore = true)
+    @Mapping(target = "profilePicture",ignore = true)
+    @Mapping(target = "state",ignore = true)
+    @Mapping(target = "streetAddress",ignore = true)
+    @Mapping(target = "zipCode",ignore = true)
+    EDealerRegistration eUserRegToEDealer(EUserRegistration userReg);
+
+
 }

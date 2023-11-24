@@ -60,7 +60,7 @@ public class ApprFormServiceImpl implements ApprFormService {
     @Autowired
     private AppraisalVehicleMapper appraisalVehicleMapper;
 
-    @Value("${image_folder_path}")
+    @Value("${jrXmlPics}")
     private String pllink;
 
     @Autowired

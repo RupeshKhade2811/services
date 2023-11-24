@@ -4,6 +4,7 @@ package com.massil.config;
 
 import com.massil.services.AutoBidService;
 import com.massil.services.OffersService;
+import com.massil.services.PaymentGatewayService;
 import com.massil.services.impl.AutoBidServiceImpl;
 import jakarta.annotation.PostConstruct;
 import org.jobrunr.jobs.JobId;
@@ -29,8 +30,15 @@ public class JobRunrConfig {
     private JobScheduler jobScheduler;
     @Value("${cron.schedule.expression}")
     private String cronExpression;
-   @Value("${cron.schedule.expression.autoBid}")
+	@Value("${cron.schedule.expression.autoBid}")
     private String autoBidCronExpression;
+
+   	@Value("${cron.schedule.everyDay}")
+    private String everyDay;
+
+    @Value("${cron.schedule.onceInMonth}")
+    private String onceInAMonth;
+
     Logger log = LoggerFactory.getLogger(JobRunrConfig.class);
 
 
@@ -39,6 +47,8 @@ public class JobRunrConfig {
         jobScheduler.<OffersService>scheduleRecurrently(cronExpression, x -> x.myScheduledTask());
 
         //jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), x -> x.sellerAutoBid());
+		jobScheduler.<PaymentGatewayService>scheduleRecurrently(everyDay, PaymentGatewayService::onceInADay);
+        jobScheduler.<PaymentGatewayService>scheduleRecurrently(onceInAMonth, PaymentGatewayService::onceInAMonth);
 
    /*@Bean
     public StorageProvider storageProvider(JobMapper jobMapper) {

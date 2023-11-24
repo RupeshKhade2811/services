@@ -120,15 +120,19 @@
 				<text><![CDATA[Seller]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="160" y="0" width="180" height="30" forecolor="#2549E8" uuid="e622555d-198b-4ccd-a4a1-c59c53304058">
+				<reportElement x="160" y="0" width="280" height="30" forecolor="#2549E8" uuid="e622555d-198b-4ccd-a4a1-c59c53304058">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="19" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ Factory KeyAssure]]></text>
+				<text><![CDATA[ Factory KeyAssure llc]]></text>
 			</staticText>
+			<image>
+				<reportElement x="87" y="7" width="72" height="52" uuid="7a4d2396-b8c2-4cbe-8ace-73bde8f1dd0b"/>
+				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
+			</image>
 			<staticText>
 				<reportElement x="190" y="30" width="158" height="30" forecolor="#252CE8" uuid="120c307c-9a4d-4bd3-bb09-180112743385">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -202,13 +206,6 @@
 				</textElement>
 				<text><![CDATA[Agreed Price:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="340" y="7" width="30" height="23" forecolor="#3016F2" uuid="870dc57e-307e-4332-a444-1052dd54039f"/>
-				<textElement>
-					<font size="11"/>
-				</textElement>
-				<text><![CDATA[LLC]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="41" y="93" width="98" height="18" uuid="b6a62070-bb8c-411d-9054-6f664ffa5db2"/>
 				<textFieldExpression><![CDATA[$F{slrName}]]></textFieldExpression>
@@ -226,7 +223,7 @@
 				<textFieldExpression><![CDATA[$F{slrCity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="40" y="158" width="120" height="16" uuid="0b123a48-6832-41ff-b477-6175179a55c9"/>
+				<reportElement x="40" y="158" width="140" height="16" uuid="0b123a48-6832-41ff-b477-6175179a55c9"/>
 				<textFieldExpression><![CDATA[$F{slrMail}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -258,7 +255,7 @@
 				<textFieldExpression><![CDATA[$F{buyerCity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="380" y="158" width="120" height="16" uuid="f604aa68-4630-4250-aade-7600decc0821"/>
+				<reportElement x="380" y="158" width="140" height="16" uuid="f604aa68-4630-4250-aade-7600decc0821"/>
 				<textFieldExpression><![CDATA[$F{buyerMail}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -480,11 +477,11 @@ PURCHASE VEHICLES ON BEHALF OF THE DEALERSHIP NAMED ABOVE.]]></text>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="40" y="260" width="70" height="40" uuid="e669249d-f954-45fb-9e9f-c91c1bc41cdb"/>
+				<reportElement x="40" y="260" width="91" height="40" uuid="e669249d-f954-45fb-9e9f-c91c1bc41cdb"/>
 				<imageExpression><![CDATA[$F{buyerSign}!= null && $F{buyerAgreed} ? $F{picLink} + $F{buyerSign} : null]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="450" y="260" width="70" height="40" uuid="e669249d-f954-45fb-9e9f-c91c1bc41cdb"/>
+				<reportElement x="450" y="260" width="90" height="40" uuid="e669249d-f954-45fb-9e9f-c91c1bc41cdb"/>
 				<imageExpression><![CDATA[$F{sellerSign} != null  && $F{sellerAgreed} ? $F{picLink} + $F{sellerSign} : null]]></imageExpression>
 			</image>
 		</band>

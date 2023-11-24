@@ -17,6 +17,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
+import com.massil.config.AuditConfiguration;
 import com.massil.constants.AppraisalConstants;
 
 import com.massil.dto.*;
@@ -96,8 +97,11 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
 
     @Autowired
     private CompareUtils compareUtils;
+    @Autowired
+    private AuditConfiguration auditConfiguration;
 
     @Override
+    @Transactional
     public String createDealer(DealerRegistration dealerRegistration) throws AppraisalException {
         log.info("This method is used to create Dealer");
         EDealerRegistration eDealerRegistration = apprVehMapper.dealerRegToEdealerReg(dealerRegistration);
@@ -112,6 +116,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         if(byRole.getRole().equalsIgnoreCase("D2") || byRole.getRole().equalsIgnoreCase("D3") || byRole.getRole().equalsIgnoreCase("S1") || byRole.getRole().equalsIgnoreCase("M1")){
             eDealerRegistration.setStatus(null);
         }
+        auditConfiguration.setAuditorName(eDealerRegistration.getName());
         EDealerRegistration save = dlrRegRepo.save(eDealerRegistration);
 
         log.info("Dealer is saved and Process started for user registration");
@@ -143,8 +148,10 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
 
         if(null!=d2UserId) {
             EUserRegistration userById = userRegRepo.findUserById(d2UserId);
+            userById.getRoleMapping().get(0).getRole();
             DealerRegistration dealerRegistration = apprVehMapper.edealerRegToDealerReg(
                     dlrRegRepo.findDealerById(userById.getDealer().getId()));
+            dealerRegistration.setRoleOfUser(apprVehMapper.eRoleToRole(userById.getRoleMapping().get(0).getRole()));
 
 
             if(null!=userById.getRoleMapping().get(0).getManager()){
@@ -181,6 +188,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         EDealerRegistration eDealerReg=null;
         if(null!=d2UserId){
             EUserRegistration userById = userRegRepo.findUserById(d2UserId);
+            auditConfiguration.setAuditorName(userById.getUserName());
             if(newDealer.getPassword()==null||newDealer.getPassword().equals("")) newDealer.setPassword(userById.getPassword());
 
             if(null!=userById.getDealer()){
@@ -227,7 +235,9 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
         return response;
     }
 
-    private UpdateUserIS forUserUpdateIS(DealerRegistration newDealer,EDealerRegistration oldDealer) {
+
+@Override
+    public UpdateUserIS forUserUpdateIS(DealerRegistration newDealer,EDealerRegistration oldDealer) {
 
         Map<String,Object>map= new HashMap<>();
         if(Boolean.FALSE.equals(compareValues(oldDealer.getFirstName(),newDealer.getFirstName()))){
@@ -258,9 +268,11 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
     }
 
     @Override
+    @Transactional
     public Response deleteDealer(Long dealerId) throws GlobalException {
         Response response = new Response();
         EDealerRegistration dealerById = dlrRegRepo.findDealerById(dealerId);
+        auditConfiguration.setAuditorName(AppraisalConstants.ADMIN);
         if (null != dealerById) {
             dealerById.setValid(Boolean.FALSE);
             EUserRegistration eUserRegistration = userRegRepo.checkUserNamePresent(dealerById.getName());
@@ -306,6 +318,7 @@ public class DealerRegistrationServiceImpl implements DealerRegistrationService 
     public Response dealerD1Approval(DealerManagersAssign managersAssign) throws AppraisalException {
         Response response = new Response();
         EDealerRegistration dealer = dlrRegRepo.findDealerById(managersAssign.getDealerId());
+        auditConfiguration.setAuditorName(AppraisalConstants.FACTORY_ADMIN);
         if (managersAssign.getStatus().equalsIgnoreCase(AppraisalConstants.APPROVED)) {
             dealer.setStatus(AppraisalConstants.APPROVED);
             EDealerRegistration eDealerRegistration = dlrRegRepo.save(dealer);

@@ -36,4 +36,9 @@ public interface RoleMappingRepo extends JpaRepository<ERoleMapping,Long> {
 
    @Query(value = "select r from ERoleMapping r where r.dealerAdmin=:dealerAdminId and r.valid=true")
     List<ERoleMapping> findByDealerAdmin(UUID dealerAdminId, Pageable pageable);
+
+    @Query(value = "select r from ERoleMapping r where r.dealerAdmin=:dealerAdminId and r.valid=true")
+    List<ERoleMapping> findByDealerAdmin(UUID dealerAdminId);
+
+
 }

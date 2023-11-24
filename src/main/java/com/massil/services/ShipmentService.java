@@ -30,9 +30,9 @@ public interface ShipmentService {
     CardsPage myBuyerCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException;
 
 
-    Response buyerAgreedService(Shipment shipment,Long ship_id) throws GlobalException, IOException;
+    Response buyerAgreedService(Shipment shipment,Long ship_id) throws Exception;
 
 
-    Response sellerAgreedService(Shipment shipment,Long ship_id) throws GlobalException, AppraisalException, IOException;
+    Response sellerAgreedService(Shipment shipment,Long ship_id) throws Exception;
 
 }

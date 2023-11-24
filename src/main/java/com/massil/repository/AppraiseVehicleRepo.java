@@ -20,9 +20,8 @@ import java.util.UUID;
 public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long>, JpaSpecificationExecutor<EAppraiseVehicle>{
 
    // @Query("select e from EAppraiseVehicle e where e.vinNumber=:vin and e.dealer.id=:dealerId and e.valid=true")
-    @Query("select e from EAppraiseVehicle e where e.vinNumber=:vin and valid=true and e.dealer.id=(select u.dealer.id from EUserRegistration" +
-            " u where u.id=:userId and u.valid=true)")
-    List< EAppraiseVehicle> findByVinAndDlrId(String vin, UUID userId);
+    @Query("select e from EAppraiseVehicle e where e.vinNumber=:vin and valid=true and e.user.id in :userId" )
+    List< EAppraiseVehicle> findByVinAndDlrId(String vin, List<UUID> userId);
 
     @Query(value = "SELECT e FROM EAppraiseVehicle e WHERE e.user.id = :userId AND " +
             "(e.invntrySts = 'created' OR e.invntrySts = 'Draft') AND e.valid = :valid ORDER BY e.createdOn DESC")
@@ -30,7 +29,7 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
 
     @Query(value = "SELECT e FROM EAppraiseVehicle e WHERE e.user.id in (:userId) AND " +
          "(e.invntrySts = 'created' OR e.invntrySts = 'Draft') AND e.valid = :valid ORDER BY e.createdOn DESC")
-    Page<EAppraiseVehicle> allAppraisalCards(List<Long> userId, boolean valid, Pageable pageable);
+    Page<EAppraiseVehicle> appraisalCards(List<UUID> userId, boolean valid, Pageable pageable);
 
     /**
      * Returns the valid EAppraiseVehicle object base on EAppraiseVehicle id
@@ -76,7 +75,9 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
     @Query(value = "SELECT e FROM EAppraiseVehicle e WHERE e.user.id = :userId AND "+
             "e.invntrySts = :inventory AND e.valid = :valid ORDER BY e.modifiedOn DESC")
     Page<EAppraiseVehicle> findUserAndInvntrySts(@Param("userId") UUID userId,@Param("inventory") String inventory, boolean valid, Pageable pageable);
-
+ @Query(value = "SELECT e FROM EAppraiseVehicle e WHERE e.user.id in (:userId) AND "+
+         "e.invntrySts = :inventory AND e.valid = :valid ORDER BY e.modifiedOn DESC")
+ Page<EAppraiseVehicle> findUserAndInvntrySts(@Param("userId") List<UUID> userId,@Param("inventory") String inventory, boolean valid, Pageable pageable);
 
 
     /**
@@ -91,6 +92,13 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
             "AND av.id NOT IN (SELECT o.appRef.id FROM EOffers o WHERE o.status.id in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id <> :userId AND av.invntrySts = :inventory AND av.valid = true)) " +
             "ORDER BY av.modifiedOn DESC")
     Page<EAppraiseVehicle> findByUserIdNot(@Param("userId") UUID userId, @Param("inventory") String inventory,Boolean valid, Pageable pageable);
+
+    @Query(value = "SELECT av FROM EAppraiseVehicle av " +
+            "WHERE av.user.id not in (:userId) AND av.invntrySts = :inventory " +
+            "AND av.valid =:valid AND av.field1<>true AND av.field2<>true " +
+            "AND av.id NOT IN (SELECT o.appRef FROM EOffers o WHERE o.status in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id not in (:userId) AND av.invntrySts = :inventory AND av.valid = true)) " +
+            "ORDER BY av.modifiedOn DESC")
+    Page<EAppraiseVehicle> findByUserIdNot(@Param("userId") List<UUID> userId, @Param("inventory") String inventory,Boolean valid, Pageable pageable);
 
     /**
      * Returns the valid List of EAppraiseVehicle object base on DealerId
@@ -121,6 +129,9 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
             +"AND e.tdStatus.pushForBuyFig = :pushForBuyFig And e.valid=:valid ORDER BY e.modifiedOn DESC")
     Page<EAppraiseVehicle> findNotUserIdInAvbleTrdCrds(UUID userId, String invntrySts, boolean pushForBuyFig, boolean valid ,Pageable pageable);
 
+    @Query(value = "SELECT e FROM EAppraiseVehicle e WHERE e.user.id not in (:userId) AND e.invntrySts = :invntrySts "
+            +"AND e.tdStatus.pushForBuyFig = :pushForBuyFig And e.valid=:valid ORDER BY e.modifiedOn DESC")
+    Page<EAppraiseVehicle> findNotUserIdInAvbleTrdCrds(List<UUID> userId, String invntrySts, boolean pushForBuyFig, boolean valid ,Pageable pageable);
 
 
     /**
@@ -139,7 +150,7 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
 
     @Query("SELECT count(*) FROM EAppraiseVehicle e WHERE e.invntrySts <> 'Draft' AND valid=true")
     Long getTotalVehiclesInSystem();
-    @Query("SELECT o.appRef.id FROM EOffers o WHERE o.status.id in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id <> :userId AND av.invntrySts ='inventory' AND av.valid = true)")
-   List<Long> apprIdOfUnsoldVehicles(UUID userId);
+    @Query("SELECT o.appRef.id FROM EOffers o WHERE o.status.id in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id not in :userId AND av.invntrySts ='inventory' AND av.valid = true)")
+    List<Long> apprIdOfUnsoldVehicles(List<UUID> userId);
 
 }

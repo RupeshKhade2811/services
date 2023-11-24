@@ -2,6 +2,7 @@ package com.massil.services.impl;
 
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.Response;
+import com.massil.config.AuditConfiguration;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.FtryTraining;
 import com.massil.dto.TrainingVideos;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,11 +41,15 @@ public class FtryTrainingServiceImpl implements FtryTrainingService {
     private AppraisalVehicleMapper appraisalVehicleMapper;
     @Value("${file_size}")
     private Long fileSize;
+    @Autowired
+    private AuditConfiguration auditConfiguration;
 
     @Override
+    @Transactional
     public Response trainingUpload(FtryTraining ftryTraining,  UUID userId) throws AppraisalException, IOException {
         Response response=new Response();
         ERoleMapping userById = roleRepo.findByUserId(userId);
+        auditConfiguration.setAuditorName(userById.getUser().getUserName());
         if (null!=userById && userById.getRole().getRoleGroup().equals("FA")) {
             EFtryTraining eFtryTraining = appraisalVehicleMapper.ftryTrainToEFtryTrain(ftryTraining);
             eFtryTraining.setUser(userById.getUser());
@@ -75,9 +81,11 @@ public class FtryTrainingServiceImpl implements FtryTrainingService {
     }
 
     @Override
+    @Transactional
     public Response deleteTrainVideo(UUID userId, Long factTrainId) throws AppraisalException {
         Response response=new Response();
         ERoleMapping userById = roleRepo.findByUserId(userId);
+        auditConfiguration.setAuditorName(userById.getUser().getUserName());
         EFtryTraining trainingId = ftryTrainingRepo.findById(factTrainId).orElse(null);
         if (null!=userById && userById.getRole().getRole().equals("A1")) {
             if(null !=trainingId && trainingId.getValid() ){

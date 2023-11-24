@@ -408,8 +408,8 @@ public class AppraisalVehicleController {
     }
 
     @GetMapping("/keyAssureDownload")
-    public ResponseEntity<Resource> keyAssureVehReport(@RequestParam ("apprId") Long apprId) throws IOException {
-        byte[] bytes = service.keyAssureReport(apprId);
+    public ResponseEntity<Resource> keyAssureVehReport(@RequestHeader("userId") UUID userId,@RequestParam ("apprId") Long apprId) throws IOException, AppraisalException {
+        byte[] bytes = service.keyAssureReport(apprId,userId);
         Resource resource=new ByteArrayResource(bytes);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= keyAssureVehicleReport.pdf" );
@@ -420,8 +420,8 @@ public class AppraisalVehicleController {
     }
 
     @GetMapping("/keyAssurePreview")
-    public ResponseEntity<Resource> servePdf(@RequestParam ("apprId") Long apprId) throws IOException {
-        byte[] bytes = service.servePdf(apprId);
+    public ResponseEntity<Resource> servePdf(@RequestHeader("userId") UUID userId,@RequestParam ("apprId") Long apprId) throws IOException, AppraisalException {
+        byte[] bytes = service.keyAssureReport(apprId,userId);
         Resource resource=new ByteArrayResource(bytes);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);

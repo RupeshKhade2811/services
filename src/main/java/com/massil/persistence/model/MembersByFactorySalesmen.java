@@ -3,6 +3,8 @@ package com.massil.persistence.model;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 import jakarta.persistence.*;
+
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -22,5 +24,7 @@ public class MembersByFactorySalesmen {
     private String compName;
     private String fsFirstName;
     private String fsLastName;
+    private Date signupDate;
+    private Double totalRevenue;
 
 }

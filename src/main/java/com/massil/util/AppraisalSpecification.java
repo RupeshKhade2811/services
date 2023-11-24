@@ -14,54 +14,65 @@ public class AppraisalSpecification {
     private AppraisalSpecification(){
 
     }
-    public static Specification<EAppraiseVehicle> getEApprSpecification(FilterParameters filter, UUID userId) {
+    public static Specification<EAppraiseVehicle> getEApprSpecification(FilterParameters filter, List<UUID> userId) {
         Specification<EAppraiseVehicle> spec = Specification.where((root, query, criteriaBuilder) -> null);
 
-        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.USER).get(AppraisalConstants.ID), userId));
-        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.INVENTORYSTS), AppraisalConstants.CREATED));
-        spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("valid"),Boolean.TRUE)));
+        spec = spec.and((root, query, criteriaBuilder) -> root.get(AppraisalConstants.USER).get(AppraisalConstants.ID).in(userId));
+        spec = spec.and((root, query, criteriaBuilder) -> root.get(AppraisalConstants.INVENTORYSTS).in( AppraisalConstants.CREATED,AppraisalConstants.DRAFT));
+        spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.VALID),Boolean.TRUE)));
         spec = getEAppraiseVehicleSpecification(filter, spec);
         return spec;
     }
+    public static Specification<AppraisalFilterParamView> getAppFilParaSpec(FilterParameters filter, List<UUID> userId) {
+        Specification<AppraisalFilterParamView> spec = Specification.where((root, query, criteriaBuilder) -> null);
+        spec = spec.and((root, query, criteriaBuilder) -> root.get(AppraisalConstants.USERID).in(userId));
+        spec = getAppFilParamSpec(filter, spec);
+        return spec;
+    }
 
-    public static Specification<EAppraiseVehicle> getInventrySpecification(FilterParameters filter, UUID userId) {
+
+    public static Specification<EAppraiseVehicle> getInventrySpecification(FilterParameters filter, List<UUID> userId) {
         Specification<EAppraiseVehicle> spec = Specification.where((root, query, criteriaBuilder) -> null);
-        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.USER).get(AppraisalConstants.ID), userId));
+        spec = spec.and((root, query, criteriaBuilder) -> root.get(AppraisalConstants.USER).get(AppraisalConstants.ID).in(userId));
         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.INVENTORYSTS), AppraisalConstants.INVENTORY));
-        spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("valid"),Boolean.TRUE)));
+        spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.VALID),Boolean.TRUE)));
         spec = getEAppraiseVehicleSpecification(filter, spec);
         return spec;
     }
-    public static Specification<EAppraiseVehicle> getSearchFactorySpecification(FilterParameters filter, UUID userId, List<Long> unsoldVehicles) {
+    public static Specification<InventoryFilterParamView> getInvFilParaSpec(FilterParameters filter, List<UUID> userId) {
+        Specification<InventoryFilterParamView> spec = Specification.where((root, query, criteriaBuilder) -> null);
+        spec = spec.and((root, query, criteriaBuilder) -> root.get(AppraisalConstants.USERID).in(userId));
+        spec = getInvFilParamSpec(filter, spec);
+        return spec;
+    }
+    public static Specification<EAppraiseVehicle> getSearchFactorySpecification(FilterParameters filter, List<UUID> userId, List<Long> soldVehicles) {
         Specification<EAppraiseVehicle> spec = Specification.where((root, query, criteriaBuilder) -> null);
 
-        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(AppraisalConstants.USER).get(AppraisalConstants.ID), userId));
+        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.not(root.get(AppraisalConstants.USER).get(AppraisalConstants.ID).in(userId)));
         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.INVENTORYSTS), AppraisalConstants.INVENTORY));
-        spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("valid"),Boolean.TRUE)));
+        spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.VALID),Boolean.TRUE)));
         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("field1"), true));
         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("field2"), true));
-        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.not(root.get("id").in(unsoldVehicles)));
+        if(null!=soldVehicles && !soldVehicles.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.not(root.get(AppraisalConstants.ID).in(soldVehicles)));
+        }
         spec = getEAppraiseVehicleSpecification(filter, spec);
+        return spec;
+    }
+    public static Specification<SearchFactoryView> getSearchFactSpec(FilterParameters filter, List<UUID> userId) {
+        Specification<SearchFactoryView> spec = Specification.where((root, query, criteriaBuilder) -> null);
+        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.not(root.get(AppraisalConstants.USERID).in(userId)));
+        spec = getSearchFactSpec(filter, spec);
         return spec;
     }
 
     public static Specification<TransactionReport> displayBySellingDealer(SellingDealer filter) {
         Specification<TransactionReport> spec = Specification.where((root, query, criteriaBuilder) -> null);
         if (null!=filter.getFirstName()) {
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%" + filter.getFirstName().toLowerCase() + "%"));
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.FIRSTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
         }
         if (null!=filter.getFirstName()) {
-            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + filter.getFirstName().toLowerCase() + "%"));
-        }
-        return spec;
-    }
-    public static Specification<CorporateAdminView> corporateAdminList(SellingDealer filter) {
-        Specification<CorporateAdminView> spec = Specification.where((root, query, criteriaBuilder) -> null);
-        if (null!=filter.getFirstName()) {
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%" + filter.getFirstName().toLowerCase() + "%"));
-        }
-        if (null!=filter.getFirstName()) {
-            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + filter.getFirstName().toLowerCase() + "%"));
+            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.LASTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
         }
         return spec;
     }
@@ -127,13 +138,53 @@ public class AppraisalSpecification {
         return spec;
     }
 
+
+    private static Specification<AppraisalFilterParamView> getAppFilParamSpec(FilterParameters filter, Specification<AppraisalFilterParamView> spec) {
+        if (null!= filter.getYear()){
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.VEH_YEAR), filter.getYear()));
+        }
+        if (null!= filter.getMake()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MAKE)), filter.getMake().toLowerCase()));
+        }
+        if (null!= filter.getModel()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MODEL)),"%" + filter.getModel().toLowerCase() + "%"));
+        }
+        return spec;
+    }
+    private static Specification<InventoryFilterParamView> getInvFilParamSpec(FilterParameters filter, Specification<InventoryFilterParamView> spec) {
+        if (null!= filter.getYear()){
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.VEH_YEAR), filter.getYear()));
+        }
+        if (null!= filter.getMake()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MAKE)), filter.getMake().toLowerCase()));
+        }
+        if (null!= filter.getModel()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MODEL)),"%" + filter.getModel().toLowerCase() + "%"));
+        }
+        return spec;
+    }
+    private static Specification<SearchFactoryView> getSearchFactSpec(FilterParameters filter, Specification<SearchFactoryView> spec) {
+        if (null!= filter.getYear()){
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.VEH_YEAR), filter.getYear()));
+        }
+        if (null!= filter.getMake()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MAKE)), filter.getMake().toLowerCase()));
+        }
+        if (null!= filter.getModel()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.VEH_MODEL)),"%" + filter.getModel().toLowerCase() + "%"));
+        }
+        return spec;
+    }
+
+
+
     public static Specification<DlrInvntryView> getDlrInvntryViewSpecification(DlrInvntryPdfFilter filter) {
 
         Specification<DlrInvntryView> spec = Specification.where((root, query, criteriaBuilder) -> null);
         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(AppraisalConstants.INVENTORYSTS), AppraisalConstants.INVENTORY));
         spec = spec.and(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("valid"),Boolean.TRUE)));
 
-        if (null!= filter.getConsumerAskPrice()&& filter.getDelrRetlAskPrice()!=0.0) {
+        if (null!= filter.getConsumerAskPrice()&& filter.getConsumerAskPrice()!=0.0) {
             spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(AppraisalConstants.CONSUMER_ASKING_PRICE), filter.getConsumerAskPrice()));
         }
         if (null!= filter.getVehicleMake() && !filter.getVehicleMake().equals("")) {
@@ -163,10 +214,10 @@ public class AppraisalSpecification {
     public static Specification<EDealerRegistration> dsplyDlrList(DealerRegistration filter) {
         Specification<EDealerRegistration> spec = Specification.where((root, query, criteriaBuilder) -> null);
         if (null!=filter.getFirstName()) {
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%" + filter.getFirstName().toLowerCase() + "%"));
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.FIRSTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
         }
         if (null!=filter.getFirstName()) {
-            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + filter.getFirstName().toLowerCase() + "%"));
+            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.LASTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
         }
 
         return spec;
@@ -174,10 +225,10 @@ public class AppraisalSpecification {
     public static Specification<AllDealersView> dsplyDlrs(DealerRegistration filter) {
         Specification<AllDealersView> spec = Specification.where((root, query, criteriaBuilder) -> null);
         if (null!=filter.getFirstName()) {
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%" + filter.getFirstName().toLowerCase() + "%"));
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.FIRSTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
         }
         if (null!=filter.getFirstName()) {
-            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + filter.getFirstName().toLowerCase() + "%"));
+            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.LASTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
         }
         return spec;
     }
@@ -209,6 +260,16 @@ public class AppraisalSpecification {
         }
         if(null!=filter.getUserId()){
             spec= spec.and((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("dealerAdmin"),filter.getUserId()));
+        }
+        return spec;
+    }
+	 public static Specification<FactoryPersonnel> fctryPrsnl(SellingDealer filter) {
+        Specification<FactoryPersonnel> spec = Specification.where((root, query, criteriaBuilder) -> null);
+        if (null!=filter.getFirstName()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.FIRSTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
+        }
+        if (null!=filter.getFirstName()) {
+            spec = spec.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(AppraisalConstants.LASTNAME)), "%" + filter.getFirstName().toLowerCase() + "%"));
         }
         return spec;
     }

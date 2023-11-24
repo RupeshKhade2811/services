@@ -32,6 +32,12 @@ public interface OffersRepo extends JpaRepository<EOffers,Long> {
             + "AND e.isTradeBuy = :isTradeBuy ORDER BY e.modifiedOn DESC")
     Page<EOffers> findByBuyerUserIdJPQL(@Param("userId") UUID userId, @Param("inventory") String inventory, @Param("valid") boolean valid, @Param("isTradeBuy") boolean isTradeBuy, Pageable pageable);
 
+
+    @Query("SELECT e FROM EOffers e WHERE e.buyerUserId.id in (:userId) "
+            + "AND e.appRef.invntrySts = :inventory AND e.valid = :valid AND e.appRef.valid=true "
+            + "AND e.isTradeBuy = :isTradeBuy ORDER BY e.modifiedOn DESC")
+    Page<EOffers> findByBuyerUserIdJPQL(@Param("userId") List<UUID> userId, @Param("inventory") String inventory, @Param("valid") boolean valid, @Param("isTradeBuy") boolean isTradeBuy, Pageable pageable);
+
     /**
      *  This method returns the page of EOffers base on BuyerDealerId
      * @param dealerId This is buyer dealer id
@@ -77,6 +83,14 @@ List<EOffers>  listOfMakeOfferLessThn24hrs();
                                          @Param("isTradeBuy") boolean isTradeBuy, Pageable pageable);
 
 
+    @Query("SELECT o FROM EOffers o WHERE o.sellerUserId.id in (:userId) AND o.isTradeBuy = isTradeBuy "
+            +"AND (o.appRef, o.modifiedOn) IN (SELECT o2.appRef, MAX(o2.modifiedOn) FROM EOffers o2 "
+            +"WHERE o2.sellerUserId.id in (:userId) AND o2.isTradeBuy = :isTradeBuy AND o2.valid=true AND o2.appRef.valid=true "
+            +"GROUP BY o2.appRef) ORDER BY o.modifiedOn DESC")
+    Page<EOffers> findBySellerUserIdJPQL(@Param("userId") List<UUID> userId,
+                                         @Param("isTradeBuy") boolean isTradeBuy, Pageable pageable);
+
+
     /**
      * This method returns the page of EOffers base on Seller DealerId
      * @param dealerId This is Seller DealerId
@@ -102,6 +116,14 @@ List<EOffers>  listOfMakeOfferLessThn24hrs();
             +"WHERE o2.sellerUserId.id = :userId AND o2.isTradeBuy = :isTradeBuy AND o2.valid=true AND o2.appRef.valid=true "
             +"GROUP BY o2.appRef) ORDER BY o.modifiedOn DESC")
     Page<EOffers> findBySlrUserIdInGetFctryOfrsJPQL(@Param("userId") UUID userId,
+                                                    @Param("isTradeBuy") boolean isTradeBuy,
+                                                    Pageable pageable);
+
+    @Query(value = "SELECT o FROM EOffers o WHERE o.sellerUserId.id in (:userId) AND o.isTradeBuy = isTradeBuy "
+            +"AND (o.appRef, o.modifiedOn) IN (SELECT o2.appRef, MAX(o2.modifiedOn) FROM EOffers o2 "
+            +"WHERE o2.sellerUserId.id in (:userId) AND o2.isTradeBuy = :isTradeBuy AND o2.valid=true AND o2.appRef.valid=true "
+            +"GROUP BY o2.appRef) ORDER BY o.modifiedOn DESC")
+    Page<EOffers> findBySlrUserIdInGetFctryOfrsJPQL(@Param("userId") List<UUID> userId,
                                                     @Param("isTradeBuy") boolean isTradeBuy,
                                                     Pageable pageable);
 
@@ -133,6 +155,13 @@ List<EOffers>  listOfMakeOfferLessThn24hrs();
     @Query("SELECT e FROM EOffers e WHERE e.sellerUserId.id = :userId "
             + "AND e.valid = :valid AND e.appRef.valid=true and e.isTradeBuy=false  AND e.status.statusCode in (:code1,:code2) ORDER BY e.modifiedOn DESC")
     Page<EOffers> findBySellerUserIdSold(@Param("userId") UUID userId, @Param("valid") boolean valid,@Param("code1") String statusCode1,@Param("code2") String statusCode2, Pageable pageable);
+
+    @Query("SELECT e FROM EOffers e WHERE e.sellerUserId.id in (:userId) "
+            + "AND e.valid = :valid AND e.appRef.valid=true and e.isTradeBuy=false  AND e.status.statusCode in (:code1,:code2) ORDER BY e.modifiedOn DESC")
+    Page<EOffers> findBySellerUserIdSold(@Param("userId") List<UUID> userId, @Param("valid") boolean valid,@Param("code1") String statusCode1,@Param("code2") String statusCode2, Pageable pageable);
+
+
+
 /**
      * This method returns the page of EOffers which are sold base on Seller dealerId
      * @param dealerId This is Seller UserId
@@ -157,6 +186,11 @@ List<EOffers>  listOfMakeOfferLessThn24hrs();
     @Query("SELECT e FROM EOffers e WHERE e.buyerUserId.id = :userId "
             + "AND e.valid = :valid AND e.appRef.valid=true and e.isTradeBuy=false AND e.status.statusCode in (:code1,:code2) ORDER BY e.modifiedOn DESC")
     Page<EOffers> findByBuyerUserIdSold(@Param("userId") UUID userId, @Param("valid") boolean valid,@Param("code1") String statusCode1,@Param("code2") String statusCode2,Pageable pageable);
+
+    @Query("SELECT e FROM EOffers e WHERE e.buyerUserId.id in (:userId) "
+            + "AND e.valid = :valid AND e.appRef.valid=true and e.isTradeBuy=false AND e.status.statusCode in (:code1,:code2) ORDER BY e.modifiedOn DESC")
+    Page<EOffers> findByBuyerUserIdSold(@Param("userId") List<UUID> userId, @Param("valid") boolean valid,@Param("code1") String statusCode1,@Param("code2") String statusCode2,Pageable pageable);
+
 
     /**
      *

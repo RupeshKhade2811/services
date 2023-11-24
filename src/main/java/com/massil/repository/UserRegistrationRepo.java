@@ -62,12 +62,14 @@ public interface UserRegistrationRepo extends JpaRepository<EUserRegistration,Lo
     List<EUserRegistration> findByIdFromList(List<UUID> userId);
 
     @Query(value = "SELECT u FROM EUserRegistration u JOIN ERoleMapping m ON u.id  = m.user.id " +
-            "JOIN ERole r ON m.role.id  = r.id WHERE u.dealer.id  = :dealerId" +
-            "  AND (r.roleGroup = 'DS' OR r.roleGroup = 'DM')")
-    List<EUserRegistration> findDlrshipUsersByDlrId(Long dealerId);
+            "WHERE m.dealerAdmin = :userId AND u.valid = true")
+    List<EUserRegistration> findDlrshipUsersByDlrAdmin(UUID userId);
 
     @Query(value = "select u from EUserRegistration u WHERE u.id =:userId AND u.valid=true")
     EUserRegistration findByUserName(UUID userId);
+
+    @Query(value = "select u from EUserRegistration u WHERE u.id =:userId AND u.valid=true")
+    List<EUserRegistration> findDlrSales(UUID userId);
 
     @Query(value=" SELECT u FROM EUserRegistration u WHERE u.valid=true AND u.email=:email")
     EUserRegistration findUserByEmailId(String email);

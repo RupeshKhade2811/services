@@ -92,8 +92,8 @@ public class EShipment extends TransactionEntity {
     @IndexedEmbedded(includeDepth = 1)
     private EUserRegistration sellerUserId;
     @GenericField
-    private Integer saleFee;
+    private Double saleFee;
     @GenericField
-    private Integer buyFee;
+    private Double buyFee;
 
 }

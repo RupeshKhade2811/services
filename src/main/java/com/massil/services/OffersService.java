@@ -61,7 +61,7 @@ public interface OffersService {
      * @return message
      */
 
-     Response sellerAccept(Long offerId) throws OfferException;
+     Response sellerAccept(Long offerId) throws OfferException, AppraisalException;
 
     /**
      * This method will update status of buyer
@@ -69,7 +69,7 @@ public interface OffersService {
      * @return message
      */
 
-     Response buyerAccept(Long offerId) throws OfferException;
+     Response buyerAccept(Long offerId) throws OfferException, AppraisalException;
 
     /**
      * This method will update status of seller
