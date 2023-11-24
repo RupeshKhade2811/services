@@ -6,6 +6,7 @@ import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.dto.*;
 import com.massil.persistence.model.D2DlrList;
+import com.massil.persistence.model.FactoryPersonnel;
 import com.massil.services.DealerRegistrationService;
 import com.massil.services.EmailService;
 import com.massil.services.FilterSpecificationService;
@@ -68,7 +69,7 @@ public class DealerRegistrationController {
      * @return  Response
      */
     @PostMapping("/dealerUpdate")
-    public ResponseEntity<Response> modifyDealer(@RequestBody @Validated DealerRegistration dealerRegistration, @RequestHeader("d2UserId") UUID d2UserId) throws AppraisalException, IOException {
+    public ResponseEntity<Response> modifyDealer(@RequestBody  DealerRegistration dealerRegistration, @RequestHeader("d2UserId") UUID d2UserId) throws AppraisalException, IOException {
 
         log.info("Dealer update method is triggered **Controller**");
         Response response = dealerRegistrationService.updateDealer(dealerRegistration, d2UserId);
@@ -189,13 +190,18 @@ public class DealerRegistrationController {
     }
 
     @PostMapping("/searchDlrD2")
-    public ResponseEntity< List<D2DlrList>> getDlrD2(@RequestBody SellingDealer filter) throws AppraisalException {
-        List<D2DlrList> dlrD2Lists = specService.sendDlrD2(filter);
+    public ResponseEntity< List<D2DlrList>> getDlrD2(@RequestHeader("userId") UUID userId) throws AppraisalException {
+        List<D2DlrList> dlrD2Lists = specService.sendDlrD2(userId);
         return new ResponseEntity<>(dlrD2Lists,HttpStatus.ACCEPTED);
 
     }
 
+    @PostMapping("/factoryPersonel")
+    public ResponseEntity< List<FactoryPersonnel>> factoryPersonnel(@RequestBody SellingDealer filter) throws AppraisalException {
+        List<FactoryPersonnel> fctryPrsnnelList= specService.sendFctryPrsnl(filter);
+        return new ResponseEntity<>(fctryPrsnnelList,HttpStatus.ACCEPTED);
 
+    }
 
 
 

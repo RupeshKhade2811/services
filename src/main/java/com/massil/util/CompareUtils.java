@@ -203,26 +203,28 @@ public class CompareUtils {
         return dates;
     }
     public Boolean isDocPresent(String fileName) throws IOException {
-        return doesObjectExist(pdfpath, fileName);
+     return doesObjectExist1(pdfpath, fileName);
     }
     public Boolean isImagePresent(String fileName) throws IOException {
-        return doesObjectExist(imageFolderPath, fileName);
+        return doesObjectExist1(imageFolderPath, fileName);
     }
     public Boolean isVideoPresent(String fileName) throws IOException {
-        return doesObjectExist(videoFolderPath, fileName);
+        return doesObjectExist1(videoFolderPath, fileName);
     }
 
     public byte[] fileDownloadfromBucket(String bucketName,String fileName) throws IOException {
         //object from amazons3
         byte[] responseBytes = new byte[0];
-        ClientConfiguration config = new ClientConfiguration();
-        config.setProtocol(Protocol.HTTPS);
-        AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
-        S3ClientOptions options =  new S3ClientOptions();
-        options.setPathStyleAccess(true);
-        s3.setS3ClientOptions(options);
-        s3.setEndpoint(amazonS3Url);  // ECS IP Address
-        if(Boolean.TRUE.equals(s3.doesObjectExist(bucketName, fileName))) {
+        if(null!= fileName && !fileName.equals("")&&null!=bucketName&&!bucketName.equals("")) {
+                //object from amazons3
+                ClientConfiguration config = new ClientConfiguration();
+                config.setProtocol(Protocol.HTTPS);
+                AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
+                S3ClientOptions options = new S3ClientOptions();
+                options.setPathStyleAccess(true);
+                s3.setS3ClientOptions(options);
+                s3.setEndpoint(amazonS3Url);  // ECS IP Address
+                if (Boolean.TRUE.equals(s3.doesObjectExist(bucketName, fileName))) {
 
             S3Object s3Object = s3.getObject(new GetObjectRequest(bucketName, fileName));
 
@@ -230,33 +232,35 @@ public class CompareUtils {
             byte[] byteArray = new byte[(int) s3Object.getObjectMetadata().getContentLength()];
             int bytesRead;
 
-            try {
-                while ((bytesRead = objectContent.read(byteArray)) != -1) {
-                    responseBytes = Arrays.copyOf(responseBytes, responseBytes.length + bytesRead);
-                    System.arraycopy(byteArray, 0, responseBytes, responseBytes.length - bytesRead, bytesRead);
+                try {
+                    while ((bytesRead = objectContent.read(byteArray)) != -1) {
+                        responseBytes = Arrays.copyOf(responseBytes, responseBytes.length + bytesRead);
+                        System.arraycopy(byteArray, 0, responseBytes, responseBytes.length - bytesRead, bytesRead);
+                    }
+                } finally {
+                    objectContent.close();
+                    s3Object.close();
                 }
-            } finally {
-                objectContent.close();
-                s3Object.close();
             }
         }
 
         return responseBytes;
     }
-
-    public String uploadFileInBucket(File file, String bucketName, String fileName)  {
-        //object to AmazonS3
-        ClientConfiguration config = new ClientConfiguration();
-        config.setProtocol(Protocol.HTTPS);
-        AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
-        S3ClientOptions options =  new S3ClientOptions();
-        options.setPathStyleAccess(true);
-        s3.setS3ClientOptions(options);
-        s3.setEndpoint(amazonS3Url);  //ECS IP Address
-        log.info("Listing buckets");
-        PutObjectRequest request=new PutObjectRequest(bucketName,fileName,file);
-        request.setCannedAcl(CannedAccessControlList.PublicRead);
-        s3.putObject(request);
+    public String uploadFileInBucket(File file,String bucketName,String fileName)  {
+        if(null!= fileName && !fileName.equals("")&&null!=bucketName&&!bucketName.equals("")) {
+            //object to AmazonS3
+            ClientConfiguration config = new ClientConfiguration();
+            config.setProtocol(Protocol.HTTPS);
+            AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
+            S3ClientOptions options = new S3ClientOptions();
+            options.setPathStyleAccess(true);
+            s3.setS3ClientOptions(options);
+            s3.setEndpoint(amazonS3Url);  //ECS IP Address
+            log.info("Listing buckets");
+            PutObjectRequest request = new PutObjectRequest(bucketName, fileName, file);
+            request.setCannedAcl(CannedAccessControlList.PublicRead);
+            s3.putObject(request);
+        }
         return fileName;
     }
 
@@ -265,8 +269,8 @@ public class CompareUtils {
         return (long) totalpages;
     }
 
-    public Boolean doesObjectExist(String bucketName,String fileName){
-
+public Boolean doesObjectExist1(String bucketName, String fileName){
+    if(null!= fileName && !fileName.equals("")&&null!=bucketName&&!bucketName.equals("")) {
         ClientConfiguration config = new ClientConfiguration();
         config.setProtocol(Protocol.HTTPS);
         AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
@@ -277,11 +281,26 @@ public class CompareUtils {
         if(Boolean.TRUE.equals(s3.doesObjectExist(bucketName, fileName))) {
             return true;
         }
+    }
         return false;
     }
 
-
-
+    public Boolean deleteObject(String bucketName, String fileName){
+        if(null!= fileName && !fileName.equals("")&&null!=bucketName&&!bucketName.equals("")) {
+            ClientConfiguration config = new ClientConfiguration();
+            config.setProtocol(Protocol.HTTPS);
+            AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accesskey, secret), config);
+            S3ClientOptions options = new S3ClientOptions();
+            options.setPathStyleAccess(true);
+            s3.setS3ClientOptions(options);
+            s3.setEndpoint(amazonS3Url);  // ECS IP Address
+            if (Boolean.TRUE.equals(s3.doesObjectExist(bucketName, fileName))) {
+                s3.deleteObject(bucketName,fileName);
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }

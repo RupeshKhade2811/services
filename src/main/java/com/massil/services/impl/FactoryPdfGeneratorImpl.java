@@ -6,6 +6,7 @@ import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.massil.ExceptionHandle.Response;
+import com.massil.config.AuditConfiguration;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.*;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
@@ -119,13 +120,16 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
 
     @Autowired
     private ApprFormService apprForm;
+    @Autowired
+    private AuditConfiguration auditConfiguration;
 
     Logger log = LoggerFactory.getLogger(FactoryPdfGeneratorImpl.class);
 
 
     @Override
-    public Response pdfTable(Long offerId) throws JRException, IOException, JDOMException, GlobalException, TemplateException {
-
+    @Transactional
+    public Response  pdfTable(Long offerId) throws JRException, IOException, JDOMException, GlobalException, TemplateException {
+        auditConfiguration.setAuditorName("System");
         List<EFileStatus> fileData = fileRepo.findByAppId(offerId);
         PdfDto pdfDto= new PdfDto();
         EFileStatus save=null;
@@ -603,16 +607,6 @@ public class FactoryPdfGeneratorImpl implements FactoryPdfGenerator {
         EShipment shipment=shipmentRepo.findByApprId(apprRefId);
         PdfDataDto pdfDataDto = mapper.apprToPdfData(byApprId);
         pdfDataDto = mapper.offersToPdf(offers,shipment,pdfDataDto);
-        if(pdfDataDto.getBuyerSign() != null){
-            if(!compareUtils.isImagePresent(pdfDataDto.getBuyerSign())) {
-                pdfDataDto.setBuyerSign(null);
-            }
-        }
-        if(pdfDataDto.getSellerSign() != null){
-            if(!compareUtils.isImagePresent(pdfDataDto.getSellerSign())) {
-                pdfDataDto.setSellerSign(null);
-            }
-        }
         return pdfDataDto;
     }
     @Override

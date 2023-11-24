@@ -30,18 +30,27 @@ public class DealersUser {
 
         switch (roleGroup) {
                 case "D":
-                EDealerRegistration dealer = userRepo.findUserById(userId).getDealer();
-                List<EUserRegistration> users = userRepo.findUserByDealerId(dealer.getId());
-                userIds = users.stream().map(EUserRegistration::getId).collect(Collectors.toList());
+                    if(mapping.getRole().getRole().equals("D1")) {
+                        List<ERoleMapping> dealerUsers = mappingRepo.findByDealerAdmin(userId);
+                        if(null!= dealerUsers &&!dealerUsers.isEmpty()) {
+                            List<EUserRegistration> users = dealerUsers.stream().map(ERoleMapping::getUser).collect(Collectors.toList());
+                            userIds = users.stream().map(EUserRegistration::getId).collect(Collectors.toList());
+                        }
+                        userIds.add(userId);
+                    }else
+                        userIds.add(userId);
+
                 break;
                 case "DM":
                 userIds= mappingRepo.findUsersUnderManager(userId);
+                userIds.add(userId);
                 break;
                 case "DS":
                     case "P":
                 userIds.add(userId);
                 break;
-                default: return userIds;
+                default: userIds.add(userId);
+                return userIds;
         }
         return userIds;
     }

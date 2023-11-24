@@ -3,10 +3,8 @@ package com.massil.services;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
-import com.massil.dto.DealerManagersAssign;
-import com.massil.dto.DealerRegistration;
-import com.massil.dto.DlrList;
-import com.massil.dto.UserRegistration;
+import com.massil.dto.*;
+import com.massil.persistence.model.EDealerRegistration;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -69,6 +67,7 @@ public interface DealerRegistrationService {
 
 
     List<UserRegistration> dlrListToDlrAdmin(UUID dealerAdminId, Integer pageNo, Integer pageSize) throws AppraisalException;
+    public UpdateUserIS forUserUpdateIS(DealerRegistration newDealer, EDealerRegistration oldDealer);
 
 
 }

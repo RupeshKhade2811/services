@@ -183,4 +183,71 @@ public class EApprVehInteriCondn extends TransactionEntity {
     @IndexedEmbedded(includeDepth = 1)
     @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private EConfigCodes poorNeedsRepair;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "AC_SEAT")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes acSeat;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "DR_PWR_ST")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes driversPowerSeat;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "HDLNR_STAIND")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes headLinerStained;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "HEAT_ST")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes heatedSeats;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "PSNGR_PWR_ST")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes psngrPowerSeat;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "RR_ST_RIP")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes rearSeatRipped;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "SPRT_ST")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes sportSeats;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(targetEntity = EConfigCodes.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "SNRF_MNFR_LEAK")
+    @Where(clause = "IS_ACTIVE = true")
+	@IndexedEmbedded(includeDepth = 1)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+    private EConfigCodes sunOrMoonRfLeaking;
+
+
+
 }

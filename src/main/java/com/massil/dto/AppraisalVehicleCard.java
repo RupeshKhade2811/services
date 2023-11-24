@@ -61,4 +61,5 @@ public class AppraisalVehicleCard {
     private Boolean isPrivateParty;
     private Double dealerReserve;
     private String dsName;
+
 }

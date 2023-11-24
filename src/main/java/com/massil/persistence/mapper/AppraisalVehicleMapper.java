@@ -87,13 +87,13 @@ public interface AppraisalVehicleMapper {
     @Mapping(target="isSold",expression = "java(isShAvlbl(eAppraiseVehicle.getShipment()))")
     @Mapping (target = "dsName",source = "dlrsUserNames.userName")
     @Mapping(target = "role",expression = "java(setRoleOfCreator(eAppraiseVehicle.getUser().getRoleMapping()))")
-
     AppraisalVehicleCard eApprVehiToApprVehiCard(EAppraiseVehicle eAppraiseVehicle);
-    default  Role setRoleOfCreator(List<ERoleMapping> roleMapping){
+
+    default Role setRoleOfCreator(List<ERoleMapping> roleMapping){
         if(!roleMapping.isEmpty()){
             ERoleMapping eRoleMapping = roleMapping.get(0);
             ERole role = eRoleMapping.getRole();
-             return  eRoleToRole(role);
+            return eRoleToRole(role);
         }
         return null;
     }
@@ -957,4 +957,17 @@ public interface AppraisalVehicleMapper {
     @Mapping(target = "name",source = "userName")
     @Mapping(target = "id",ignore = true)
     EDealerRegistration eUserToEdealer(EUserRegistration userById);
+
+    DealerRegistration userToDealer(UserRegistration userReg);
+
+    @Mapping(target = "id",ignore = true)
+    @Mapping(target = "city",ignore = true)
+    @Mapping(target = "phoneNumber",ignore = true)
+    @Mapping(target = "profilePicture",ignore = true)
+    @Mapping(target = "state",ignore = true)
+    @Mapping(target = "streetAddress",ignore = true)
+    @Mapping(target = "zipCode",ignore = true)
+    EDealerRegistration eUserRegToEDealer(EUserRegistration userReg);
+
+
 }

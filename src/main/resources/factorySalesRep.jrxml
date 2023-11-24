@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="factorySalesRep" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c44ae430-f968-46da-8a6b-81297c390286">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="factorySalesRep" pageWidth="695" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c44ae430-f968-46da-8a6b-81297c390286">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<queryString>
 		<![CDATA[]]>
@@ -9,66 +9,51 @@
 	<field name="memberId" class="java.util.UUID"/>
 	<field name="memberName" class="java.lang.String"/>
 	<field name="location" class="java.lang.String"/>
-	<field name="signUpDate" class="java.lang.String"/>
+	<field name="signupDate" class="java.lang.String"/>
+	<field name="totalRevenue" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
 			<staticText>
-				<reportElement x="400" y="0" width="52" height="21" uuid="f57394eb-5ce7-40d4-a7c6-442fbb5749bb"/>
-				<text><![CDATA[Print Date:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="190" y="30" width="200" height="30" uuid="d6f049f9-1df6-4227-8690-d1487f16fa1d"/>
+				<reportElement x="220" y="30" width="260" height="30" uuid="d6f049f9-1df6-4227-8690-d1487f16fa1d"/>
 				<textElement>
 					<font size="19" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Factory Sales Report]]></text>
 			</staticText>
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="460" y="0" width="90" height="20" uuid="45d5bfe2-5c2c-4379-950f-8cf078cf53dc"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="400" y="34" width="52" height="16" uuid="7cabffde-d257-4f38-972d-2e25dcc1dd83"/>
-				<text><![CDATA[Search By:]]></text>
-			</staticText>
 			<image>
-				<reportElement x="0" y="0" width="80" height="70" uuid="b16c48e0-e519-440d-a989-bde29014e3d9"/>
+				<reportElement x="100" y="0" width="80" height="70" uuid="b16c48e0-e519-440d-a989-bde29014e3d9"/>
 				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="212" y="0" width="158" height="30" uuid="aa0525c9-1559-4a5a-8c1d-606fa1895aed"/>
+				<reportElement x="242" y="0" width="198" height="30" uuid="aa0525c9-1559-4a5a-8c1d-606fa1895aed"/>
 				<textElement>
 					<font size="19" isBold="true"/>
 				</textElement>
 				<text><![CDATA[KEY ASSURE llc]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="460" y="34" width="90" height="15" uuid="34f2bde8-bd15-4c97-917f-e84c84ec30f0"/>
-				<textFieldExpression><![CDATA[$F{searchby}]]></textFieldExpression>
-			</textField>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="7" width="100" height="13" backcolor="#4E8F9C" uuid="c126e180-eb93-47f3-a9bb-d3fda960cb7b"/>
+				<reportElement mode="Opaque" x="0" y="7" width="180" height="13" backcolor="#4E8F9C" uuid="c126e180-eb93-47f3-a9bb-d3fda960cb7b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Member ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="100" y="7" width="210" height="13" backcolor="#4E8F9C" uuid="91476228-50b7-4866-b4ea-6630dd271d79"/>
+				<reportElement mode="Opaque" x="180" y="7" width="141" height="13" backcolor="#4E8F9C" uuid="91476228-50b7-4866-b4ea-6630dd271d79"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Member Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="310" y="7" width="150" height="13" backcolor="#4E8F9C" uuid="669f6742-336d-45e4-839d-d04fa9c1d673"/>
+				<reportElement mode="Opaque" x="320" y="7" width="140" height="13" backcolor="#4E8F9C" uuid="669f6742-336d-45e4-839d-d04fa9c1d673"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
@@ -81,33 +66,62 @@
 				</textElement>
 				<text><![CDATA[Sign Up Date]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="560" y="7" width="100" height="13" backcolor="#4E8F9C" uuid="5a8af15d-c6ba-4c20-8c5c-b67b2b45283f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Revenue]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement mode="Opaque" x="0" y="-3" width="100" height="20" backcolor="#B1DEF0" uuid="3dbfdb5e-0e84-4079-af05-21507e87ccf6"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement mode="Opaque" x="0" y="-3" width="180" height="20" backcolor="#B1DEF0" uuid="3dbfdb5e-0e84-4079-af05-21507e87ccf6"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{memberId}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="100" y="-3" width="210" height="20" backcolor="#B1DEF0" uuid="dc6f272f-1130-4904-b241-85624aa574fd"/>
+				<reportElement mode="Opaque" x="180" y="-3" width="141" height="20" backcolor="#B1DEF0" uuid="dc6f272f-1130-4904-b241-85624aa574fd"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{memberName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="310" y="-3" width="150" height="20" backcolor="#B1DEF0" uuid="8278bf34-a604-40f7-9de4-de81c36013ff"/>
+				<reportElement mode="Opaque" x="320" y="-3" width="140" height="20" backcolor="#B1DEF0" uuid="8278bf34-a604-40f7-9de4-de81c36013ff"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="460" y="-3" width="100" height="20" backcolor="#B1DEF0" uuid="aa872439-4e8c-49b4-bc78-5d5693eded31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{signupDate} != null ? $F{signupDate} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="560" y="-3" width="100" height="20" backcolor="#B1DEF0" uuid="aa872439-4e8c-49b4-bc78-5d5693eded31"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{signUpDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{totalRevenue} != null ? $F{totalRevenue} : ""]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="17" width="560" height="1" uuid="a08a4314-3a85-4b94-ac03-695125a44bcf"/>
+				<reportElement x="0" y="17" width="660" height="1" uuid="a08a4314-3a85-4b94-ac03-695125a44bcf"/>
 			</line>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="20" uuid="af5d67bc-822d-4d12-97a2-03aaf44b33b4"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[This is 'System' generated report on: ]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="170" y="0" width="110" height="20" uuid="33ca9e75-348e-4fc8-9777-572028cc43ae"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 </jasperReport>

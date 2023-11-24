@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @ToString
 public class UsrDlrList extends Response {
-    List<UserRegistration> userList;
-    public UserRegistration details;
+    private  List<UserRegistration> userList;
+    private UserRegistration details;
 
 }

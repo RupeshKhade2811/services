@@ -3,6 +3,7 @@ package com.massil.services.impl;
 import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.OfferException;
 import com.massil.ExceptionHandle.Response;
+import com.massil.config.AuditConfiguration;
 import com.massil.constants.AppraisalConstants;
 import com.massil.dto.*;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
@@ -12,6 +13,7 @@ import com.massil.repository.*;
 import com.massil.repository.elasticRepo.OffersERepo;
 import com.massil.services.OffersService;
 import com.massil.util.CompareUtils;
+import com.massil.util.DealersUser;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -21,6 +23,7 @@ import org.jobrunr.jobs.annotations.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -63,6 +66,7 @@ public class OffersServiceImpl implements OffersService {
     @Autowired
     private StatusRepo statusRepo;
 
+
     @Autowired
     private OfferQuotesRepo offerQuotesRepo;
     @Autowired
@@ -89,26 +93,40 @@ public class OffersServiceImpl implements OffersService {
     private ConfigCodesRepo configCodesRepo;
     @Autowired
     private ECountdownClockHighBidRepo clockHighBidRepo;
+    @Autowired
+    private DealersUser dealersUser;
+    @Autowired
+    private AuditConfiguration auditConfiguration;
 
+    @Autowired
+    private RoleMappingRepo roleMappingRepo;
+    @Value("${spring.mail.username}")
+    private String fromMail;
 
     @Override
-    public CardsPage procurementCards(UUID id, Integer pageNumber, Integer pageSize) throws AppraisalException{
-        CardsPage cardsPage =null;
+    public CardsPage procurementCards(UUID id, Integer pageNumber, Integer pageSize) throws AppraisalException {
+        CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
         Page<EOffers> pageResult = null;
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-            EUserRegistration userById = userRepo.findUserById(id);
-            if (null != userById) {
-                if(Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
-                    pageResult = offersRepo.findByBuyerUserIdJPQL(id, AppraisalConstants.INVENTORY, true, false, pageable);
-                }else {
-                    cardsPage = offersERepo.procurementCards(id, pageNumber, pageSize);
-                }
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
 
+        ERoleMapping findUserId = roleMappingRepo.findByUserId(id);
+        if (findUserId.getRole().getRole().equals("D2") || findUserId.getRole().getRole().equals("D3") || findUserId.getRole().getRole().equals("S1") || findUserId.getRole().getRole().equals("M1")) {
+            id = findUserId.getDealerAdmin();
+        }
+        EUserRegistration userById = userRepo.findUserById(id);
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
+        if (null != userById) {
+            if (Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
+                pageResult = offersRepo.findByBuyerUserIdJPQL(allUsersUnderDealer, AppraisalConstants.INVENTORY, true, false, pageable);
+            } else {
+                cardsPage = offersERepo.procurementCards(id, pageNumber, pageSize);
             }
 
-        if (null!= pageResult && pageResult.getTotalElements() != 0) {
+        }
+
+        if (null != pageResult && pageResult.getTotalElements() != 0) {
 
             pageInfo.setTotalRecords(pageResult.getTotalElements());
             pageInfo.setTotalPages((long) pageResult.getTotalPages());
@@ -117,9 +135,9 @@ public class OffersServiceImpl implements OffersService {
 
             List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
             pageInfo.setCards(appraiseVehicleDtos);
-        } else if (null!=cardsPage && !cardsPage.getEOffersList().isEmpty()) {
+        } else if (null != cardsPage && !cardsPage.getEOffersList().isEmpty()) {
             pageInfo.setTotalRecords(cardsPage.getTotalRecords());
-            pageInfo.setTotalPages( cardsPage.getTotalPages());
+            pageInfo.setTotalPages(cardsPage.getTotalPages());
 
             List<EOffers> apv = cardsPage.getEOffersList();
 
@@ -141,24 +159,30 @@ public class OffersServiceImpl implements OffersService {
         CardsPage pageInfo = new CardsPage();
         Page<EOffers> pageResult = null;
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-            EUserRegistration userById = userRepo.findUserById(id);
-            if (null != userById) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
 
-                    pageResult = offersRepo.findBySellerUserIdJPQL(id, false, pageable);
+        ERoleMapping findUserId = roleMappingRepo.findByUserId(id);
+        if (findUserId.getRole().getRole().equals("D2") || findUserId.getRole().getRole().equals("D3") || findUserId.getRole().getRole().equals("S1") || findUserId.getRole().getRole().equals("M1")) {
+            id = findUserId.getDealerAdmin();
+        }
 
-            }
+        EUserRegistration userById = userRepo.findUserById(id);
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
+        if (null != userById) {
 
-            if (null!= pageResult&&pageResult.getTotalElements() != 0) {
+            pageResult = offersRepo.findBySellerUserIdJPQL(allUsersUnderDealer, false, pageable);
 
-                pageInfo.setTotalRecords(pageResult.getTotalElements());
-                pageInfo.setTotalPages((long) pageResult.getTotalPages());
+        }
 
-                List<EOffers> apv = pageResult.toList();
-                List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
-                pageInfo.setCards(appraiseVehicleDtos);
-            }
-            else throw new AppraisalException("AppraisalCards not available");
+        if (null != pageResult && pageResult.getTotalElements() != 0) {
+
+            pageInfo.setTotalRecords(pageResult.getTotalElements());
+            pageInfo.setTotalPages((long) pageResult.getTotalPages());
+
+            List<EOffers> apv = pageResult.toList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
+            pageInfo.setCards(appraiseVehicleDtos);
+        } else throw new AppraisalException("AppraisalCards not available");
 
 
         pageInfo.setCode(HttpStatus.OK.value());
@@ -173,10 +197,13 @@ public class OffersServiceImpl implements OffersService {
     public Response makeOfferByBuyer(Long appraisalId, Offers offers, UUID buyerUserId) throws OfferException {
 
         EOffers offers1 = appraisalVehicleMapper.offersToEOffers(offers);
-        Response response = new Response();
-        String res="";
+        EUserRegistration userById = userRepo.findUserById(buyerUserId);
+        auditConfiguration.setAuditorName(userById.getUserName());
 
-        if(Boolean.TRUE.equals(checkvalue(offers.getBuyerQuote()))){
+        Response response = new Response();
+        String res = "";
+
+        if (Boolean.TRUE.equals(checkvalue(offers.getBuyerQuote()))) {
             EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(appraisalId);
             if (!byApprId.getIsHold()) {
                 EOffers offer = offersRepo.findOffer(appraisalId, buyerUserId);
@@ -196,13 +223,13 @@ public class OffersServiceImpl implements OffersService {
                 } else {
                     res = offerInsertedToDb(byApprId, offers1, appraisalId, offers, buyerUserId);
                 }
-            }else{
+            } else {
                 response.setMessage("This appraisal is on HOLD");
                 response.setCode(HttpStatus.FORBIDDEN.value());
                 response.setStatus(Boolean.TRUE);
                 return response;
             }
-        }else throw new OfferException("provide quote more then 0");
+        } else throw new OfferException("provide quote more then 0");
 
 
         response.setMessage(res);
@@ -218,14 +245,15 @@ public class OffersServiceImpl implements OffersService {
 
 
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
+        auditConfiguration.setAuditorName(offerById.getSellerUserId().getUserName());
         Response response = new Response();
         EOfferQuotes selQuo = offerQuotesRepo.getLatestQuo(offerId);
 
 
-        if(Boolean.TRUE.equals(checkvalue(offers.getSellerQuote()))){
+        if (Boolean.TRUE.equals(checkvalue(offers.getSellerQuote()))) {
             if (null != offerById) {
-                if (selQuo.getSellerQuote()==null||((offers.getSellerQuote()<=selQuo.getSellerQuote())&&
-                        (offers.getSellerQuote()>selQuo.getBuyerQuote()))) {
+                if (selQuo.getSellerQuote() == null || ((offers.getSellerQuote() <= selQuo.getSellerQuote()) &&
+                        (offers.getSellerQuote() > selQuo.getBuyerQuote()))) {
                     offerById.setPrice(offers.getSellerQuote());
                     offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.SELLERCOUNTER));
                     EOffers saveOffer = offersRepo.save(offerById);
@@ -233,10 +261,10 @@ public class OffersServiceImpl implements OffersService {
                     EOfferQuotes offerQuotesById = offerQuotesRepo.findTopByOffersIdOrderByCreatedOnDesc(offerId);
                     offerQuotesById.setSellerQuote(offers.getSellerQuote());
                     offerQuotesRepo.save(offerQuotesById);
-                }else throw new OfferException("Seller cannot quote less than buyer quoted value and " +
+                } else throw new OfferException("Seller cannot quote less than buyer quoted value and " +
                         "more than his/her previous quoted value");
             } else throw new OfferException("Offer not available");
-        }else throw new OfferException("give quote more then 0");
+        } else throw new OfferException("give quote more then 0");
 
         response.setCode(HttpStatus.OK.value());
         response.setMessage("Seller countered and seller quote updated");
@@ -251,23 +279,24 @@ public class OffersServiceImpl implements OffersService {
 
 
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
+        auditConfiguration.setAuditorName(offerById.getBuyerUserId().getUserName());
         Response response = new Response();
         EOfferQuotes latestQuo = offerQuotesRepo.getLatestQuo(offerId);
 
-        if(Boolean.TRUE.equals(checkvalue(offers.getBuyerQuote()))){
+        if (Boolean.TRUE.equals(checkvalue(offers.getBuyerQuote()))) {
             if (null != offerById) {
-                if (offers.getBuyerQuote()>latestQuo.getBuyerQuote()) {
-                offerById.setPrice(offers.getBuyerQuote());
-                offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.BUYERCOUNTER));
-                EOffers saveOffer = offersRepo.save(offerById);
+                if (offers.getBuyerQuote() > latestQuo.getBuyerQuote()) {
+                    offerById.setPrice(offers.getBuyerQuote());
+                    offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.BUYERCOUNTER));
+                    EOffers saveOffer = offersRepo.save(offerById);
 
-                EOfferQuotes offerQuotes = new EOfferQuotes();
-                offerQuotes.setBuyerQuote(offers.getBuyerQuote());
-                offerQuotes.setAppRef(offerById.getAppRef());
-                offerQuotes.setOffers(saveOffer);
-                offerQuotesRepo.save(offerQuotes);
+                    EOfferQuotes offerQuotes = new EOfferQuotes();
+                    offerQuotes.setBuyerQuote(offers.getBuyerQuote());
+                    offerQuotes.setAppRef(offerById.getAppRef());
+                    offerQuotes.setOffers(saveOffer);
+                    offerQuotesRepo.save(offerQuotes);
 
-                    if(null!= saveOffer.getAppRef().getDealerReserve() && saveOffer.getAppRef().getDealerReserve()>0) {
+                    if (null != saveOffer.getAppRef().getDealerReserve() && saveOffer.getAppRef().getDealerReserve() > 0) {
                         EAutoBidJobs autoBidJobs = new EAutoBidJobs();
                         autoBidJobs.setAppraisalRef(offerById.getAppRef());
                         autoBidJobs.setStatus(0);
@@ -276,9 +305,9 @@ public class OffersServiceImpl implements OffersService {
                         autoBidJobs.setOfferId(saveOffer);
                         autoBidJobsRepo.save(autoBidJobs);
                     }
-                }else throw new OfferException("Buyer cannot quote less than previous quoted value");
+                } else throw new OfferException("Buyer cannot quote less than previous quoted value");
             } else throw new OfferException("Offer not available");
-        }else throw new OfferException("give quote more then 0");
+        } else throw new OfferException("give quote more then 0");
 
 
         response.setStatus(Boolean.TRUE);
@@ -291,21 +320,22 @@ public class OffersServiceImpl implements OffersService {
 
     @Override
     @Transactional
-    public Response sellerAccept(Long offerId) throws OfferException {
+    public Response sellerAccept(Long offerId) throws OfferException, AppraisalException {
 
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
+        auditConfiguration.setAuditorName(offerById.getSellerUserId().getUserName());
         Response response = new Response();
 
         if (null != offerById) {
             int rowUpdated = offersRepo.updateOfferSetPurchasedSellerAccept(offerId, offerById.getAppRef().getId());
             int rowsUpdated = offersRepo.updateOfferSetSold(offerId, offerById.getAppRef().getId());
-            EShipment shipment=new EShipment();
-            shipment.setSellerAgreed(true);
-            insertShipmentDtls(offerById,shipment);
+            EShipment shipment = new EShipment();
+            shipment.setSellerAgreed(false);
+            insertShipmentDtls(offerById, shipment);
+            shipment.setBuyerUserId(offerById.getBuyerUserId());
+            shipment.setSellerUserId(offerById.getSellerUserId());
 
-            } else throw new OfferException("Invalid offer id Send..");
-
-
+        } else throw new OfferException("Invalid offer id Send..");
 
 
         response.setCode(HttpStatus.OK.value());
@@ -316,20 +346,21 @@ public class OffersServiceImpl implements OffersService {
 
     @Override
     @Transactional
-    public Response buyerAccept(Long offerId) throws OfferException {
+    public Response buyerAccept(Long offerId) throws OfferException, AppraisalException {
 
         EOffers offers = offersRepo.findById(offerId).orElse(null);
+        auditConfiguration.setAuditorName(offers.getBuyerUserId().getUserName());
         Response response = new Response();
 
-            if (null != offers) {
+        if (null != offers) {
 
-                int rowUpdated = offersRepo.updateOfferSetPurchasedBuyerAccept(offerId, offers.getAppRef().getId());
-                int rowsUpdated = offersRepo.updateOfferSetSold(offerId, offers.getAppRef().getId());
-                EShipment shipment=new EShipment();
-                shipment.setBuyerAgreed(true);
-                insertShipmentDtls(offers,shipment);
+            int rowUpdated = offersRepo.updateOfferSetPurchasedBuyerAccept(offerId, offers.getAppRef().getId());
+            int rowsUpdated = offersRepo.updateOfferSetSold(offerId, offers.getAppRef().getId());
+            EShipment shipment = new EShipment();
+            shipment.setBuyerAgreed(false);
+            insertShipmentDtls(offers, shipment);
 
-            } else throw new OfferException("Invalid offer id Send..");
+        } else throw new OfferException("Invalid offer id Send..");
 
         response.setStatus(Boolean.TRUE);
         response.setCode(HttpStatus.OK.value());
@@ -342,14 +373,15 @@ public class OffersServiceImpl implements OffersService {
     public Response sellerRejected(Long offerId) throws OfferException {
 
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
+        auditConfiguration.setAuditorName(offerById.getSellerUserId().getUserName());
         Response response = new Response();
 
 
-            if (null != offerById) {
-                offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.SELLERREJECTED));
-                EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(offerById.getAppRef().getId());
-                offersRepo.save(offerById);
-            } else throw new OfferException("Invalid offer id Send..");
+        if (null != offerById) {
+            offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.SELLERREJECTED));
+            EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(offerById.getAppRef().getId());
+            offersRepo.save(offerById);
+        } else throw new OfferException("Invalid offer id Send..");
 
         response.setStatus(Boolean.TRUE);
         response.setCode(HttpStatus.OK.value());
@@ -358,17 +390,19 @@ public class OffersServiceImpl implements OffersService {
     }
 
     @Override
+    @Transactional
     public Response buyerRejected(Long offerId) throws OfferException {
 
         EOffers offerById = offersRepo.findById(offerId).orElse(null);
+        auditConfiguration.setAuditorName(offerById.getBuyerUserId().getUserName());
         Response response = new Response();
 
-            if (null != offerById) {
-                offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.BUYERREJECTED));
-                EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(offerById.getAppRef().getId());
+        if (null != offerById) {
+            offerById.setStatus(statusRepo.findByStatusCode(AppraisalConstants.BUYERREJECTED));
+            EAppraiseVehicle byApprId = eAppraiseVehicleRepo.getAppraisalById(offerById.getAppRef().getId());
 
-                offersRepo.save(offerById);
-            } else throw new OfferException("Invalid offer id Send..");
+            offersRepo.save(offerById);
+        } else throw new OfferException("Invalid offer id Send..");
 
         response.setMessage("Buyer rejected the offer");
         response.setCode(HttpStatus.OK.value());
@@ -379,40 +413,42 @@ public class OffersServiceImpl implements OffersService {
     @Override
     @Transactional
     public OfferInfo procurementOfferInfo(Long offerId) throws OfferException {
-        OfferInfo offerInfo=null;
+        OfferInfo offerInfo = null;
         EOffers info = offersRepo.findById(offerId).orElse(null);
 
-        if(null!=info){
-            offerInfo=new OfferInfo();
+        if (null != info) {
+            offerInfo = new OfferInfo();
             AppraisalVehicleCard card = appraisalVehicleMapper.eApprVehiToApprVehiCard(info.getAppRef());
 
             offerInfo.setCard(card);
             offerInfo.setStatusInfo(offersMapper.eStatusToStatus(info.getStatus()));
-            List< EOfferQuotes> quotes = offerQuotesRepo.findByOffersIdOrderByCreatedOnDesc(offerId);
-            List<Quotes> quotesList=new ArrayList<>();
-            int i=0;
-            for (EOfferQuotes offer: quotes) {
+            List<EOfferQuotes> quotes = offerQuotesRepo.findByOffersIdOrderByCreatedOnDesc(offerId);
+            List<Quotes> quotesList = new ArrayList<>();
+            int i = 0;
+            for (EOfferQuotes offer : quotes) {
                 Quotes quotes1 = new Quotes();
-                if(i==0){
+                if (i == 0) {
                     quotes1.setStatus(offerInfo.getStatusInfo().getStatus());
-                    i=1;
+                    i = 1;
                 }
-                    quotes1.setBuyerQuote(offer.getBuyerQuote());
-                    quotes1.setSellerQuote(offer.getSellerQuote());
-                    quotes1.setAppraisedValue(offerInfo.getCard().getAppraisedValue());
+                quotes1.setBuyerQuote(offer.getBuyerQuote());
+                quotes1.setSellerQuote(offer.getSellerQuote());
+                quotes1.setAppraisedValue(offerInfo.getCard().getAppraisedValue());
 
                 quotesList.add(quotes1);
             }
+            offerInfo.setBuyFee(configCodesRepo.getFee(AppraisalConstants.BUY_FEE).toString());
+            offerInfo.setSaleFee(configCodesRepo.getFee(AppraisalConstants.BUY_FEE).toString());
             offerInfo.setQuotesList(quotesList);
             offerInfo.setOfferId(offerId);
-        }
-        else throw new OfferException("Invalid id");
+        } else throw new OfferException("Invalid id");
 
         offerInfo.setCode(HttpStatus.OK.value());
         offerInfo.setMessage("Procurement offer information");
         offerInfo.setStatus(true);
         return offerInfo;
     }
+
     @Override
     @Transactional
     public OfferInfo liquidationOfferInfo(Long offerId) throws OfferException {
@@ -425,21 +461,21 @@ public class OffersServiceImpl implements OffersService {
             offerInfo.setCard(card);
             offerInfo.setStatusInfo(offersMapper.eStatusToStatus(offerById.getStatus()));
             List<EOfferQuotes> quotes = offerQuotesRepo.findByOffersIdOrderByCreatedOnDesc(offerId);
-            List<Quotes> quotesList=new ArrayList<>();
-            int i=0;
-            for (EOfferQuotes qts: quotes) {
-                Quotes quotes1= new Quotes();
-                if(i==0){
+            List<Quotes> quotesList = new ArrayList<>();
+            int i = 0;
+            for (EOfferQuotes qts : quotes) {
+                Quotes quotes1 = new Quotes();
+                if (i == 0) {
                     quotes1.setStatus(offerInfo.getStatusInfo().getStatus());
-                    i=1;
+                    i = 1;
                 }
                 quotes1.setBuyerQuote(qts.getBuyerQuote());
                 quotes1.setSellerQuote(qts.getSellerQuote());
                 quotes1.setAppraisedValue(offerInfo.getCard().getAppraisedValue());
                 quotesList.add(quotes1);
             }
-         /*       offerInfo.setBuyerQuote(quotes.getBuyerQuote());
-                offerInfo.setSellerQuote(quotes.getSellerQuote());*/
+            offerInfo.setBuyFee(configCodesRepo.getFee(AppraisalConstants.BUY_FEE).toString());
+            offerInfo.setSaleFee(configCodesRepo.getFee(AppraisalConstants.BUY_FEE).toString());
             offerInfo.setQuotesList(quotesList);
             offerInfo.setOfferId(offerId);
 
@@ -454,8 +490,9 @@ public class OffersServiceImpl implements OffersService {
     }
 
 
-    @Job(name = "The sample job", retries = 2)
+    //  @Job(name = "The sample job", retries = 2)
     @Override
+    @Transactional
     public Response myScheduledTask() throws IOException, TemplateException, MessagingException {
         log.info("myScheduledTask() method started..");
         log.info("myScheduledTask() method started..");
@@ -463,16 +500,17 @@ public class OffersServiceImpl implements OffersService {
         Response response = new Response();
 
         List<EOffers> mdfonLess24hrs = offersRepo.listOfMakeOfferLessThn24hrs();
+        auditConfiguration.setAuditorName("System");
 
-        for(int i=0;i<mdfonLess24hrs.size();i++){
-            if(null==notifyRepo.GetNotificationFreq(mdfonLess24hrs.get(i).getId())) {
-            EUserRegistration buyerById = userRegistrationRepo.findUserById(mdfonLess24hrs.get(i).getBuyerUserId().getId());
-            EUserRegistration sellerById = userRegistrationRepo.findUserById(mdfonLess24hrs.get(i).getSellerUserId().getId());
+        for (int i = 0; i < mdfonLess24hrs.size(); i++) {
+            if (null == notifyRepo.GetNotificationFreq(mdfonLess24hrs.get(i).getId())) {
+                EUserRegistration buyerById = userRegistrationRepo.findUserById(mdfonLess24hrs.get(i).getBuyerUserId().getId());
+                EUserRegistration sellerById = userRegistrationRepo.findUserById(mdfonLess24hrs.get(i).getSellerUserId().getId());
 
-            EStatus stsById = statusRepo.findStsById(mdfonLess24hrs.get(i).getStatus().getId());
+                EStatus stsById = statusRepo.findStsById(mdfonLess24hrs.get(i).getStatus().getId());
 
-            if(stsById.getStatusCode().equals(AppraisalConstants.MAKEOFFER) || stsById.getStatusCode().equals(AppraisalConstants.BUYERCOUNTER)
-            || stsById.getStatusCode().equals(AppraisalConstants.SELLERCOUNTER)){
+                if (stsById.getStatusCode().equals(AppraisalConstants.MAKEOFFER) || stsById.getStatusCode().equals(AppraisalConstants.BUYERCOUNTER)
+                        || stsById.getStatusCode().equals(AppraisalConstants.SELLERCOUNTER)) {
 
                     MimeMessage message = sender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
@@ -499,35 +537,37 @@ public class OffersServiceImpl implements OffersService {
                     String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
 
                     helper.setTo(email);
+                    helper.setFrom(fromMail);
                     helper.setText(html, true);
                     helper.setSubject(AppraisalConstants.SUBJECT);
                     sender.send(message);
 
-                MimeMessage msg = sender.createMimeMessage();
-                MimeMessageHelper helper1 = new MimeMessageHelper(msg, StandardCharsets.UTF_8.name());
+                    MimeMessage msg = sender.createMimeMessage();
+                    MimeMessageHelper helper1 = new MimeMessageHelper(msg, StandardCharsets.UTF_8.name());
 
-                String email2 = buyerById.getEmail();
-                String message2 = "BUYER, YOUR MAKE OFFER WILL EXPIRE SOON";
-                String price2 = String.valueOf(mdfonLess24hrs.get(i).getPrice());
-                String name3 = comUtl.checkDbVariable(sellerById.getFirstName()) + " " + comUtl.checkDbVariable(sellerById.getLastName());
-                String name4 = comUtl.checkDbVariable(buyerById.getFirstName()) + " " + comUtl.checkDbVariable(buyerById.getLastName());
-                String vin1 = apprVeh;
+                    String email2 = buyerById.getEmail();
+                    String message2 = "BUYER, YOUR MAKE OFFER WILL EXPIRE SOON";
+                    String price2 = String.valueOf(mdfonLess24hrs.get(i).getPrice());
+                    String name3 = comUtl.checkDbVariable(sellerById.getFirstName()) + " " + comUtl.checkDbVariable(sellerById.getLastName());
+                    String name4 = comUtl.checkDbVariable(buyerById.getFirstName()) + " " + comUtl.checkDbVariable(buyerById.getLastName());
+                    String vin1 = apprVeh;
 
-                Template t1 = config.getTemplate("delayAccept.ftl");
+                    Template t1 = config.getTemplate("delayAccept.ftl");
 
-                Map<String, Object> model2 = new HashMap<>();
-                model2.put(AppraisalConstants.SELLERNAME, name3);
-                model2.put(AppraisalConstants.BUYERNAME, name4);
-                model2.put(AppraisalConstants.VIN, vin1);
-                model2.put(AppraisalConstants.MESSAGE, message2);
-                model2.put(AppraisalConstants.VALUE, price2);
+                    Map<String, Object> model2 = new HashMap<>();
+                    model2.put(AppraisalConstants.SELLERNAME, name3);
+                    model2.put(AppraisalConstants.BUYERNAME, name4);
+                    model2.put(AppraisalConstants.VIN, vin1);
+                    model2.put(AppraisalConstants.MESSAGE, message2);
+                    model2.put(AppraisalConstants.VALUE, price2);
 
-                String html1 = FreeMarkerTemplateUtils.processTemplateIntoString(t1, model2);
+                    String html1 = FreeMarkerTemplateUtils.processTemplateIntoString(t1, model2);
 
-                helper1.setTo(email2);
-                helper1.setText(html1, true);
-                helper1.setSubject(AppraisalConstants.SUBJECT);
-                sender.send(msg);
+                    helper1.setTo(email2);
+                    helper1.setFrom(fromMail);
+                    helper1.setText(html1, true);
+                    helper1.setSubject(AppraisalConstants.SUBJECT);
+                    sender.send(msg);
 
                     ENotificationTable notify = new ENotificationTable();
                     notify.setToBuyerMail(email2);
@@ -538,7 +578,7 @@ public class OffersServiceImpl implements OffersService {
                     notifyRepo.save(notify);
                 }
 
-                }
+            }
         }
         log.info("myScheduledTask() method end..");
         log.info("myScheduledTask() method end..");
@@ -549,20 +589,22 @@ public class OffersServiceImpl implements OffersService {
 
     @Override
     public ListedOffer getOfferList(Long appraisalId) throws OfferException {
-       ListedOffer list=new ListedOffer() ;
-        List<OfferList> offerLists=null;
-       List<EOffers> offerList = offersRepo.getOfferList(appraisalId,true);
+        ListedOffer list = new ListedOffer();
+        List<OfferList> offerLists = null;
+        List<EOffers> offerList = offersRepo.getOfferList(appraisalId, true);
 
-           if (null != offerList && 0 != offerList.size()) {
-               offerLists = new ArrayList<>();
-               for (EOffers offers : offerList) {
-                   OfferList obj = new OfferList();
-                   obj.setFirstName(offers.getBuyerUserId().getFirstName());
-                   obj.setLastName(offers.getBuyerUserId().getLastName());
-                   obj.setOfferId(offers.getId());
-                   offerLists.add(obj);
-               }
-           } else throw new OfferException("invalid id");
+        if (null != offerList && 0 != offerList.size()) {
+            offerLists = new ArrayList<>();
+            for (EOffers offers : offerList) {
+                OfferList offer = new OfferList();
+                offer.setFirstName(offers.getBuyerUserId().getFirstName());
+                offer.setLastName(offers.getBuyerUserId().getLastName());
+                offer.setOfferId(offers.getId());
+                offer.setOfferStatus(offers.getStatus().getStatus());
+                offer.setOfferDesc(offers.getStatus().getStatusCode());
+                offerLists.add(offer);
+            }
+        } else throw new OfferException("invalid id");
 
         list.setOffersCards(offerLists);
         list.setCode(HttpStatus.OK.value());
@@ -572,7 +614,9 @@ public class OffersServiceImpl implements OffersService {
         return list;
     }
 
-    public String offerInsertedToDb(EAppraiseVehicle byApprId,EOffers offers1,Long appraisalId, Offers offers, UUID buyerUserId){
+
+
+    public String offerInsertedToDb(EAppraiseVehicle byApprId, EOffers offers1, Long appraisalId, Offers offers, UUID buyerUserId) {
         EUserRegistration sellerUserid = byApprId.getUser();
         EDealerRegistration sellerDealerid = byApprId.getDealer();
         EUserRegistration userById = userRepo.findUserById(buyerUserId);
@@ -581,9 +625,9 @@ public class OffersServiceImpl implements OffersService {
 
         offers1.setIsTradeBuy(pushForBuyFig);
         offers1.setSellerUserId(sellerUserid);
-        if(null!=sellerDealerid){
+        if (null != sellerDealerid) {
             offers1.setSellerDealerId(sellerDealerid);
-        }else{
+        } else {
             offers1.setSellerDealerId(null);
         }
         offers1.setMakeNewOffer(0);
@@ -598,7 +642,7 @@ public class OffersServiceImpl implements OffersService {
         } else
             offers1.setBuyerDealerId(null);
 
-        byApprId.setIsOfferMade(true);
+//        byApprId.setIsOfferMade(true);
         offers1.setAppRef(byApprId);
 
         EOffers save = offersRepo.save(offers1);
@@ -618,7 +662,7 @@ public class OffersServiceImpl implements OffersService {
 
     private void setBidProcess(EAppraiseVehicle byApprId, Offers offers, EOffers save) {
 
-        if(null!= byApprId.getDealerReserve() && byApprId.getDealerReserve()>0) {
+        if (null != byApprId.getDealerReserve() && byApprId.getDealerReserve() > 0) {
             EAutoBidProcess autoBidProcess = new EAutoBidProcess();
             autoBidProcess.setAppraisalRef(byApprId);
             autoBidProcess.setLastOfferID(save);
@@ -638,7 +682,7 @@ public class OffersServiceImpl implements OffersService {
         }
     }
 
-    public String updatPrevOffer(Long appraisalId,EOffers offers1, EOffers offer,Offers offers){
+    public String updatPrevOffer(Long appraisalId, EOffers offers1, EOffers offer, Offers offers) {
         Double price = offers.getBuyerQuote();
         offer.setPrice(price);
         offer.setStatus(statusRepo.findByStatusCode(AppraisalConstants.MAKEOFFER));
@@ -653,37 +697,41 @@ public class OffersServiceImpl implements OffersService {
         return "Offer again saved ";
     }
 
-    Boolean checkvalue(Double quote){
+    Boolean checkvalue(Double quote) {
         return quote > 0;
     }
 
 
-    private void insertShipmentDtls(EOffers eOffers,EShipment shipment ){
-        shipment.setAppraisalRef(eOffers.getAppRef());
-        shipment.setOffers(eOffers);
-        shipment.setPushForBuyFig(eOffers.getIsTradeBuy());
-        shipmentRepo.save(shipment);
+    private void insertShipmentDtls(EOffers eOffers, EShipment shipment) throws AppraisalException {
+        EShipment byApprId = shipmentRepo.findByApprId(eOffers.getAppRef().getId());
+        if (null == byApprId) {
+            shipment.setAppraisalRef(eOffers.getAppRef());
+            shipment.setOffers(eOffers);
+            shipment.setPushForBuyFig(eOffers.getIsTradeBuy());
+            shipmentRepo.save(shipment);
+        }
     }
 
 
-    @Override
-    @Transactional
-    public HighReserveValuePop isReserveHigh(Long appraisalId, Double newDealerReserve) throws AppraisalException {
-        EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(appraisalId);
-        HighReserveValuePop reserveValuePop = new HighReserveValuePop();
-        if(null!= appraisalById) {
-            if (null != appraisalById.getDealerReserve()){
-                reserveValuePop.setIsNewReserveHigh(appraisalById.getDealerReserve() < newDealerReserve);
-            }else {
-                reserveValuePop.setIsNewReserveHigh(true);
-            }
-            if(Boolean.TRUE.equals(reserveValuePop.getIsNewReserveHigh())) {
-                Integer rows = offersRepo.anyOfferLowerThanReserve(appraisalId, newDealerReserve);
-                reserveValuePop.setAreBidsLTNewReserve(rows != 0);
-            }
-            reserveValuePop.setStatus(true);
-            reserveValuePop.setCode(HttpStatus.OK.value());
-        }else throw new AppraisalException("Appraisal not found");
-        return reserveValuePop;
+        @Override
+        @Transactional
+        public HighReserveValuePop isReserveHigh (Long appraisalId, Double newDealerReserve) throws AppraisalException {
+            EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(appraisalId);
+            HighReserveValuePop reserveValuePop = new HighReserveValuePop();
+            if (null != appraisalById) {
+                if (null != appraisalById.getDealerReserve()) {
+                    reserveValuePop.setIsNewReserveHigh(appraisalById.getDealerReserve() < newDealerReserve);
+                } else {
+                    reserveValuePop.setIsNewReserveHigh(true);
+                }
+                if (Boolean.TRUE.equals(reserveValuePop.getIsNewReserveHigh())) {
+                    Integer rows = offersRepo.anyOfferLowerThanReserve(appraisalId, newDealerReserve);
+                    reserveValuePop.setAreBidsLTNewReserve(rows != 0);
+                }
+                reserveValuePop.setStatus(true);
+                reserveValuePop.setCode(HttpStatus.OK.value());
+            } else throw new AppraisalException("Appraisal not found");
+            return reserveValuePop;
+        }
     }
-}
+

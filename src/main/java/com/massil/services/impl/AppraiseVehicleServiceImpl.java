@@ -146,16 +146,31 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
    private ApplicationContext applicationContext;
    @Autowired
    private ApprTestDrStsRepo tdRepo;
+   
+    @Autowired
+   private PaymentDetailsRepo paymentDetailsRepo;
 
    @Autowired
    private ResourceLoader resourceLoader;
    @Autowired
    private AppraisalVehicleERepo appraisalVehicleERepo;
+    @Autowired
+   private KeyassureRptLogRepo rptLogRepo;
+   @Autowired
+   private RoleMappingRepo roleMappingRepo;
+   
 
     @Override
     public Response checkVinAvaliable(String vin, UUID userId) {
         Response response=new Response();
-        List<EAppraiseVehicle> vehicle= eAppraiseVehicleRepo.findByVinAndDlrId(vin, userId);
+
+        ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
+        if(byUserId.getRole().getRole().equals("D2") || byUserId.getRole().getRole().equals("D3") || byUserId.getRole().getRole().equals("S1") || byUserId.getRole().getRole().equals("M1")){
+            userId=byUserId.getDealerAdmin();
+        }
+
+        List<UUID> usersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
+        List< EAppraiseVehicle > vehicle= eAppraiseVehicleRepo.findByVinAndDlrId(vin, usersUnderDealer);
         if(null==vehicle||vehicle.size()==0){
             response.setStatus(false);
             response.setMessage("Vin number not found for Id "+userId);
@@ -321,20 +336,47 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
                     updateTestDrvStatus(apprConfigList, eApprTestDrSts);
 
                 }
-                if (null!=apprCreaPage.getPreStartMeas()) {
-                    List<OBD2_PreStartMeasurement> ps=new ArrayList<>();
-                    OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(apprCreaPage.getPreStartMeas());
-                    ps.add(preStart);
-                    preStart.setApprRef(eAppraiseVehicle);
-                    eAppraiseVehicle.setPreStart(ps);
-                }
-                if (null!=apprCreaPage.getTestDrive()) {
-                    List<OBD2_TestDriveMeasurements> testDriveList = appraisalVehicleMapper.apprCreaPageToLTestDriveMeas(apprCreaPage.getTestDrive());
-                    for (OBD2_TestDriveMeasurements testDrMeas : testDriveList) {
-                        testDrMeas.setApprRef(eAppraiseVehicle);
+
+                ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
+                if(byUserId.getRole().getRoleGroup().equalsIgnoreCase("P")){
+                    PaymentDetails user1 = paymentDetailsRepo.getUser(userId);
+                    if (null != user1 && user1.getConsumeQuota() < user1.getTotalQuota()) {
+                        log.info("new record inserted");
+                        user1.setConsumeQuota(user1.getConsumeQuota() + 1);
+                        paymentDetailsRepo.save(user1);
+                        if (null!=apprCreaPage.getPreStartMeas()) {
+                            List<OBD2_PreStartMeasurement> ps=new ArrayList<>();
+                            OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(apprCreaPage.getPreStartMeas());
+                            ps.add(preStart);
+                            preStart.setApprRef(eAppraiseVehicle);
+                            eAppraiseVehicle.setPreStart(ps);
+                        }
+                        if (null!=apprCreaPage.getTestDrive()) {
+                            List<OBD2_TestDriveMeasurements> testDriveList = appraisalVehicleMapper.apprCreaPageToLTestDriveMeas(apprCreaPage.getTestDrive());
+                            for (OBD2_TestDriveMeasurements testDrMeas : testDriveList) {
+                                testDrMeas.setApprRef(eAppraiseVehicle);
+                            }
+                            eAppraiseVehicle.setTestDriveMeas(testDriveList);
+                        }
                     }
-                    eAppraiseVehicle.setTestDriveMeas(testDriveList);
+                }else{
+                    if (null!=apprCreaPage.getPreStartMeas()) {
+                        List<OBD2_PreStartMeasurement> ps=new ArrayList<>();
+                        OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(apprCreaPage.getPreStartMeas());
+                        ps.add(preStart);
+                        preStart.setApprRef(eAppraiseVehicle);
+                        eAppraiseVehicle.setPreStart(ps);
+                    }
+                    if (null!=apprCreaPage.getTestDrive()) {
+                        List<OBD2_TestDriveMeasurements> testDriveList = appraisalVehicleMapper.apprCreaPageToLTestDriveMeas(apprCreaPage.getTestDrive());
+                        for (OBD2_TestDriveMeasurements testDrMeas : testDriveList) {
+                            testDrMeas.setApprRef(eAppraiseVehicle);
+                        }
+                        eAppraiseVehicle.setTestDriveMeas(testDriveList);
+                    }
                 }
+
+
 
                 EUserRegistration userById = userRegistrationRepo.findUserById(apprCreaPage.getDealershipUserNames());
 
@@ -345,7 +387,16 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
                 }
                 eAppraiseVehicle.setDlrsUserNames(userById);
                 eAppraiseVehicle.setTdStatus(eApprTestDrSts);
-                eAppraiseVehicleRepo.save(eAppraiseVehicle);
+                EAppraiseVehicle save = eAppraiseVehicleRepo.save(eAppraiseVehicle);
+
+                if(byUserId.getRole().getRoleGroup().equalsIgnoreCase("P")){
+                    KeyassureReportLog kReportLog = new KeyassureReportLog();
+                    kReportLog.setAppraisalRef(save);
+                    kReportLog.setUser(user);
+                    rptLogRepo.save(kReportLog);
+                }
+
+
             } else throw new AppraisalException("User not found with id: "+userId);
 
             Response response= new Response();
@@ -367,11 +418,12 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
 
 
-        if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
-            pageResult = eAppraiseVehicleRepo.appraisalCards(userId, true, pageable);
-        }else {
-             cardsPage = appraisalVehicleERepo.appraisalCards(userId, pageNumber, pageSize);
+        ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
+        if(byUserId.getRole().getRole().equals("D2") || byUserId.getRole().getRole().equals("D3") || byUserId.getRole().getRole().equals("S1") || byUserId.getRole().getRole().equals("M1")){
+            userId=byUserId.getDealerAdmin();
         }
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
+         pageResult = eAppraiseVehicleRepo.appraisalCards(allUsersUnderDealer, true,pageable);
 
         if(null!= pageResult && pageResult.getTotalElements()!=0) {
                 pageInfo.setTotalRecords(pageResult.getTotalElements());
@@ -438,6 +490,13 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
                 apprConfigList = showInEditTireCondition(apprTstDriSts.getApprVehTireCondn(), apprConfigList);
                 apprConfigList=showInEditSetRearWindowDamage(apprTstDriSts.getRearWindow(),apprConfigList);
 
+                apprCrePg.setVehicleInterior(selctOneShowInUi(apprTstDriSts.getIntrColor()));
+                apprCrePg.setVehicleExtColor(selctOneShowInUi(apprTstDriSts.getExtrColor()));
+
+                if (null!=eAppraiseVehicles.getDlrsUserNames()) {
+                    apprCrePg.setDealershipUserNames(eAppraiseVehicles.getDlrsUserNames().getId());
+                }
+
                 if(null!=apprConfigList && !apprConfigList.isEmpty() && apprConfigList.size()>0){
                     List<ConfigDropDown> configCodesList=appraisalVehicleMapper.lEConfigCodeToConfigCode(apprConfigList);
 
@@ -493,21 +552,26 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
             String keyAssureYes=appraisalById.getTdStatus().getKeyAssureYes();
             String keyAssureFiles=appraisalById.getTdStatus().getKeyAssureFiles();
 
-            if ((keyAssureYes.equalsIgnoreCase("yes")&&keyAssureFiles==null)||(keyAssureYes.equalsIgnoreCase("yes")&& keyAssureFiles.equals("")||Boolean.FALSE.equals(utils.isDocPresent(keyAssureFiles)))) {
-                appraisalById.getTdStatus().setKeyAssureFiles(vehReportPdf(setDataToPdf(appraisalId)));
+            if ((keyAssureYes.equalsIgnoreCase("yes")&&keyAssureFiles==null)||(keyAssureYes.equalsIgnoreCase("yes")&& keyAssureFiles.equals(""))) {
+                if(Boolean.FALSE.equals(utils.isDocPresent(keyAssureFiles))) {
+                    appraisalById.getTdStatus().setKeyAssureFiles(vehReportPdf(setDataToPdf(appraisalId)));
+                }
             }
+            auditConfiguration.setAuditorName(appraisalById.getUser().getUserName());
             eAppraiseVehicleRepo.save(appraisalById);
         }
     }
 
 
     @Override
+    @Transactional
     public Response updateAppraisal(ApprCreaPage page, Long apprId) throws AppraisalException, IOException, JRException, JDOMException {
 
         EAppraiseVehicle vehicle = eAppraiseVehicleRepo.getAppraisalById(apprId);
 
 
             if (null!=vehicle) {
+                auditConfiguration.setAuditorName(vehicle.getUser().getUserName());
 
                 EApprTestDrSts testDriveStatus = vehicle.getTdStatus();
 
@@ -546,25 +610,77 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
                     vehicle.setDlrsUserNames(vehicle.getDlrsUserNames());
                 }
 
-                if (null!=page.getPreStartMeas()) {
-                    List<OBD2_PreStartMeasurement> ps=new ArrayList<>();
-                    OBD2_PreStartMeasurement byApprId = preStRepo.getPreStartMeasByApprRef(apprId);
-                    if (null!=byApprId) {
-                        byApprId.setValid(Boolean.FALSE);
-                        preStRepo.save(byApprId);
-                        OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
-                        ps.add(preStart);
-                        preStart.setApprRef(vehicle);
-                        vehicle.setPreStart(ps);
-                        vehicle.getTdStatus().setKeyAssureFiles(null);
+                ERoleMapping byUserId = roleMappingRepo.findByUserId(vehicle.getUser().getId());
+                if(byUserId.getRole().getRole().equalsIgnoreCase("P")){
+                    KeyassureReportLog record = rptLogRepo.getRecord(vehicle.getUser().getId(), apprId);
+                    if(null!=record){
+                        if (null!=page.getPreStartMeas()) {
+                            List<OBD2_PreStartMeasurement> ps=new ArrayList<>();
+                            OBD2_PreStartMeasurement byApprId = preStRepo.getPreStartMeasByApprRef(apprId);
+                            if (null!=byApprId) {
+                                byApprId.setValid(Boolean.FALSE);
+                                preStRepo.save(byApprId);
+                                OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
+                                ps.add(preStart);
+                                preStart.setApprRef(vehicle);
+                                vehicle.setPreStart(ps);
+                                vehicle.getTdStatus().setKeyAssureFiles(null);
+                            }else{
+                                OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
+                                ps.add(preStart);
+                                preStart.setApprRef(vehicle);
+                                vehicle.setPreStart(ps);
+                                vehicle.getTdStatus().setKeyAssureFiles(null);
+                            }
+                        }
                     }else{
-                        OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
-                        ps.add(preStart);
-                        preStart.setApprRef(vehicle);
-                        vehicle.setPreStart(ps);
-                        vehicle.getTdStatus().setKeyAssureFiles(null);
+                        KeyassureReportLog  reportLog= new KeyassureReportLog();
+                        reportLog.setAppraisalRef(vehicle);
+                        reportLog.setUser(vehicle.getUser());
+                        rptLogRepo.save(reportLog);
+                        if (null!=page.getPreStartMeas()) {
+                            List<OBD2_PreStartMeasurement> ps=new ArrayList<>();
+                            OBD2_PreStartMeasurement byApprId = preStRepo.getPreStartMeasByApprRef(apprId);
+                            if (null!=byApprId) {
+                                byApprId.setValid(Boolean.FALSE);
+                                preStRepo.save(byApprId);
+                                OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
+                                ps.add(preStart);
+                                preStart.setApprRef(vehicle);
+                                vehicle.setPreStart(ps);
+                                vehicle.getTdStatus().setKeyAssureFiles(null);
+                            }else{
+                                OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
+                                ps.add(preStart);
+                                preStart.setApprRef(vehicle);
+                                vehicle.setPreStart(ps);
+                                vehicle.getTdStatus().setKeyAssureFiles(null);
+                            }
+                        }
+                    }
+                }else{
+                    if (null!=page.getPreStartMeas()) {
+                        List<OBD2_PreStartMeasurement> ps=new ArrayList<>();
+                        OBD2_PreStartMeasurement byApprId = preStRepo.getPreStartMeasByApprRef(apprId);
+                        if (null!=byApprId) {
+                            byApprId.setValid(Boolean.FALSE);
+                            preStRepo.save(byApprId);
+                            OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
+                            ps.add(preStart);
+                            preStart.setApprRef(vehicle);
+                            vehicle.setPreStart(ps);
+                            vehicle.getTdStatus().setKeyAssureFiles(null);
+                        }else{
+                            OBD2_PreStartMeasurement preStart = appraisalVehicleMapper.appCreaPageToPreStrt(page.getPreStartMeas());
+                            ps.add(preStart);
+                            preStart.setApprRef(vehicle);
+                            vehicle.setPreStart(ps);
+                            vehicle.getTdStatus().setKeyAssureFiles(null);
+                        }
                     }
                 }
+
+
 
                 if (null!=page.getTestDrive()) {
                     List<OBD2_TestDriveMeasurements> byApprId1=new ArrayList<>();
@@ -608,7 +724,8 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
             return response;
     }
 
-
+@Override
+@Transactional
     public Response updateDraftAppraisal(ApprCreaPage page, Long apprId) throws AppraisalException, IOException, JRException, JDOMException {
 
         EAppraiseVehicle oldCopy = eAppraiseVehicleRepo.getAppraisalById(apprId);
@@ -616,6 +733,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         EAppraiseVehicle vehicle = oldCopy;
 
             if (null!=vehicle) {
+                auditConfiguration.setAuditorName(vehicle.getUser().getUserName());
 
                 EApprTestDrSts testDriveStatus = vehicle.getTdStatus();
 
@@ -703,7 +821,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
 
                 }
 
-                auditConfiguration.setAuditorName(vehicle.getUser().getFirstName());
+                
 
                 eAppraiseVehicleRepo.save(vehicle);
                 log.info("draft appraisal dtls saved ");
@@ -742,7 +860,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         VideoAndImageResponse responseDTO = new VideoAndImageResponse();
         //object from amazons3
         byte[] responseBytes = utils.fileDownloadfromBucket(videoFolderPath, videoName);
-        responseDTO.setImageBytes(responseBytes);
+        responseDTO.setVideoBytes(responseBytes);
         responseDTO.setCode(HttpStatus.OK.value());
         responseDTO.setStatus(true);
         responseDTO.setMessage("Video send successfully");
@@ -782,6 +900,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     }
 
     @Override
+    @Transactional
     public Response deleteAppraisalVehicle(Long apprRef) throws AppraisalException {
         
         EAppraiseVehicle appraisal = eAppraiseVehicleRepo.getAppraisalById(apprRef);
@@ -789,6 +908,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
 
              if (null!= appraisal && appraisal.getValid()) {
                  appraisal.setValid(false);
+                 auditConfiguration.setAuditorName(appraisal.getUser().getUserName());
                  eAppraiseVehicleRepo.save(appraisal);
                  response.setMessage("Deleted Successfully");
                  response.setCode(HttpStatus.OK.value());
@@ -1214,14 +1334,16 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         if(null==newPic && null!=oldPic ||(null!=newPic && null==oldPic) || (null!=newPic && null !=oldPic && !newPic.equals(oldPic)) ){
 
             if(null != oldPic && (oldPic.endsWith(".mp4")||oldPic.endsWith(".webm")||oldPic.endsWith(".mov"))){
-                Path filePath = Paths.get(videoFolderPath + oldPic);
-                Files.delete(filePath);
+/*                Path filePath = Paths.get(videoFolderPath + oldPic);
+                Files.delete(filePath);*/
+                utils.deleteObject(videoFolderPath,oldPic);
             }
             else {
 
                 if (null != oldPic) {
-                    Path filePath = Paths.get(imageFolderPath + oldPic);
-                    Files.delete(filePath);
+/*                    Path filePath = Paths.get(imageFolderPath + oldPic);
+                    Files.delete(filePath);*/
+                    utils.deleteObject(imageFolderPath,oldPic);
                 }
             }
 
@@ -1314,6 +1436,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
 
     }
     @Override
+    @Transactional
     public Response moveToInventory(Long apprRef) throws AppraisalException {
 
         EAppraiseVehicle mveToInvt = eAppraiseVehicleRepo.getAppraisalById(apprRef);
@@ -1336,6 +1459,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
                        }
 
                     }
+                auditConfiguration.setAuditorName(mveToInvt.getUser().getUserName());
                     eAppraiseVehicleRepo.save(mveToInvt);
                     response.setMessage("added to inventory Successfully");
                     response.setCode(HttpStatus.OK.value());
@@ -1346,12 +1470,15 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
 
     }
     @Override
+    @Transactional
     public Response moveToWishList(Long apprRef,UUID userId) throws AppraisalException {
         Response response=new Response();
 
         EAppraiseVehicle wish = eAppraiseVehicleRepo.findVehicleByInventorySts(apprRef,AppraisalConstants.INVENTORY);
         EUserWishlist wishList = wishRepo.findByAppraisalId(userId,apprRef);
         EUserWishlist userWish=new EUserWishlist();
+        EUserRegistration userById = userRegistrationRepo.findUserById(userId);
+        auditConfiguration.setAuditorName(userById.getUserName());
             if (wishList!=null){
                 wishList.setValid(true);
                 wishRepo.save(wishList);
@@ -1395,9 +1522,11 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     }
 
     @Override
+    @Transactional
     public Response removeVehicleFromFavoritePage(Long apprRef, UUID userId) throws AppraisalException {
         Response response=new Response();
             EUserWishlist eUserWishlist = wishRepo.findByAppraisalId(userId,apprRef);
+        auditConfiguration.setAuditorName(eUserWishlist.getUser().getUserName());
             if (eUserWishlist != null) {
                 eUserWishlist.setValid(false);
                 wishRepo.save(eUserWishlist);
@@ -1555,17 +1684,43 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     }
 
     @Override
-    public byte[] keyAssureReport(Long apprId) throws IOException {
+    public byte[] keyAssureReport(Long apprId,UUID userId) throws IOException, AppraisalException {
+        byte[] bytes=null;
         EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(apprId);
-        //object from amazons3
-        return utils.fileDownloadfromBucket(pdfpath,appraisalById.getTdStatus().getKeyAssureFiles());
-    }
+        EUserRegistration userById = userRegistrationRepo.findUserById(userId);
+        ERoleMapping roleMapping = roleMappingRepo.findByUserId(userId);
+        if(null!=userById && null!= roleMapping) {
+            if((roleMapping.getRole().getRole().equals("D2") || roleMapping.getRole().getRole().equals("D3") || roleMapping.getRole().getRole().equals("S1") || roleMapping.getRole().getRole().equals("M1"))){
+                userId=roleMapping.getDealerAdmin();
+            }
+            PaymentDetails user = paymentDetailsRepo.getUser(userId);
+            if(!roleMapping.getRole().getRoleGroup().equalsIgnoreCase("P") && null!=user){
+                bytes = utils.fileDownloadfromBucket(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
+                return bytes;
+            }
+            /* this repo is checking if this user previously opened keyAssure report or not
+                 * if opened the record will be available in keyassureReport log  */
+                KeyassureReportLog record = rptLogRepo.getRecord(userId, apprId);
+                if (null != record) {
+                    log.info("record exist");
+                    //object from amazons3
+                    bytes = utils.fileDownloadfromBucket(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
+                    return bytes;
+                }
+                if (null != user && user.getConsumeQuota() < user.getTotalQuota()) {
+                    log.info("new record inserted");
+                    KeyassureReportLog kReportLog = new KeyassureReportLog();
+                    kReportLog.setAppraisalRef(appraisalById);
+                    kReportLog.setUser(userById);
+                    rptLogRepo.save(kReportLog);
+                    user.setConsumeQuota(user.getConsumeQuota() + 1);
+                    paymentDetailsRepo.save(user);
+                    //object from amazons3
+                    bytes = utils.fileDownloadfromBucket(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
+                    return bytes;
+                } else throw new AppraisalException("limit Exceeded");
 
-    @Override
-    public byte[] servePdf(Long apprId) throws IOException {
-        EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(apprId);
-        //object from amazons3
-        return utils.fileDownloadfromBucket(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
+        }else throw new AppraisalException("user not found");
     }
 
     @Override

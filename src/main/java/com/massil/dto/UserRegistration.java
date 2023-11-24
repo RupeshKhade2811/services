@@ -37,8 +37,7 @@ public class UserRegistration extends Response {
     @NotNull(message = "LastName should not be null")
     @Size(max = 15,message = "the maximum length is 15 only")
     private String lastName;
-    @NotNull(message = "password should not be null")
-    @Size(max = 20, message = "the maximum length is 20 only")
+
     private String password;
     @NotNull(message = "phoneNumber should not be null")
     @Size(max = 13,min = 10, message = "give 13 digit American phone number with +1 code sample example:+1 5551234567")
@@ -72,5 +71,6 @@ public class UserRegistration extends Response {
     private String fsFirstName;
     private String fmFirstName;
     private String mngFirstName;
+    private Boolean subscription;
 
 }

@@ -114,14 +114,13 @@ public class OffersERepo {
     }
 
 
-    public CardsPage myPurchaseCards(UUID userId, Integer pageNumber, Integer pageSize){
+    public CardsPage myPurchaseCards(List<UUID> userId, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo");
 
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
         SearchResult<EOffers> searchResult = searchSession.search(EOffers.class)
                 .where( f -> f.bool()
-                        .must( f.match().field( "buyerUserId.id" )
-                                .matching( userId ) )
+                        .must( f.terms().field( "buyerUserId.id" ).matchingAny( userId ) )
                         .must(f.match().field("valid")
                                 .matching(true))
                         .must(f.match().field("appRef.valid")

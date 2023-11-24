@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 
+import java.util.UUID;
 
 
 @Entity
@@ -15,9 +16,9 @@ import org.hibernate.annotations.Immutable;
 @Data
 public class CorporateAdminView {
     @Id
-    private Long userId;
+    private UUID userId;
     private Long roleId;
-    private Long managerId;
+    private UUID managerId;
     private String userName;
     private String firstName;
     private String lastName;

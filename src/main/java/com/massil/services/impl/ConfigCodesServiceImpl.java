@@ -19,6 +19,8 @@ import com.massil.repository.RoleMappingRepo;
 import com.massil.repository.UserRegistrationRepo;
 import com.massil.repository.elasticRepo.AppraisalVehicleERepo;
 import com.massil.services.ConfigCodesService;
+import com.massil.util.AppraisalSpecification;
+import com.massil.util.DealersUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,16 @@ public class ConfigCodesServiceImpl implements ConfigCodesService {
     @Autowired
     private AppraisalVehicleERepo appraisalVehicleERepo;
 
+    @Autowired
+    private DealersUser dealersUser;
+    @Autowired
+    private AppraiseVehicleRepo appraiseVehicleRepo;
+    @Autowired
+    private AppraisalFilterParamViewRepo appFilParamRepo;
+    @Autowired
+    private InventoryFilterParamViewRepo invFilParamRepo;
+    @Autowired
+    private SearchFactoryViewRepo searchFactoryRepo;
 
     @Override
     public String addConfigCode(List<ConfigDropDown> configCodes) {
@@ -123,11 +135,19 @@ public class ConfigCodesServiceImpl implements ConfigCodesService {
         List<EUserRegistration> userByDealerId=null;
         ERoleMapping byUserId = mappingRepo.findByUserId(userId);
         if (null!=byUserId){
-            if ((byUserId.getRole().getRoleGroup().equalsIgnoreCase("D"))|| (null!=byUserId.getUser().getDealer())){
-                Long dealerId = byUserId.getUser().getDealer().getId();
-                userByDealerId=userRepo.findDlrshipUsersByDlrId(dealerId);
-                this.log.debug("USERS UNDER DEALER {}",userByDealerId);
-            }else{
+            if ((byUserId.getRole().getRoleGroup().equalsIgnoreCase("D"))){
+                if(byUserId.getRole().getRole().equalsIgnoreCase("D1")){
+                    userByDealerId=userRepo.findDlrshipUsersByDlrAdmin(userId);
+                    this.log.debug("USERS UNDER DEALER {}",userByDealerId);
+                }else{
+                    userByDealerId=userRepo.findDlrshipUsersByDlrAdmin(byUserId.getDealerAdmin());
+                    this.log.debug("USERS UNDER DEALER {}",userByDealerId);
+                }
+            } else if (byUserId.getRole().getRole().equalsIgnoreCase("S1") || byUserId.getRole().getRole().equalsIgnoreCase("M1")) {
+                userByDealerId=userRepo.findDlrSales(userId);
+                this.log.debug("DEALER SALES {}",userByDealerId);
+            }
+            else{
                 userByDealerId= new ArrayList<>();
                 userByDealerId.add(byUserId.getUser());
                 this.log.debug("USER {}",userByDealerId);
@@ -178,59 +198,60 @@ public class ConfigCodesServiceImpl implements ConfigCodesService {
 
 
 
-    public FilterDropdowns sendFilterParams(){
+    public FilterDropdowns sendFilterParams(FilterParameters filter, UUID userId, String module) throws AppraisalException {
+        ERoleMapping byUserId = mappingRepo.findByUserId(userId);
+        FilterDropdowns dropdowns = new FilterDropdowns();
+        if (null != byUserId && null!=module) {
+            if (byUserId.getRole().getRole().equals("D2") || byUserId.getRole().getRole().equals("D3") || byUserId.getRole().getRole().equals("S1") || byUserId.getRole().getRole().equals("M1")) {
+                userId = byUserId.getDealerAdmin();
+            }
+            List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
+            List<Long> yearList = null;
+            List<String> makeList =null;
+            List<String> modelList = null;
+            List<AppraisalFilterParamView> appVehicles=null;
+            List<InventoryFilterParamView> invVehicles=null;
+            List<SearchFactoryView> searchFactVehicles=null;
 
-        FilterDropdowns  dropdowns=new FilterDropdowns();
-        List<YearView> yearViewList = yearViewRepo.findAll();
-        List<MakeView> makeViewList = makeViewRepo.findAll();
-        List<ModelView> modelViewList = modelViewRepo.findAll();
-        List<SeriesView> seriesViewList = seriesViewRepo.findAll();
-        List<EngineView> engineViewList = engineViewRepo.findAll();
-        List<TransmissionView> transmissionViewList = transmissionViewRepo.findAll();
+            if(module.equalsIgnoreCase("Appraisal")){
+                appVehicles = appFilParamRepo.findAll(AppraisalSpecification.getAppFilParaSpec(filter, allUsersUnderDealer));
+                yearList = appVehicles.stream().map(AppraisalFilterParamView::getVehicleYear).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+                yearList.sort(Collections.reverseOrder());
+                makeList = appVehicles.stream().map(AppraisalFilterParamView::getVehicleMake).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+                Collections.sort(makeList);
+                modelList = appVehicles.stream().map(AppraisalFilterParamView::getVehicleModel).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+                Collections.sort(modelList);
+            }
+           if(module.equalsIgnoreCase("Inventory")){
 
-        List<String> engineList= new ArrayList<>();
-        for (EngineView engineView: engineViewList) {
-            engineList.add( engineView.getEngine());
+               invVehicles = invFilParamRepo.findAll(AppraisalSpecification.getInvFilParaSpec(filter, allUsersUnderDealer));
+               yearList = invVehicles.stream().map(InventoryFilterParamView::getVehicleYear).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+               yearList.sort(Collections.reverseOrder());
+               makeList = invVehicles.stream().map(InventoryFilterParamView::getVehicleMake).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+               Collections.sort(makeList);
+               modelList = invVehicles.stream().map(InventoryFilterParamView::getVehicleModel).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+               Collections.sort(modelList);
+           }
+
+           if(module.equalsIgnoreCase("SearchTheFactory")){
+               searchFactVehicles = searchFactoryRepo.findAll(AppraisalSpecification.getSearchFactSpec(filter, allUsersUnderDealer));
+               yearList = searchFactVehicles.stream().map(SearchFactoryView::getVehicleYear).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+               yearList.sort(Collections.reverseOrder());
+               makeList = searchFactVehicles.stream().map(SearchFactoryView::getVehicleMake).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+               Collections.sort(makeList);
+               modelList = searchFactVehicles.stream().map(SearchFactoryView::getVehicleModel).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+               Collections.sort(modelList);
+           }
+
+            dropdowns.setYear(yearList);
+            dropdowns.setMake(makeList);
+            dropdowns.setModel(modelList);
+            dropdowns.setStatus(true);
+            dropdowns.setMessage("dropdowns send successfully");
+            dropdowns.setCode(HttpStatus.OK.value());
+            return dropdowns;
         }
-        dropdowns.setEngine(engineList);
-
-        List<String> makeList= new ArrayList<>();
-        for (MakeView makeView: makeViewList) {
-            makeList.add( makeView.getMake());
-        }
-        dropdowns.setMake(makeList);
-
-        List<String> modelList= new ArrayList<>();
-        for (ModelView modelView: modelViewList) {
-            modelList.add( modelView.getModel());
-        }
-        dropdowns.setModel(modelList);
-
-        List<String> seriesList= new ArrayList<>();
-        for (SeriesView seriesView: seriesViewList) {
-            seriesList.add( seriesView.getSeries());
-        }
-        dropdowns.setSeries(seriesList);
-
-        List<String> transmiList= new ArrayList<>();
-        for (TransmissionView transView: transmissionViewList) {
-            transmiList.add( transView.getTransmission());
-        }
-        dropdowns.setTransmission(transmiList);
-
-        List<Long> yearList= new ArrayList<>();
-        for (YearView yearView: yearViewList) {
-            yearList.add( yearView.getYear());
-        }
-        dropdowns.setYear(yearList);
-        dropdowns.setStatus(true);
-        dropdowns.setMessage("dropdowns send successfully");
-        dropdowns.setCode(HttpStatus.OK.value());
-        return dropdowns;
-    }
-
-    public FilterDropdowns appraisalDropdown(FilterParameters filter,UUID userId) throws AppraisalException {
-        return appraisalVehicleERepo.filterAppraisalParams(filter, userId);
+        else throw new AppraisalException("User Not Found");
 
     }
 

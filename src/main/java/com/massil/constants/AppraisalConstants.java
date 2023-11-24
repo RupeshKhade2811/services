@@ -9,6 +9,11 @@ package com.massil.constants;
 public class AppraisalConstants {
 
     public static final String REJECT = "rejected";
+    public static final String PRIVATE_USER ="PVT_USER_PAYMENT" ;
+
+    public static final String PAYMENT_DEALER="DEALER_PAYMENT";
+    public static final String PRIVATEUSER = "Private user";
+    public static final Integer TOTAL_QUOTA = 6;
 
      private AppraisalConstants() {
 
@@ -23,7 +28,7 @@ public class AppraisalConstants {
     public static final String SEQUENCE_NAME = "mygen";
 
     public static final String CUSTOM_SEQUENCE_GENERATOR = "com.massil.persistence.generator.CustomIDGenerator";
-    public static final String DEALER="dealer";
+    public static final String DEALER="Dealer";
     public static final String ID="id";
     public static final String INVENTORYSTS="invntrySts";
     public static final String USER="user";
@@ -84,6 +89,15 @@ public class AppraisalConstants {
     public static final String CARPETBADLYWORN="CARPET_BADLY_WORN" ;
     public static final String INTERTRIMBRKNNMISS="INT_TRIM_BRKN_MS" ;
     public static final String POORNEEDSREPAIR="POOR_NEEDS_RPR" ;
+    public static final String ACSEAT="AC_SEAT";
+    public static final String DRPOWERSEAT="DR_PWR_ST";
+    public static final String HEADLINERSTAINED="HDLNR_STAIND";
+    public static final String HEATEDSEATS="HEAT_ST";
+    public static final String PSNGRPOWERSEAT="PSNGR_PWR_ST";
+    public static final String REARSEATRIPPED="RR_ST_RIP";
+    public static final String SPORTSEATS="SPRT_ST";
+    public static final String SUNORMOONROOFLEAKING="SNRF_MNFR_LEAK";
+
     public static final String CLEANOIL="CLN_OIL" ;
     public static final String DIRTYOIL="DIRTY_OIL" ;
     public static final String WATERINOIL="WATR_IN_OL(BRN FOAM)";
@@ -308,4 +322,63 @@ public class AppraisalConstants {
   public static final String VIDEO_FOR_D="D";
 
   public static final String Dealer_ASKING_PRICE="delrRetlAskPrice";
+
+
+    public static final String PLAN_ID="plan_id";
+    public static final String AMOUNT="amount";
+    public static final String TYPE="type";
+    public static final String SALE="sale";
+    public static final String PAYMENT_TOKEN="payment_token";
+    public static final String MERCHANT_DEFINED_FIELD_1="merchant_defined_field_1";
+    public static final String CUSTOMER_RECEIPT="customer_receipt";
+    public static final String RECURRING="recurring";
+    public static final String ADD_SUBSCRIPTION="add_subscription";
+    public static final String LAST_NAME="last_name";
+    public static final String CUSTOMER_VAULT="customer_vault";
+    public static final String ADD_CUSTOMER="add_customer";
+    public static final String INVOICING="invoicing";
+    public static final String ADD_INVOICE="add_invoice";
+    public static final String EMAIL="email";
+
+    public static final String TRANSACTION_SUCCESS="transaction_success";
+
+    public static final String TRANSACTION_PENDING="transaction_pending";
+
+    public static final String FAILED="failed";
+    public static final String FACTORY_ADMIN ="Factory_Admin";
+    public static final String ADMIN ="Admin";
+
+    public static final String SUBSCRIPTION ="RECURRING_DATE";
+
+    public static final String SOURCE_TRANSACTION_ID="source_transaction_id";
+
+    public static final String PYMNT_RECURNG_URL="https://secure.nmi.com/api/query.php";
+
+    public static final String SECURITY_KEY="security_key";
+    public static final String KEY="s4HE4CC3MX4qhgdYFY2DDJTwG9j3wG8P";
+
+    public static final String SOURCE="source";
+    public static final String CONDITION="condition";
+    public static final String COMPLETE="complete";
+    public static final String START_DATE="start_date";
+    public static final String END_DATE="end_date";
+
+    public static final String BILLING_METHOD="billing_method";
+
+    public static final String FIRST_NAME="first_name";
+
+    public static final String ORDER_ID="orderid";
+
+    public static final String MERCHANT_DEFINED_FIELD_2="merchant_defined_field_2";
+
+    public static final String  UPDATE_CUSTOMER = "update_customer" ;
+    public static final String CUSTOMER_VAULT_ID = "customer_vault_id";
+    public static final String VALID="valid";
+    public static final String FIRSTNAME="firstName";
+    public static final String LASTNAME="lastName";
+    public static final String USERID="userId";
+
+    public static final String SUBSCRIPTION_FEE = "subscription_fee";
+
+
 }

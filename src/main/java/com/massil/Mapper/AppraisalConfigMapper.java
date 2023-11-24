@@ -198,6 +198,31 @@ public class AppraisalConfigMapper {
         if(isUpdateApprConfReq(intrCondn.getPoorNeedsRepair(),intrCondnMap,AppraisalConstants.POORNEEDSREPAIR)){
             intrCondn.setPoorNeedsRepair(intrCondnMap.get(AppraisalConstants.POORNEEDSREPAIR));
         }
+        if(isUpdateApprConfReq(intrCondn.getAcSeat(),intrCondnMap,AppraisalConstants.ACSEAT)){
+            intrCondn.setAcSeat(intrCondnMap.get(AppraisalConstants.ACSEAT));
+        }
+        if(isUpdateApprConfReq(intrCondn.getDriversPowerSeat(),intrCondnMap,AppraisalConstants.DRPOWERSEAT)){
+            intrCondn.setDriversPowerSeat(intrCondnMap.get(AppraisalConstants.DRPOWERSEAT));
+        }
+        if(isUpdateApprConfReq(intrCondn.getHeadLinerStained(),intrCondnMap,AppraisalConstants.HEADLINERSTAINED)){
+            intrCondn.setHeadLinerStained(intrCondnMap.get(AppraisalConstants.HEADLINERSTAINED));
+        }
+        if(isUpdateApprConfReq(intrCondn.getHeatedSeats(),intrCondnMap,AppraisalConstants.HEATEDSEATS)){
+            intrCondn.setHeatedSeats(intrCondnMap.get(AppraisalConstants.HEATEDSEATS));
+        }
+        if(isUpdateApprConfReq(intrCondn.getPsngrPowerSeat(),intrCondnMap,AppraisalConstants.PSNGRPOWERSEAT)){
+            intrCondn.setPsngrPowerSeat(intrCondnMap.get(AppraisalConstants.PSNGRPOWERSEAT));
+        }
+        if(isUpdateApprConfReq(intrCondn.getRearSeatRipped(),intrCondnMap,AppraisalConstants.REARSEATRIPPED)){
+            intrCondn.setRearSeatRipped(intrCondnMap.get(AppraisalConstants.REARSEATRIPPED));
+        }
+        if(isUpdateApprConfReq(intrCondn.getSportSeats(),intrCondnMap,AppraisalConstants.SPORTSEATS)){
+            intrCondn.setSportSeats(intrCondnMap.get(AppraisalConstants.SPORTSEATS));
+        }
+        if(isUpdateApprConfReq(intrCondn.getSunOrMoonRfLeaking(),intrCondnMap,AppraisalConstants.SUNORMOONROOFLEAKING)){
+            intrCondn.setSunOrMoonRfLeaking(intrCondnMap.get(AppraisalConstants.SUNORMOONROOFLEAKING));
+        }
+
         intrCondn.setTdStatus(testDrSts);
         testDrSts.setApprVehInteriCondn(intrCondn);
         log.debug("Updating Interior condition",testDrSts);

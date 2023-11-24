@@ -18,5 +18,7 @@ public class OfferInfo extends Response {
     private Status statusInfo;
     List<Quotes> quotesList;
     private Long offerId;
+    private String buyFee;
+    private String saleFee;
 
 }

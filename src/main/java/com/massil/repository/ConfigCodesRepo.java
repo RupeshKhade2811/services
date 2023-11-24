@@ -42,7 +42,7 @@ public interface ConfigCodesRepo extends JpaRepository<EConfigCodes,Long> {
     EConfigCodes findByCodeTypeAndShortCode(String codeType,String shortCode);
 
     @Query(value="select intValue from EConfigCodes e where e.valid=true and e.shortCode=:shortCode")
-    Integer getFee(String shortCode);
+    Double getFee(String shortCode);
 
     @Query(value="select c.id from EConfigCodes c where c.shortDescrip=:exterior and c.codeType='EXTERIOR_COLOR' and c.valid=true")
     List<Long> getCodeForExtColor(String exterior);
@@ -50,6 +50,9 @@ public interface ConfigCodesRepo extends JpaRepository<EConfigCodes,Long> {
     List<Long> getCodeForIntColor(String interior);
     @Query(value="select c.valid from EConfigCodes c where c.shortDescrip='ElasticSearch'")
     Boolean isElasticActive();
+	
+	@Query(value="select c from EConfigCodes c where c.configGroup=:configGroup and c.valid=true")
+    EConfigCodes byCodeGroup(String configGroup);
 
 
 

@@ -17,6 +17,7 @@ import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.services.FactoryPdfGenerator;
 import com.massil.services.FilterSpecificationService;
+import com.massil.services.PaymentGatewayService;
 import com.massil.services.ShipmentService;
 import com.massil.services.impl.EmailServiceImpl;
 import com.massil.util.CompareUtils;
@@ -85,6 +86,9 @@ public class ShipmentController {
     @Autowired
     private FactoryPdfGenerator pdfGeneratorSrvc;
 
+    @Autowired
+    private PaymentGatewayService gatewayService;
+
     /**
      * This method sends list of shipment my sold cars cards and pagination information  to ui
      * @param id  This   user id or dealer id coming in header from ui
@@ -125,11 +129,11 @@ public class ShipmentController {
 
     }
     @PostMapping("/buyerAgreed")
-    public ResponseEntity<Response> buyerShipmentDet(@RequestBody Shipment shipment, @RequestHeader ("shipmentId") Long shipId) throws GlobalException, IOException {
+    public ResponseEntity<Response> buyerShipmentDet(@RequestBody Shipment shipment, @RequestHeader ("shipmentId") Long shipId) throws Exception {
         return new ResponseEntity<>(service.buyerAgreedService(shipment,shipId),HttpStatus.OK);
     }
     @PostMapping("/sellerAgreed")
-    public ResponseEntity<Response> sellerShipmentDet(@RequestBody Shipment shipment, @RequestHeader ("shipmentId") Long shipId) throws GlobalException, AppraisalException, IOException, AppraisalException {
+    public ResponseEntity<Response> sellerShipmentDet(@RequestBody Shipment shipment, @RequestHeader ("shipmentId") Long shipId) throws Exception {
         return new ResponseEntity<>(service.sellerAgreedService(shipment,shipId),HttpStatus.OK);
     }
 
@@ -417,7 +421,22 @@ public class ShipmentController {
         return new ResponseEntity<>(sellingDealerList,HttpStatus.OK);
     }
 
+    @PostMapping("/payment")
+    public ResponseEntity<Response> payment(@RequestHeader("userId") UUID userId,@RequestHeader("token") String token){
+        Response response = gatewayService.paymentInfo(userId, token);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 
+/*    @PostMapping("/trnDetail")
+    public ResponseEntity<Response> trxdetail(String startDate, String endDate) throws JsonProcessingException, JAXBException, AppraisalException, ParseException {
+        Response s = gatewayService.paymentDetails(startDate,endDate);
+        return new ResponseEntity<>(s,HttpStatus.OK);
+    }*/
+/*    @PostMapping("/payment")
+    public ResponseEntity<Response> feePayment(Shipment shipment, Long shipId) throws Exception {
+    Response response = gatewayService.feePaymentService(shipment,shipId);
+    return new ResponseEntity<>(response,HttpStatus.OK);
+}*/
 
 
 }

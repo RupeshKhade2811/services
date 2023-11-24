@@ -39,5 +39,5 @@ public class ConfigDropDown {
     @NotNull
     @Size(max = 20,message = "lenght must be less than equal to 20 characters")
     private String configGroup;
-    private Integer intValue;
+    private Double intValue;
 }

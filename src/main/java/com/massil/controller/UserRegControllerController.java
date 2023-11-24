@@ -170,8 +170,8 @@ public class UserRegControllerController {
         return new ResponseEntity<>(userExistResponse,HttpStatus.ACCEPTED);
     }
     @PostMapping("/corporateAdminList")
-    public ResponseEntity<CorporateAdminList> getCorporateAdminList(@RequestBody SellingDealer filter) throws AppraisalException {
-        CorporateAdminList corporateAdminList = specificationService.sendCorporateList(filter);
+    public ResponseEntity<CorporateAdminList> getCorporateAdminList() throws AppraisalException {
+        CorporateAdminList corporateAdminList = specificationService.sendCorporateList();
         return new ResponseEntity<>(corporateAdminList,HttpStatus.ACCEPTED);
 
     }
@@ -185,8 +185,8 @@ public class UserRegControllerController {
         return new ResponseEntity<>(userRegistration,HttpStatus.OK);
     }
     @PostMapping("/userList")
-    public List<UserRegistration> searchUserList(@RequestParam ("roleGroup") String roleGroup, @RequestParam("name") String name){
-        List<UserRegistration> userList = specificationService.getUserList(roleGroup, name);
+    public List<UserRegistration> searchUserList(@RequestParam ("roleGroup") String roleGroup){
+        List<UserRegistration> userList = specificationService.getUserList(roleGroup);
         return userList;
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b9ac1713-4323-4846-b511-933f6a0db19b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="695" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b9ac1713-4323-4846-b511-933f6a0db19b">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -104,50 +104,33 @@
 	<field name="vinNumber" class="java.lang.String"/>
 	<field name="membertype" class="java.lang.String"/>
 	<field name="memberId" class="java.util.UUID"/>
-	<field name="searchby" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="85" splitType="Stretch">
 			<staticText>
-				<reportElement x="400" y="0" width="52" height="21" uuid="b4112828-156c-4a9c-9cf4-5b45739c0c8d"/>
-				<text><![CDATA[Print Date:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="210" y="30" width="160" height="30" uuid="829af9c7-4004-4a2f-b351-bdac0c597318"/>
+				<reportElement x="240" y="30" width="160" height="30" uuid="829af9c7-4004-4a2f-b351-bdac0c597318"/>
 				<textElement>
 					<font size="16" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Appraisal Report]]></text>
-			</staticText>
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="460" y="0" width="100" height="20" uuid="fb9bef9b-67c9-4327-b9e5-69a0626664c7"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="400" y="34" width="52" height="16" uuid="f875d227-52c6-4ae8-9ebe-46797105d4f7"/>
-				<text><![CDATA[Search By:]]></text>
 			</staticText>
 			<image>
 				<reportElement x="0" y="0" width="100" height="80" uuid="5769fe93-4ebb-453f-b6f9-fae7acc67ea4"/>
 				<imageExpression><![CDATA["classpath:static/image/Tink.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="212" y="0" width="158" height="30" uuid="477eeeb2-ce58-4dcb-94e3-4490556c378b"/>
+				<reportElement x="242" y="0" width="208" height="30" uuid="477eeeb2-ce58-4dcb-94e3-4490556c378b"/>
 				<textElement>
 					<font size="19" isBold="true"/>
 				</textElement>
 				<text><![CDATA[KEY ASSURE llc]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="460" y="34" width="100" height="16" uuid="8d82990c-02e2-4350-a993-1c91bbc3c2c0"/>
-				<textFieldExpression><![CDATA[$F{searchby}]]></textFieldExpression>
-			</textField>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="22" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="7" width="45" height="13" backcolor="#4E8F9C" uuid="e2932339-1bda-4bbe-a1bb-f62abd35f065"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -192,17 +175,17 @@
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="400" y="7" width="60" height="13" backcolor="#4E8F9C" uuid="27a8cd96-60b6-4e80-928e-c6f0df2bb4f1"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Member type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="460" y="7" width="110" height="13" backcolor="#4E8F9C" uuid="1fe93b82-b6b9-4a26-a32f-35b68bfb63fa"/>
-				<textElement>
+				<reportElement mode="Opaque" x="460" y="7" width="200" height="13" backcolor="#4E8F9C" uuid="1fe93b82-b6b9-4a26-a32f-35b68bfb63fa"/>
+				<textElement textAlignment="Center">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[        Member ID]]></text>
+				<text><![CDATA[Member ID]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -210,64 +193,77 @@
 		<band height="12" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="0" width="45" height="12" backcolor="#B1DEF0" uuid="3f762873-e35f-41b3-9d13-dd37fa839d58"/>
+				<reportElement mode="Opaque" x="0" y="-1" width="45" height="12" backcolor="#B1DEF0" uuid="3f762873-e35f-41b3-9d13-dd37fa839d58"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehicleYear}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="45" y="0" width="55" height="12" backcolor="#B1DEF0" uuid="91635805-5340-4a0c-92f3-466a58c65b35"/>
+				<reportElement mode="Opaque" x="45" y="-1" width="55" height="12" backcolor="#B1DEF0" uuid="91635805-5340-4a0c-92f3-466a58c65b35"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehicleMake}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="100" y="0" width="80" height="12" backcolor="#B1DEF0" uuid="a88eae99-d45d-443f-ac65-d46d3c1bb429"/>
+				<reportElement mode="Opaque" x="100" y="-1" width="80" height="12" backcolor="#B1DEF0" uuid="a88eae99-d45d-443f-ac65-d46d3c1bb429"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehicleModel}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="180" y="0" width="50" height="12" backcolor="#B1DEF0" uuid="1d74c14a-6914-48c4-9854-97ac8dcc4e8a"/>
+				<reportElement mode="Opaque" x="180" y="-1" width="50" height="12" backcolor="#B1DEF0" uuid="1d74c14a-6914-48c4-9854-97ac8dcc4e8a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehicleMileage}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="230" y="0" width="64" height="12" backcolor="#B1DEF0" uuid="37026b5f-a347-4fcc-9f84-0e7c433e7505"/>
+				<reportElement mode="Opaque" x="230" y="-1" width="64" height="12" backcolor="#B1DEF0" uuid="37026b5f-a347-4fcc-9f84-0e7c433e7505"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehExtColor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="294" y="0" width="106" height="12" backcolor="#B1DEF0" uuid="09c5ea8e-77de-407c-8a17-c27aa21f5bda"/>
+				<reportElement mode="Opaque" x="294" y="-1" width="106" height="12" backcolor="#B1DEF0" uuid="09c5ea8e-77de-407c-8a17-c27aa21f5bda"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vinNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="400" y="0" width="60" height="12" backcolor="#B1DEF0" uuid="e533d2d5-5049-4c0d-9106-5e7bcbd98fcb"/>
+				<reportElement mode="Opaque" x="400" y="-1" width="60" height="12" backcolor="#B1DEF0" uuid="e533d2d5-5049-4c0d-9106-5e7bcbd98fcb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{membertype}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="460" y="0" width="110" height="12" backcolor="#B1DEF0" uuid="ade98c76-b459-4603-8c31-da148bf94f08"/>
+				<reportElement mode="Opaque" x="460" y="-1" width="200" height="12" backcolor="#B1DEF0" uuid="ade98c76-b459-4603-8c31-da148bf94f08"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{memberId}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="11" width="570" height="1" uuid="be6e37ab-31aa-4063-9e41-71972fb2831c"/>
+				<reportElement x="0" y="10 " width="660" height="1" uuid="be6e37ab-31aa-4063-9e41-71972fb2831c"/>
 			</line>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="20" uuid="af5d67bc-822d-4d12-97a2-03aaf44b33b4"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[This is 'System' generated report on: ]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="170" y="0" width="110" height="20" uuid="33ca9e75-348e-4fc8-9777-572028cc43ae"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 </jasperReport>

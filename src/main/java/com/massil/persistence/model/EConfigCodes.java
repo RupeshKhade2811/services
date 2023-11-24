@@ -69,8 +69,8 @@ public class EConfigCodes extends TransactionEntity {
     private String configGroup;
     @Column(name = "INT_VALUE")
     @GenericField
-    private Integer intValue;
-    public EConfigCodes(String codeType, String shortCode, String longCode, String shortDescription,String LongDescrip, String configGroup) {
+    private Double intValue;
+    public EConfigCodes(String codeType, String shortCode, String longCode, String shortDescription,String LongDescrip, String configGroup, Double intValue) {
 
         this.codeType = codeType;
         this.shortCode = shortCode;

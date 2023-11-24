@@ -4,6 +4,7 @@ import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.dto.DealerRegistration;
+import com.massil.dto.MailTeamSprt;
 import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import net.sf.jasperreports.engine.JRException;
@@ -31,6 +32,7 @@ public interface EmailService {
 
     Response offerUpdateEmail(Long offerId) throws AppraisalException, MessagingException, TemplateException, IOException, MessagingException;
 
+    Response mailToSprtTeam(MailTeamSprt mailTeamSprt, UUID userId) throws AppraisalException, TemplateException, MessagingException, IOException;
 
     public void sendMailWithAttachment(Long offerId) throws MessagingException, IOException, AppraisalException, JRException, JDOMException, GlobalException, TemplateException;
 

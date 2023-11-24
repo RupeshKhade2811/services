@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -18,11 +19,11 @@ public class TotalMembersView {
     private String memberLastName;
     private String streetAddress;
     private String role;
-   // private Date signFrom;
+    private Date signupDate;
     private String factorySalesmanFirstName;
     private String factorySalesmanLastName;
     private String factoryManagerFirstName;
     private String factoryManagerLastName;
-   // private Double amount;
+    private Double totalRevenue;
 
 }

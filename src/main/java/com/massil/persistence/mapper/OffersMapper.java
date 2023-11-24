@@ -27,6 +27,8 @@ public interface OffersMapper {
     @Mapping(target = "modifiedOn",expression ="java(customDate(eAppraiseVehicle.getModifiedOn()))")
     @Mapping(target = "vehiclePic1",source = "eAppraiseVehicle.tdStatus.aprVehImg.vehiclePic1")
     @Mapping(target = "titleSts",expression = "java(setTitelStsConfig(eAppraiseVehicle))")
+    @Mapping(target = "isOfferMade",expression = "java(setIsOfferMade(eAppraiseVehicle.getOffers(),allUsersUnderDealer))")
+    AppraisalVehicleCard eApprVehiToOffersCards(EAppraiseVehicle eAppraiseVehicle, UUID userId,List<UUID> allUsersUnderDealer);
     @Mapping (target = "dsName",source = "eAppraiseVehicle.dlrsUserNames.userName")
     AppraisalVehicleCard eApprVehiToOffersCards(EAppraiseVehicle eAppraiseVehicle, UUID userId);
 
@@ -58,18 +60,18 @@ public interface OffersMapper {
     @Mapping(source = "appRef.dealerReserve",target = "dealerReserve")
     @Mapping (target = "dsName",source = "appRef.dlrsUserNames.userName")
     @Mapping(target = "role",expression = "java(setRoleOfCreator(eOffers.getAppRef().getUser().getRoleMapping()))")
-
     AppraisalVehicleCard eoffersToOffersCards(EOffers eOffers);
+
     Role eRoleToRole(ERole role);
-    default  Role setRoleOfCreator(List<ERoleMapping> roleMapping){
+
+    default Role setRoleOfCreator(List<ERoleMapping> roleMapping){
         if(!roleMapping.isEmpty()){
             ERoleMapping eRoleMapping = roleMapping.get(0);
             ERole role = eRoleMapping.getRole();
-            return  eRoleToRole(role);
+            return eRoleToRole(role);
         }
         return null;
     }
-
 
     /**
      *This method mpping list of Eoffers to OfferCards
@@ -399,5 +401,17 @@ public interface OffersMapper {
     default String dateModification(Date date)  {
         SimpleDateFormat dateFormat=new SimpleDateFormat("dd MMM yyyy");
         return dateFormat.format(date);
+    }
+
+    default Boolean setIsOfferMade(List<EOffers> offers, List<UUID>allUsersUnderDealer){
+
+        if(null!= offers && null!= allUsersUnderDealer && !offers.isEmpty() && !allUsersUnderDealer.isEmpty()){
+            for (EOffers offers1:offers) {
+                if(allUsersUnderDealer.contains( offers1.getBuyerUserId().getId())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
