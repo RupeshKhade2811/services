@@ -85,7 +85,18 @@ public interface AppraisalVehicleMapper {
     @Mapping(source = "tdStatus.aprVehImg.vehiclePic1", target = "vehiclePic1" )
     @Mapping(target = "titleSts",expression = "java(setTitelStsConfig(eAppraiseVehicle))")
     @Mapping(target="isSold",expression = "java(isShAvlbl(eAppraiseVehicle.getShipment()))")
+    @Mapping (target = "dsName",source = "dlrsUserNames.userName")
+    @Mapping(target = "role",expression = "java(setRoleOfCreator(eAppraiseVehicle.getUser().getRoleMapping()))")
+
     AppraisalVehicleCard eApprVehiToApprVehiCard(EAppraiseVehicle eAppraiseVehicle);
+    default  Role setRoleOfCreator(List<ERoleMapping> roleMapping){
+        if(!roleMapping.isEmpty()){
+            ERoleMapping eRoleMapping = roleMapping.get(0);
+            ERole role = eRoleMapping.getRole();
+             return  eRoleToRole(role);
+        }
+        return null;
+    }
 
     default Boolean checkIsOfferMade(EAppraiseVehicle eAppraiseVehicle,UUID userId){
         if(null!=eAppraiseVehicle && null!=eAppraiseVehicle.getOffers()) {

@@ -60,4 +60,5 @@ public class AppraisalVehicleCard {
     private Role role;     //newly added
     private Boolean isPrivateParty;
     private Double dealerReserve;
+    private String dsName;
 }

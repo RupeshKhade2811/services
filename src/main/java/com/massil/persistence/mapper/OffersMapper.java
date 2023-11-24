@@ -27,6 +27,7 @@ public interface OffersMapper {
     @Mapping(target = "modifiedOn",expression ="java(customDate(eAppraiseVehicle.getModifiedOn()))")
     @Mapping(target = "vehiclePic1",source = "eAppraiseVehicle.tdStatus.aprVehImg.vehiclePic1")
     @Mapping(target = "titleSts",expression = "java(setTitelStsConfig(eAppraiseVehicle))")
+    @Mapping (target = "dsName",source = "eAppraiseVehicle.dlrsUserNames.userName")
     AppraisalVehicleCard eApprVehiToOffersCards(EAppraiseVehicle eAppraiseVehicle, UUID userId);
 
 
@@ -55,7 +56,19 @@ public interface OffersMapper {
     @Mapping(source = "shipment.buyerAgreed", target = "buyerAgreed")
     @Mapping(source = "shipment.sellerAgreed", target = "sellerAgreed")
     @Mapping(source = "appRef.dealerReserve",target = "dealerReserve")
+    @Mapping (target = "dsName",source = "appRef.dlrsUserNames.userName")
+    @Mapping(target = "role",expression = "java(setRoleOfCreator(eOffers.getAppRef().getUser().getRoleMapping()))")
+
     AppraisalVehicleCard eoffersToOffersCards(EOffers eOffers);
+    Role eRoleToRole(ERole role);
+    default  Role setRoleOfCreator(List<ERoleMapping> roleMapping){
+        if(!roleMapping.isEmpty()){
+            ERoleMapping eRoleMapping = roleMapping.get(0);
+            ERole role = eRoleMapping.getRole();
+            return  eRoleToRole(role);
+        }
+        return null;
+    }
 
 
     /**

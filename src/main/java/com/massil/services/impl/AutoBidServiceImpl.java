@@ -11,7 +11,6 @@ import com.massil.repository.*;
 import com.massil.services.AutoBidService;
 import com.massil.services.OffersService;
 import org.jobrunr.jobs.JobId;
-import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

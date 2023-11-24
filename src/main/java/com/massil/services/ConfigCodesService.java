@@ -10,6 +10,7 @@ import com.massil.ExceptionHandle.Response;
 import com.massil.dto.AppraisalConfigs;
 import com.massil.dto.ConfigDropDown;
 import com.massil.dto.FilterDropdowns;
+import com.massil.dto.FilterParameters;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +47,7 @@ public interface ConfigCodesService {
     Response deleteConfig(Long codeId) throws GlobalException;
 
     FilterDropdowns sendFilterParams();
+    FilterDropdowns appraisalDropdown(FilterParameters filter, UUID userId) throws AppraisalException ;
 
 
 }

@@ -7,10 +7,7 @@ import com.massil.ExceptionHandle.AppraisalException;
 import com.massil.ExceptionHandle.GlobalException;
 import com.massil.ExceptionHandle.Response;
 import com.massil.constants.AppraisalConstants;
-import com.massil.dto.AppraisalConfigs;
-import com.massil.dto.ConfigDropDown;
-import com.massil.dto.FilterDropdowns;
-import com.massil.dto.UserDropDown;
+import com.massil.dto.*;
 import com.massil.persistence.mapper.AppraisalVehicleMapper;
 import com.massil.persistence.model.*;
 import com.massil.persistence.model.EConfigCodes;
@@ -20,6 +17,7 @@ import com.massil.repository.*;
 import com.massil.repository.ConfigCodesRepo;
 import com.massil.repository.RoleMappingRepo;
 import com.massil.repository.UserRegistrationRepo;
+import com.massil.repository.elasticRepo.AppraisalVehicleERepo;
 import com.massil.services.ConfigCodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +54,9 @@ public class ConfigCodesServiceImpl implements ConfigCodesService {
     private TransmissionViewRepo transmissionViewRepo;
     @Autowired
     private YearViewRepo yearViewRepo;
+    @Autowired
+    private AppraisalVehicleERepo appraisalVehicleERepo;
+
 
     @Override
     public String addConfigCode(List<ConfigDropDown> configCodes) {
@@ -217,7 +218,7 @@ public class ConfigCodesServiceImpl implements ConfigCodesService {
         }
         dropdowns.setTransmission(transmiList);
 
-        List<Integer> yearList= new ArrayList<>();
+        List<Long> yearList= new ArrayList<>();
         for (YearView yearView: yearViewList) {
             yearList.add( yearView.getYear());
         }
@@ -226,6 +227,11 @@ public class ConfigCodesServiceImpl implements ConfigCodesService {
         dropdowns.setMessage("dropdowns send successfully");
         dropdowns.setCode(HttpStatus.OK.value());
         return dropdowns;
+    }
+
+    public FilterDropdowns appraisalDropdown(FilterParameters filter,UUID userId) throws AppraisalException {
+        return appraisalVehicleERepo.filterAppraisalParams(filter, userId);
+
     }
 
 }

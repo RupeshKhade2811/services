@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8080
 
 #log-path: /opt/tomcat/customlogs/
 log-path:  C:/logs/
@@ -39,13 +39,13 @@ spring:
     cache: false
     prefix: file:src/main/resources/templates/
   datasource:
-    password: Massil@123
-    url: jdbc:postgresql://localhost:5432/Factory_db
-    username: postgres
-#    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
-#    driver-class-name: org.postgresql.Driver
-#    username: testuser
-#    password: 9Nh@mErlU10s
+    driver-class-name: org.postgresql.Driver
+#    password: Massil@123
+#    url: jdbc:postgresql://localhost:5432/Factory_db
+#    username: postgres
+    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
+    username: keyassureadmin
+    password: HxH50y8rpp$j
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -74,20 +74,23 @@ spring:
     show-sql: true
 
   mail:
-    host: mail.factorykeyassure.com
-    password: TIbMFm(#2Wn.
-    port: 465
+    host: smtp.gmail.com
+    password: ewigwguryncmvbtl
+    port: 587
     properties:
       mail:
+        debug: true
         smtp:
           auth: true
           ssl:
+            enable: false
+          starttls:
             enable: true
         transport: 
           protocol: smtp
     protocol: smtp
     test-connection: false
-    username: system@factorykeyassure.com
+    username: yudhistervijay@gmail.com
   servlet:
     multipart:
       max-file-size: 500MB
@@ -113,6 +116,7 @@ org:
       enabled: true
     dashboard:
       enabled: true
+      port: 8001
 
 
 #hibernate:

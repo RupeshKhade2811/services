@@ -13,5 +13,5 @@ import org.hibernate.annotations.Immutable;
 @Data
 public class YearView {
     @Id
-    private Integer year;
+    private Long year;
 }

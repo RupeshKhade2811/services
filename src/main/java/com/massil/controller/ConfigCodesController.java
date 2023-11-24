@@ -141,6 +141,11 @@ public class ConfigCodesController {
     public ResponseEntity<FilterDropdowns> getAllFilterParams() throws GlobalException {
         return new ResponseEntity<>(configCodesService.sendFilterParams(),HttpStatus.OK);
     }
+    @Operation(summary= "This method is used to send Appr filter parameters in dropdowns")
+    @PostMapping("/getApprFilterParams")
+    public ResponseEntity<FilterDropdowns> getAllFilterParams(@RequestBody FilterParameters filter, @RequestHeader("userId") UUID userId) throws GlobalException, AppraisalException {
+        return new ResponseEntity<>(configCodesService.appraisalDropdown(filter,userId),HttpStatus.OK);
+    }
 
     @Operation(summary = "This method is used to show drop downs for Role")
     @PostMapping("/roleDropDowns")
