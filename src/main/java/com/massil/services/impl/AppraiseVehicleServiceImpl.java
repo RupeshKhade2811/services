@@ -1735,6 +1735,13 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     }
 
     @Override
+    public byte[] servePdf(Long apprId) throws IOException {
+        EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(apprId);
+        //object from amazons3
+        return utils.fileDownloadfromBucket(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
+    }
+
+    @Override
     public byte[] previewPdf(String name) throws IOException {
         //object from amazons3
         return utils.fileDownloadfromBucket(pdfpath,name);

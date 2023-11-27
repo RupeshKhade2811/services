@@ -148,7 +148,7 @@ public interface AppraiseVehicleService {
 
  byte[] keyAssureReport(Long apprId,UUID userId) throws IOException, AppraisalException;
 
-// byte[] servePdf(Long apprId) throws IOException;
+ byte[] servePdf(Long apprId) throws IOException;
 
  byte[] previewPdf(String name) throws IOException;
 
