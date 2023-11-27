@@ -296,6 +296,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     }
 
     @Override
+    @Transactional
     public Response addAppraiseVehicle(ApprCreaPage apprCreaPage, UUID userId,String apprStatus) throws AppraisalException {
 
                 EAppraiseVehicle eAppraiseVehicle = appraisalVehicleMapper.appCreaPageToEAppVehCond(apprCreaPage);
@@ -339,7 +340,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
 
                 ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
                 if(byUserId.getRole().getRoleGroup().equalsIgnoreCase("P")){
-                    PaymentDetails user1 = paymentDetailsRepo.getUser(userId);
+                    PaymentDetails user1 = paymentDetailsRepo.getUserWithStatus(userId);
                     if (null != user1 && user1.getConsumeQuota() < user1.getTotalQuota()) {
                         log.info("new record inserted");
                         user1.setConsumeQuota(user1.getConsumeQuota() + 1);
@@ -416,21 +417,23 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
         CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
-
-
         ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
         if(byUserId.getRole().getRole().equals("D2") || byUserId.getRole().getRole().equals("D3") || byUserId.getRole().getRole().equals("S1") || byUserId.getRole().getRole().equals("M1")){
             userId=byUserId.getDealerAdmin();
         }
         List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
-         pageResult = eAppraiseVehicleRepo.appraisalCards(allUsersUnderDealer, true,pageable);
+        if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+            pageResult = eAppraiseVehicleRepo.appraisalCards(allUsersUnderDealer, true, pageable);
+        }else {
+            cardsPage = appraisalVehicleERepo.appraisalCards(allUsersUnderDealer, pageNumber, pageSize);
+        }
 
         if(null!= pageResult && pageResult.getTotalElements()!=0) {
-                pageInfo.setTotalRecords(pageResult.getTotalElements());
-                pageInfo.setTotalPages((long) pageResult.getTotalPages());
-                List<EAppraiseVehicle> apv = pageResult.toList();
-                List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(apv);
-                pageInfo.setCards(appraiseVehicleDtos);
+            pageInfo.setTotalRecords(pageResult.getTotalElements());
+            pageInfo.setTotalPages((long) pageResult.getTotalPages());
+            List<EAppraiseVehicle> apv = pageResult.toList();
+            List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(apv);
+            pageInfo.setCards(appraiseVehicleDtos);
         }
         else if(null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()){
 
@@ -544,7 +547,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
     private void keyassureFileCheck(Long appraisalId) throws JRException, IOException, JDOMException {
         EAppraiseVehicle appraisalById = eAppraiseVehicleRepo.getAppraisalById(appraisalId);
         if (null!=appraisalById){
-            if (null!=testDrMeasRepo.getTestDrMeasByApprRef(appraisalId)&&null!=preStRepo.getPreStartMeasByApprRef(appraisalId)){
+            if (!testDrMeasRepo.getTestDrMeasByApprRef(appraisalId).isEmpty()&&null!=preStRepo.getPreStartMeasByApprRef(appraisalId)){
                 appraisalById.getTdStatus().setKeyAssureYes("YES");
             }else{
                 appraisalById.getTdStatus().setKeyAssureYes("NO");
@@ -1019,6 +1022,14 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
            addApprConfigToList(apprConfigList, intrCondn.getCarpetBadlyWorn());
            addApprConfigToList(apprConfigList, intrCondn.getInterTrimBrknnMiss());
            addApprConfigToList(apprConfigList, intrCondn.getPoorNeedsRepair());
+           addApprConfigToList(apprConfigList, intrCondn.getAcSeat());
+           addApprConfigToList(apprConfigList, intrCondn.getDriversPowerSeat());
+           addApprConfigToList(apprConfigList, intrCondn.getHeadLinerStained());
+           addApprConfigToList(apprConfigList, intrCondn.getHeatedSeats());
+           addApprConfigToList(apprConfigList, intrCondn.getPsngrPowerSeat());
+           addApprConfigToList(apprConfigList, intrCondn.getRearSeatRipped());
+           addApprConfigToList(apprConfigList, intrCondn.getSportSeats());
+           addApprConfigToList(apprConfigList, intrCondn.getSunOrMoonRfLeaking());
        }
 
         return apprConfigList;
@@ -1488,7 +1499,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
             }
             else if (wish!=null){
                 userWish.setAppRef(wish.getTdStatus().getAppraisalRef());
-                userWish.setUser(userRegistrationRepo.findUserById(userId));
+                userWish.setUser(userById);
                 userWish.setWishlist(true);
                 wishRepo.save(userWish);
                 response.setCode(HttpStatus.OK.value());
@@ -1693,7 +1704,7 @@ public class AppraiseVehicleServiceImpl implements AppraiseVehicleService {
             if((roleMapping.getRole().getRole().equals("D2") || roleMapping.getRole().getRole().equals("D3") || roleMapping.getRole().getRole().equals("S1") || roleMapping.getRole().getRole().equals("M1"))){
                 userId=roleMapping.getDealerAdmin();
             }
-            PaymentDetails user = paymentDetailsRepo.getUser(userId);
+            PaymentDetails user = paymentDetailsRepo.getUserWithStatus(userId);
             if(!roleMapping.getRole().getRoleGroup().equalsIgnoreCase("P") && null!=user){
                 bytes = utils.fileDownloadfromBucket(pdfpath, appraisalById.getTdStatus().getKeyAssureFiles());
                 return bytes;

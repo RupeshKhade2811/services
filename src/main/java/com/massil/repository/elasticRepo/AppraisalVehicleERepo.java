@@ -38,14 +38,14 @@ public class AppraisalVehicleERepo {
     private DealersUser dealersUser;
 
 
-    public CardsPage appraisalCards(UUID userId, Integer pageNumber, Integer pageSize){
+    public CardsPage appraisalCards(List<UUID> userId, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo");
 
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
         SearchResult<EAppraiseVehicle> searchResult = searchSession.search(EAppraiseVehicle.class)
                 .where( f -> f.bool()
-                        .must( f.match().field( "user.id" )
-                                .matching( userId ) )
+                        .must( f.terms().field( "user.id" )
+                                .matchingAny( userId ) )
                         .mustNot( f.match().field( "invntrySts" )
                                 .matching( AppraisalConstants.INVENTORY ))
                         .must(f.match().field("valid")
@@ -150,14 +150,14 @@ public class AppraisalVehicleERepo {
     }
 
 
-    public CardsPage searchFactory(UUID id, Integer pageNumber, Integer pageSize){
+    public CardsPage searchFactory(List<UUID> id, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo");
 
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
         SearchResult<EAppraiseVehicle> searchResult = searchSession.search(EAppraiseVehicle.class)
                 .where( f -> f.bool()
-                        .mustNot( f.match().field( "user.id" )
-                                .matching( id ) )
+                        .mustNot( f.terms().field( "user.id" )
+                                .matchingAny( id ) )
                         .must( f.match().field( "invntrySts" )
                                 .matching( AppraisalConstants.INVENTORY ))
                         .must(f.match().field("valid")
@@ -179,14 +179,14 @@ public class AppraisalVehicleERepo {
         return cardsPage;
     }
 
-    public CardsPage filterSearchFactoryVehicle(FilterParameters filter, UUID userId, Integer pageNo,Integer pageSize) {
+    public CardsPage filterSearchFactoryVehicle(FilterParameters filter, List<UUID> userId, Integer pageNo,Integer pageSize) {
         log.info("From ElasticSearchRepo filterSearchFactoryVehicle");
 
         Integer offset=Math.multiplyExact(pageNo,pageSize);
         SearchResult<EAppraiseVehicle> searchResult = searchSession.search(EAppraiseVehicle.class)
                 .where( (f,root)->{
                             if(null!=filter) {
-                                root.add(f.bool().mustNot(f.match().field("user.id").matching(userId )));
+                                root.add(f.bool().mustNot(f.terms().field("user.id").matchingAny(userId )));
                                 root.add(f.bool().must(f.match().field("invntrySts").matching(AppraisalConstants.INVENTORY)));
                                 root.add(f.match().field("valid").matching(true ));
                                 root.add(f.match().field("field1").matching(false ));

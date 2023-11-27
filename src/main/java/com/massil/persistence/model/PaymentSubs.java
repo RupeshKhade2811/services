@@ -15,10 +15,15 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.AuditOverrides;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
+import org.hibernate.search.engine.backend.types.Aggregable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 
 @Entity
+@Indexed(index = "PAYMENT_SUBS")
 @Table(name = "PAYMENT_SUBS")
 @Audited
 @AuditOverrides({
@@ -40,13 +45,15 @@ import org.hibernate.envers.RelationTargetAuditMode;
 public class PaymentSubs extends TransactionEntity{
 
     @Id
+    @GenericField(aggregable = Aggregable.YES)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "paym_subs_seq")
     @GenericGenerator(name = "paym_subs_seq", strategy= AppraisalConstants.CUSTOM_SEQUENCE_GENERATOR)
     private Long id;
-
+    @FullTextField
     @Column(name = "CUST_VAULT_ID")
     private String customerVaultId;
 
+    @IndexedEmbedded(includeDepth = 1)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(targetEntity = EUserRegistration.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID",nullable = false)

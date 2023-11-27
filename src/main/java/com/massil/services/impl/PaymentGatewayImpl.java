@@ -78,6 +78,8 @@ public class PaymentGatewayImpl implements PaymentGatewayService {
     @Value("${payment_path}")
     private String paymentPath;
 
+
+    //for first time payment
     @Override
     @Transactional
     public Response paymentInfo(UUID userId, String token){
@@ -305,7 +307,6 @@ public class PaymentGatewayImpl implements PaymentGatewayService {
     public void onceInADay() throws AppraisalException, JAXBException {
         log.info("onceInADay() method started..");
 //        EConfigCodes eConfigCodes = configCodesRepo.byCodeGroup("SUBSCRIPTION_DATE");
-
         LocalDate current = LocalDate.now();
        LocalDate startDate = LocalDate.of(current.getYear(), current.getMonthValue(),current.getDayOfMonth()-1 );
        LocalDate endDate = LocalDate.of(current.getYear(), current.getMonthValue(),current.getDayOfMonth());
@@ -349,24 +350,25 @@ public class PaymentGatewayImpl implements PaymentGatewayService {
         log.info("trxDtsToDb method started");
         int totalPaymentDetails = 0;
 
-        for (int i = 0; i <= response.size(); i = i + 100) {
+            for (int i = 0; i <= response.size(); i = i + 100) {
 
-            if (response.size() - i < 100) {
-                List<TransactionDTO> transactionOnSize = response.subList(i, response.size());
-                List<PaymentDetails> paymentDetails = processRecords(transactionOnSize);
-                totalPaymentDetails+=paymentDetails.size();
+                if (response.size() - i < 100) {
+                    List<TransactionDTO> transactionOnSize = response.subList(i, response.size());
+                    List<PaymentDetails> paymentDetails = processRecords(transactionOnSize);
+                    totalPaymentDetails += paymentDetails.size();
 
-            } else {
-                List<TransactionDTO> transactionDTOS100 = response.subList(i, i + 99);
-                List<PaymentDetails> paymentDetails = processRecords(transactionDTOS100);
-                totalPaymentDetails+=paymentDetails.size();
+                } else {
+                    List<TransactionDTO> transactionDTOS100 = response.subList(i, i + 99);
+                    List<PaymentDetails> paymentDetails = processRecords(transactionDTOS100);
+                    totalPaymentDetails += paymentDetails.size();
+                }
             }
-        }
-        Response res = new Response();
-        if(response.size()==totalPaymentDetails) {
-            res.setMessage("Data updated successfully");
-            res.setCode(HttpStatus.OK.value());
-        }else throw new RuntimeException("Data update fail");
+ 			Response res = new Response();
+            if (response.size() == totalPaymentDetails) {
+                res.setMessage("Data updated successfully");
+                res.setCode(HttpStatus.OK.value());
+            } else throw new RuntimeException("Data update fail");
+        
         return  res;
     }
 

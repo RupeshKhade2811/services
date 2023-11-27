@@ -323,7 +323,7 @@ public class AppraisalVehicleController {
      */
     @Operation(summary = "It shows All the cards who is wish listed as favorite")
     @PostMapping("/getFavoriteCards")
-    public ResponseEntity<CardsPage> findAllFavoriteVehicle(@RequestHeader("userId") UUID userId, @RequestParam @Min(1) Integer pageNumber, @RequestParam @Min(1) Integer pageSize) throws AppraisalException {
+    public ResponseEntity<CardsPage> findAllFavoriteVehicle(@RequestHeader("userId") UUID userId, @RequestParam  Integer pageNumber, @RequestParam  Integer pageSize) throws AppraisalException {
         CardsPage wishListed = service.findFavoriteVehicle(userId, pageNumber, pageSize);
         return new ResponseEntity<>(wishListed, HttpStatus.OK);
     }

@@ -297,72 +297,72 @@ public interface AppraisalVehicleMapper {
      */
 
 
-   @Mapping(source = "tdStatus.engineType",target = "engineType")
-   @Mapping(source = "tdStatus.transmissionType",target = "transmissionType")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic1",target = "vehiclePic1")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic2",target = "vehiclePic2")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic3",target = "vehiclePic3")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic4",target = "vehiclePic4")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic5",target = "vehiclePic5")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic6",target = "vehiclePic6")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic7",target = "vehiclePic7")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic8",target = "vehiclePic8")
-   @Mapping(source = "tdStatus.aprVehImg.vehiclePic9",target = "vehiclePic9")
-   @Mapping(source = "tdStatus.aprVehImg.vehicleVideo1",target = "vehicleVideo1")
-   @Mapping(source = "tdStatus.externalDmgSts",target = "externalDmgSts")
-   @Mapping(source = "tdStatus.frDrSideDmgSts",target = "frDrSideDmgSts")
-   @Mapping(source = "tdStatus.frDrSideDmgTxtBox",target = "frDrSideDmgTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.frDrSideDmgPic",target = "frDrSideDmgPic")
-   @Mapping(source = "tdStatus.rearDrSideDmgSts",target = "rearDrSideDmgSts")
-   @Mapping(source = "tdStatus.rearDrSideDmgTxtBox",target = "rearDrSideDmgTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.rearDrSideDmgPic",target = "rearDrSideDmgPic")
-   @Mapping(source = "tdStatus.rearPassenSideDmgSts",target = "rearPassenSideDmgSts")
-   @Mapping(source = "tdStatus.rearPassenSideDmgTxtBox",target = "rearPassenSideDmgTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.rearPassenSideDmgPic",target = "rearPassenSideDmgPic")
-   @Mapping(source = "tdStatus.frPassenSideDmgSts",target = "frPassenSideDmgSts")
-   @Mapping(source = "tdStatus.frPassenSideDmgTxtBox",target = "frPassenSideDmgTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.frPassenSideDmgPic",target = "frPassenSideDmgPic")
-   @Mapping(source = "tdStatus.paintWork",target = "paintWork")
-   @Mapping(source = "tdStatus.frDrSidePntWrkSts",target = "frDrSidePntWrkSts")
-   @Mapping(source = "tdStatus.frDrSidePntWrkTxtBox",target = "frDrSidePntWrkTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.frDrSidePntWrkPic",target = "frDrSidePntWrkPic")
-   @Mapping(source = "tdStatus.rearDrSidePntWrk",target = "rearDrSidePntWrk")
-   @Mapping(source = "tdStatus.rearDrSidePntWrkTxtBox",target = "rearDrSidePntWrkTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.rearDrSidePntWrkPic",target = "rearDrSidePntWrkPic")
-   @Mapping(source = "tdStatus.rearPassenSidePntWrk",target = "rearPassenSidePntWrk")
-   @Mapping(source = "tdStatus.rearPassenSidePntWrkTxtBox",target = "rearPassenSidePntWrkTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.rearPassenSidePntWrkPic",target = "rearPassenSidePntWrkPic")
-   @Mapping(source = "tdStatus.frPassenSidePntWrk",target = "frPassenSidePntWrk")
-   @Mapping(source = "tdStatus.frPassenSidePntWrkTxtBox",target = "frPassenSidePntWrkTxtBox")
-   @Mapping(source = "tdStatus.aprVehImg.frPassenSidePntWrkPic",target = "frPassenSidePntWrkPic")
-   @Mapping(source = "tdStatus.keyAssureYes",target = "keyAssureYes")
-   @Mapping(source = "tdStatus.subscribToKeyAssure",target = "subscribToKeyAssure")
-   @Mapping(source = "tdStatus.keyAssureFiles",target = "keyAssureFiles")
-   @Mapping(source = "profOpinion",target = "profOpinion")
-   @Mapping(source = "vehicleDesc",target = "vehicleDesc")
-   @Mapping(source = "signDet.adjustedWholePoor",target = "adjustedWholePoor")
-   @Mapping(source = "signDet.adjustedWholeFair",target = "adjustedWholeFair")
-   @Mapping(source = "signDet.adjustedWholeGood",target = "adjustedWholeGood")
-   @Mapping(source = "signDet.adjustedWholeVeryGood",target = "adjustedWholeVeryGood")
-   @Mapping(source = "signDet.adjustedWholeExcelnt",target = "adjustedWholeExcelnt")
-   @Mapping(source = "signDet.adjustedFinanPoor",target = "adjustedFinanPoor")
-   @Mapping(source = "signDet.adjustedFinanFair",target = "adjustedFinanFair")
-   @Mapping(source = "signDet.adjustedFinanGood",target = "adjustedFinanGood")
-   @Mapping(source = "signDet.adjustedFinanVeryGood",target = "adjustedFinanVeryGood")
-   @Mapping(source = "signDet.adjustedFinanExcelnt",target = "adjustedFinanExcelnt")
-   @Mapping(source = "signDet.adjustedRetailPoor",target = "adjustedRetailPoor")
-   @Mapping(source = "signDet.adjustedRetailFair",target = "adjustedRetailFair")
-   @Mapping(source = "signDet.adjustedRetailGood",target = "adjustedRetailGood")
-   @Mapping(source = "signDet.adjustedRetailVeryGood",target = "adjustedRetailVeryGood")
-   @Mapping(source = "signDet.adjustedRetailExcelnt",target = "adjustedRetailExcelnt")
-   @Mapping(source = "dealerReserve",target = "dealerReserve")
-   @Mapping(source = "consumerAskPrice",target = "consumerAskPrice")
-   @Mapping(source = "delrRetlAskPrice",target = "delrRetlAskPrice")
-   @Mapping(source = "tdStatus.pushForBuyFig",target = "pushForBuyFig")
-   ApprCreaPage showApprcreaPage(EAppraiseVehicle eAppraiseVehicle, @MappingTarget ApprCreaPage page);
+    @Mapping(source = "tdStatus.engineType",target = "engineType")
+    @Mapping(source = "tdStatus.transmissionType",target = "transmissionType")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic1",target = "vehiclePic1")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic2",target = "vehiclePic2")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic3",target = "vehiclePic3")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic4",target = "vehiclePic4")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic5",target = "vehiclePic5")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic6",target = "vehiclePic6")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic7",target = "vehiclePic7")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic8",target = "vehiclePic8")
+    @Mapping(source = "tdStatus.aprVehImg.vehiclePic9",target = "vehiclePic9")
+    @Mapping(source = "tdStatus.aprVehImg.vehicleVideo1",target = "vehicleVideo1")
+    @Mapping(source = "tdStatus.externalDmgSts",target = "externalDmgSts")
+    @Mapping(source = "tdStatus.frDrSideDmgSts",target = "frDrSideDmgSts")
+    @Mapping(source = "tdStatus.frDrSideDmgTxtBox",target = "frDrSideDmgTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.frDrSideDmgPic",target = "frDrSideDmgPic")
+    @Mapping(source = "tdStatus.rearDrSideDmgSts",target = "rearDrSideDmgSts")
+    @Mapping(source = "tdStatus.rearDrSideDmgTxtBox",target = "rearDrSideDmgTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.rearDrSideDmgPic",target = "rearDrSideDmgPic")
+    @Mapping(source = "tdStatus.rearPassenSideDmgSts",target = "rearPassenSideDmgSts")
+    @Mapping(source = "tdStatus.rearPassenSideDmgTxtBox",target = "rearPassenSideDmgTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.rearPassenSideDmgPic",target = "rearPassenSideDmgPic")
+    @Mapping(source = "tdStatus.frPassenSideDmgSts",target = "frPassenSideDmgSts")
+    @Mapping(source = "tdStatus.frPassenSideDmgTxtBox",target = "frPassenSideDmgTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.frPassenSideDmgPic",target = "frPassenSideDmgPic")
+    @Mapping(source = "tdStatus.paintWork",target = "paintWork")
+    @Mapping(source = "tdStatus.frDrSidePntWrkSts",target = "frDrSidePntWrkSts")
+    @Mapping(source = "tdStatus.frDrSidePntWrkTxtBox",target = "frDrSidePntWrkTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.frDrSidePntWrkPic",target = "frDrSidePntWrkPic")
+    @Mapping(source = "tdStatus.rearDrSidePntWrk",target = "rearDrSidePntWrk")
+    @Mapping(source = "tdStatus.rearDrSidePntWrkTxtBox",target = "rearDrSidePntWrkTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.rearDrSidePntWrkPic",target = "rearDrSidePntWrkPic")
+    @Mapping(source = "tdStatus.rearPassenSidePntWrk",target = "rearPassenSidePntWrk")
+    @Mapping(source = "tdStatus.rearPassenSidePntWrkTxtBox",target = "rearPassenSidePntWrkTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.rearPassenSidePntWrkPic",target = "rearPassenSidePntWrkPic")
+    @Mapping(source = "tdStatus.frPassenSidePntWrk",target = "frPassenSidePntWrk")
+    @Mapping(source = "tdStatus.frPassenSidePntWrkTxtBox",target = "frPassenSidePntWrkTxtBox")
+    @Mapping(source = "tdStatus.aprVehImg.frPassenSidePntWrkPic",target = "frPassenSidePntWrkPic")
+    @Mapping(source = "tdStatus.keyAssureYes",target = "keyAssureYes")
+    @Mapping(source = "tdStatus.subscribToKeyAssure",target = "subscribToKeyAssure")
+    @Mapping(source = "tdStatus.keyAssureFiles",target = "keyAssureFiles")
+    @Mapping(source = "profOpinion",target = "profOpinion")
+    @Mapping(source = "vehicleDesc",target = "vehicleDesc")
+    @Mapping(source = "signDet.adjustedWholePoor",target = "adjustedWholePoor")
+    @Mapping(source = "signDet.adjustedWholeFair",target = "adjustedWholeFair")
+    @Mapping(source = "signDet.adjustedWholeGood",target = "adjustedWholeGood")
+    @Mapping(source = "signDet.adjustedWholeVeryGood",target = "adjustedWholeVeryGood")
+    @Mapping(source = "signDet.adjustedWholeExcelnt",target = "adjustedWholeExcelnt")
+    @Mapping(source = "signDet.adjustedFinanPoor",target = "adjustedFinanPoor")
+    @Mapping(source = "signDet.adjustedFinanFair",target = "adjustedFinanFair")
+    @Mapping(source = "signDet.adjustedFinanGood",target = "adjustedFinanGood")
+    @Mapping(source = "signDet.adjustedFinanVeryGood",target = "adjustedFinanVeryGood")
+    @Mapping(source = "signDet.adjustedFinanExcelnt",target = "adjustedFinanExcelnt")
+    @Mapping(source = "signDet.adjustedRetailPoor",target = "adjustedRetailPoor")
+    @Mapping(source = "signDet.adjustedRetailFair",target = "adjustedRetailFair")
+    @Mapping(source = "signDet.adjustedRetailGood",target = "adjustedRetailGood")
+    @Mapping(source = "signDet.adjustedRetailVeryGood",target = "adjustedRetailVeryGood")
+    @Mapping(source = "signDet.adjustedRetailExcelnt",target = "adjustedRetailExcelnt")
+    @Mapping(source = "dealerReserve",target = "dealerReserve")
+    @Mapping(source = "consumerAskPrice",target = "consumerAskPrice")
+    @Mapping(source = "delrRetlAskPrice",target = "delrRetlAskPrice")
+    @Mapping(source = "tdStatus.pushForBuyFig",target = "pushForBuyFig")
+    ApprCreaPage showApprcreaPage(EAppraiseVehicle eAppraiseVehicle, @MappingTarget ApprCreaPage page);
 
 
-   PrestartMeasurement ePrestartToPrestart(OBD2_PreStartMeasurement prestart);
+    PrestartMeasurement ePrestartToPrestart(OBD2_PreStartMeasurement prestart);
 
 
     /**
@@ -381,7 +381,6 @@ public interface AppraisalVehicleMapper {
     @Mapping(target = "vehicleSeries",ignore = true)
     @Mapping(target = "vehicleYear",ignore = true)
     @Mapping(target = "vinNumber",ignore = true)
-
     EAppraiseVehicle updateEAppraiseVehicle(ApprCreaPage page, @MappingTarget EAppraiseVehicle vehicle);
 
 
@@ -463,12 +462,12 @@ public interface AppraisalVehicleMapper {
      */
     default String customUpdate(String newValue, String oldValue) {
 
-    if(Boolean.FALSE.equals(compareValues(oldValue,newValue))) {
-        log.info("value is change from {} to {}",oldValue,newValue);
-        return newValue;
-    }
+        if(Boolean.FALSE.equals(compareValues(oldValue,newValue))) {
+            log.info("value is change from {} to {}",oldValue,newValue);
+            return newValue;
+        }
 
-      else return oldValue;
+        else return oldValue;
 
 
     }
@@ -643,11 +642,14 @@ public interface AppraisalVehicleMapper {
 
 
     default String customDate(Date date)  {
-        SimpleDateFormat dateFormat=new SimpleDateFormat("dd MMM yyyy");
-        String format = dateFormat.format(date);
-        SimpleDateFormat timeFormat=new SimpleDateFormat("hh:mm a");
-        String format1 = timeFormat.format(date);
-        return format+" "+format1;
+        if(null != date) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+            String format = dateFormat.format(date);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+            String format1 = timeFormat.format(date);
+            return format + " " + format1;
+        }
+        return "";
     }
 
     /**
@@ -723,7 +725,7 @@ public interface AppraisalVehicleMapper {
 
     @Mapping(target = "userName",source = "name")
     @Mapping(target = "id",ignore = true)
-     EUserRegistration updateEUserReg(EDealerRegistration dealer,@MappingTarget EUserRegistration user);
+    EUserRegistration updateEUserReg(EDealerRegistration dealer,@MappingTarget EUserRegistration user);
     /**
      * this method maps CompDetails to ECompDetails
      * @param compDetails
@@ -811,7 +813,7 @@ public interface AppraisalVehicleMapper {
     }
 
 
-  //  OBD2_PreStartMeasurement appCreaPageToPreStrt(ApprCreaPage apprCreaPage);
+    //  OBD2_PreStartMeasurement appCreaPageToPreStrt(ApprCreaPage apprCreaPage);
 
 
     OBD2_PreStartMeasurement appCreaPageToPreStrt(PrestartMeasurement preStart);
@@ -822,30 +824,27 @@ public interface AppraisalVehicleMapper {
     @Mapping(source = "userId",target = "memberId")
     @Mapping(target = "memberName",expression = "java(concatName(membersView.getMemberFirstName(),membersView.getMemberLastName()))")
     @Mapping(source = "streetAddress",target = "location")
-    @Mapping(target = "signUpDate",constant = "")
     @Mapping(source = "role",target = "memberType")
     @Mapping(target = "factorySalesMan",expression = "java(concatName(membersView.getFactorySalesmanFirstName(),membersView.getFactorySalesmanLastName()))")
     @Mapping(target = "factoryMgr",expression = "java(concatName(membersView.getFactoryManagerFirstName(),membersView.getFactoryManagerLastName()))")
-    @Mapping(target = "totalRev",constant = "")
+    @Mapping(target = "signupDate", expression = "java(customDate(membersView.getSignupDate()))")
     FactoryReport totalMembersToFactoryRpt( TotalMembersView membersView);
     List< FactoryReport> totalMembersToFactoryRpt( List<TotalMembersView> membersView);
 
     @Mapping(source = "userId",target = "memberId")
     @Mapping(target = "memberName",expression = "java(concatName(membersView.getFirstName(),membersView.getLastName()))")
     @Mapping(source = "streetAddress",target = "location")
-    //@Mapping(source = "signFrom",target = "signUpDate")
-    //@Mapping(source = "amount",target = "totalRev")
+    @Mapping(target = "signupDate", expression = "java(customDate(membersView.getSignupDate()))")
     FactoryReport membersToFactoryRpt( MembersByFactorySalesmen membersView);
     List< FactoryReport> membersToFactoryRpt(List< MembersByFactorySalesmen> membersView);
     @Mapping(source = "userId",target = "memberId")
     @Mapping(target = "memberName",expression = "java(concatName(membersView.getFirstName(),membersView.getLastName()))")
     @Mapping(source = "streetAddress",target = "location")
-    //@Mapping(source = "signFrom",target = "signUpDate")
-    //@Mapping(source = "amount",target = "totalRev")
+    @Mapping(target = "signupDate", expression = "java(customDate(membersView.getSignupDate()))")
     FactoryReport managersMembersToFactoryRpt( MembersByFactoryManager membersView);
     List< FactoryReport> managersMembersToFactoryRpt(List< MembersByFactoryManager> membersView);
     default String concatName(String first, String last){
-        if(first==null && last ==null) {first="";}
+        if(first==null && last ==null) {first="";last="";}
         return first+" "+last;
     }
     @Mapping(target = "userId", source = "userId")
@@ -894,7 +893,7 @@ public interface AppraisalVehicleMapper {
         }
         return "";
     }
-    default String findNames(Long compId, CompanyRepo companyRepo) {
+    default String findNames(Long compId,CompanyRepo companyRepo) {
         if(null!=compId && null!= companyRepo){
             ECompany companyId = companyRepo.findByCompanyId(compId);
             return companyId.getName();
@@ -971,3 +970,4 @@ public interface AppraisalVehicleMapper {
 
 
 }
+

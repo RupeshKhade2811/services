@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface PaymentSubsRepo extends JpaRepository<PaymentSubs,Long> {
 
 
-    @Query(value = "SELECT e FROM PaymentSubs e WHERE e.user.id=:userId and e.valid= 'true' AND e.createdOn = " +
+    @Query(value = "SELECT e FROM PaymentSubs e WHERE e.user.id=:userId and e.valid= true AND e.createdOn = " +
             "(SELECT MAX(e1.createdOn) FROM PaymentDetails e1 WHERE e1.user.id=:userId )")
     PaymentSubs findByUserId(UUID userId);
 }

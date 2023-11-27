@@ -16,9 +16,9 @@ import java.util.UUID;
 @Transactional
 public interface PaymentDetailsRepo extends JpaRepository<PaymentDetails,Long> {
 
-    @Query(value = "SELECT e FROM PaymentDetails e WHERE e.user.id=:userId  AND e.createdOn = ("
-            + "SELECT MAX(e1.createdOn) FROM PaymentDetails e1 WHERE e1.user.id=:userId AND e1.trxSts= 'success')")
-    PaymentDetails getUser(UUID userId);
+   @Query(value = "SELECT e FROM PaymentDetails e WHERE e.user.id=:userId AND e.trxDate = (SELECT MAX(e1.trxDate) FROM PaymentDetails e1 "
+    +"WHERE e1.user.id=:userId AND e1.trxSts in('pending','complete'))")
+  PaymentDetails getUserWithStatus(UUID userId);
 
     @Query("SELECT e FROM PaymentDetails e WHERE e.valid = true AND e.transacId IN :transacIds")
     List<PaymentDetails> findByTransacIds(@Param("transacIds") List<String> transacIds);

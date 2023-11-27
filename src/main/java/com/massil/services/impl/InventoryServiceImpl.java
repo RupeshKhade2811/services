@@ -60,26 +60,13 @@ public class InventoryServiceImpl implements InventoryService {
     public CardsPage inventoryCards(UUID userId, Integer pageNumber, Integer pageSize) throws AppraisalException {
         CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
-
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<EAppraiseVehicle> pageResult=null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
         ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
         if(byUserId.getRole().getRole().equals("D2") || byUserId.getRole().getRole().equals("D3") || byUserId.getRole().getRole().equals("S1") || byUserId.getRole().getRole().equals("M1")){
             userId=byUserId.getDealerAdmin();
         }
         List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
-            Page<EAppraiseVehicle> pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(allUsersUnderDealer, AppraisalConstants.INVENTORY,true,pageable);
-//            Page<EAppraiseVehicle> pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(userId, AppraisalConstants.INVENTORY,true,pageable);
-            if (pageResult.getTotalElements() != 0) {
-                pageInfo.setTotalPages((long) pageResult.getTotalPages());
-                pageInfo.setTotalRecords(pageResult.getTotalElements());
-                List<EAppraiseVehicle> invtry = pageResult.toList();
-                List<AppraisalVehicleCard> inventoryVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
-                pageInfo.setCode(HttpStatus.OK.value());
-                pageInfo.setMessage("Successfully found Inventory cards");
-                pageInfo.setStatus(Boolean.TRUE);
-                pageInfo.setCards(inventoryVehicleDtos);
-            }
-            else throw new AppraisalException("Inventory Cards not available");
 
         if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
             pageResult = eAppraiseVehicleRepo.findUserAndInvntrySts(allUsersUnderDealer, AppraisalConstants.INVENTORY,true,pageable);
@@ -115,26 +102,20 @@ public class InventoryServiceImpl implements InventoryService {
         CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
         Page<EAppraiseVehicle> pageResult=null;
-
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-
         ERoleMapping findUserId = roleMappingRepo.findByUserId(id);
         if(findUserId.getRole().getRole().equals("D2") || findUserId.getRole().getRole().equals("D3") || findUserId.getRole().getRole().equals("S1") || findUserId.getRole().getRole().equals("M1")){
             id=findUserId.getDealerAdmin();
         }
-        EUserRegistration userById = userRepo.findUserById(id);
-
-            List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(id);
             List<AppraisalVehicleCard> offersCards=new ArrayList<>();
-
-            if(null!=userById) {
-                if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
-                    pageResult = eAppraiseVehicleRepo.findByUserIdNot(id, AppraisalConstants.INVENTORY, true, pageable);
+            if(Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+                    pageResult = eAppraiseVehicleRepo.findByUserIdNot(allUsersUnderDealer, AppraisalConstants.INVENTORY, true, pageable);
                 }else {
-                     cardsPage = appraisalVehicleERepo.searchFactory(id, pageNumber, pageSize);
+                     cardsPage = appraisalVehicleERepo.searchFactory(allUsersUnderDealer, pageNumber, pageSize);
                 }
 
-            }
+
 
             if (null!=pageResult && pageResult.getTotalElements() != 0) {
 
@@ -180,8 +161,6 @@ public class InventoryServiceImpl implements InventoryService {
                 ERoleMapping byUserId = roleMappingRepo.findByUserId(id);
                 pageInfo.setRoleType(byUserId.getRole().getRole());
                 pageInfo.setRoleGroup(byUserId.getRole().getRoleGroup());
-
-
             }
             else throw new AppraisalException("No Cards available");
 

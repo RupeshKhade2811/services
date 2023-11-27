@@ -30,13 +30,13 @@ public class OffersERepo {
     private CompareUtils compareUtils;
 
 
-    public CardsPage procurementCards(UUID id, Integer pageNumber, Integer pageSize){
+    public CardsPage procurementCards(List<UUID> id, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo procurementCards");
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
         SearchResult<EOffers> searchResult = searchSession.search(EOffers.class)
                 .where( f -> f.bool()
-                        .must( f.match().field( "buyerUserId.id" )
-                                .matching( id ) )
+                        .must( f.terms().field( "buyerUserId.id" )
+                                .matchingAny( id ) )
                         .must( f.match().field( "appRef.invntrySts" )
                                 .matching( AppraisalConstants.INVENTORY ))
                         .must(f.match().field("valid")
@@ -85,14 +85,14 @@ public class OffersERepo {
     }
 
 
-    public CardsPage mySaleCards(UUID userId, Integer pageNumber, Integer pageSize){
+    public CardsPage mySaleCards(List<UUID> userId, Integer pageNumber, Integer pageSize){
         log.info("From ElasticSearchRepo");
 
         Integer offset=Math.multiplyExact(pageNumber,pageSize);
         SearchResult<EOffers> searchResult = searchSession.search(EOffers.class)
                 .where( f -> f.bool()
-                        .must( f.match().field( "sellerUserId.id" )
-                                .matching( userId ) )
+                        .must( f.terms().field( "sellerUserId.id" )
+                                .matchingAny( userId ) )
                         .must(f.match().field("valid")
                                 .matching(true))
                         .must(f.match().field("appRef.valid")

@@ -55,6 +55,9 @@ import java.nio.file.Paths;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -612,20 +615,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             }
             if(null!=byUserName && null!= roleMapping) {
                 if ((roleMapping.getRole().getRole().equals("D2") || roleMapping.getRole().getRole().equals("D3") || roleMapping.getRole().getRole().equals("S1") || roleMapping.getRole().getRole().equals("M1"))) {
-                    UUID dealerId = roleMapping.getDealerAdmin();
-                    PaymentDetails user1 = paymentDetailsRepo.getUser(dealerId);
-                    if(null!=user1 && null!=user1.getTransacId()){
-                        userRegistration.setSubscription(Boolean.TRUE);
-                    }else {
-                        userRegistration.setSubscription(Boolean.FALSE);
-                    }
+
+                    userRegistration = extracted(roleMapping.getDealerAdmin(), userRegistration);
                 } else if (roleMapping.getRole().getRole().equals("P1") || roleMapping.getRole().getRole().equals("D1")){
-                    PaymentDetails user1 = paymentDetailsRepo.getUser(userId);
-                    if(null!=user1 && null!=user1.getTransacId()){
-                        userRegistration.setSubscription(Boolean.TRUE);
-                    }else {
-                        userRegistration.setSubscription(Boolean.FALSE);
-                    }
+                    userRegistration = extracted(userId, userRegistration);
                 }
                 else{
                     userRegistration.setSubscription(Boolean.TRUE);
@@ -635,11 +628,31 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             userRegistration.setCode(HttpStatus.OK.value());
             userRegistration.setMessage("user Found");
             userRegistration.setStatus(true);
-            log.debug("User found for userId {}:{}",userId,userRegistration);
+            log.debug("User found for userId {}:{}", userId, userRegistration);
             return userRegistration;
-        }
-        else throw new AppraisalException("Invalid username");
+        } else throw new AppraisalException("Invalid username");
 
+    }
+
+    private UserRegistration extracted(UUID userID,UserRegistration userRegistration) {
+        PaymentDetails userWithStatus = paymentDetailsRepo.getUserWithStatus(userID);
+
+        if(null!=userWithStatus && userWithStatus.getTrxSts().equalsIgnoreCase("pending")){
+            LocalDateTime transDate = userWithStatus.getTrxDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            // Check if the "createdOn" date is within 24 hours from yesterday's date
+            long hoursDifference = ChronoUnit.HOURS.between(transDate, currentDateTime);
+
+            if(hoursDifference<=24){
+                userRegistration.setSubscription(Boolean.TRUE);
+            }else{
+                userRegistration.setSubscription(Boolean.FALSE);
+            }
+        }else{
+            userRegistration.setSubscription(Boolean.TRUE);
+        }
+        return userRegistration;
     }
     @Override
     @Transactional

@@ -154,7 +154,7 @@ public class EmailServiceImpl implements EmailService {
                 model1.put(AppraisalConstants.FRONT_PASSENGER_SIDE_PAINTWORK_STATUS, frPsSdPaWkSts);
                 model1.put(AppraisalConstants.REAR_PASSENGER_SIDE_PAINTWORK_STATUS, rrPsSdPaWkSts);
 
-                String html = processTemplateIntoString(t, model1);
+                String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
 
                 helper.setFrom(fromMail);
                 helper.setTo(userById.getEmail());
@@ -244,7 +244,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
 
         Template t = config.getTemplate("offerEmail.ftl");
-        String html = processTemplateIntoString(t, model1);
+        String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
 
                 helper.setFrom(fromMail);
                 helper.setTo(email);
@@ -391,7 +391,7 @@ public class EmailServiceImpl implements EmailService {
             helper.addAttachment(pdfList.get(i),attachment);
         }
 
-        String html = processTemplateIntoString(t, model1);
+        String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model1);
 
 
         helper.setFrom(fromMail);

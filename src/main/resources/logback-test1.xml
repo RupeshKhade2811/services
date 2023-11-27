@@ -1,5 +1,6 @@
 <configuration>
 
+
     <property resource="application-test.yml"/>
 
     <appender name="STDOUT-N-O" class="ch.qos.logback.core.ConsoleAppender">
@@ -143,6 +144,10 @@
         <appender-ref ref="FILE-ERROR"/>
         <appender-ref ref="FILE-ERROR-N"/>
         <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="org.jobrunr" level="info">
+
     </logger>
 
     <root level="INFO">

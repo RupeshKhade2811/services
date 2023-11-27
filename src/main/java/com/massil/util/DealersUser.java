@@ -33,7 +33,7 @@ public class DealersUser {
                     if(mapping.getRole().getRole().equals("D1")) {
                         List<ERoleMapping> dealerUsers = mappingRepo.findByDealerAdmin(userId);
                         if(null!= dealerUsers &&!dealerUsers.isEmpty()) {
-                            List<EUserRegistration> users = dealerUsers.stream().map(ERoleMapping::getUser).collect(Collectors.toList());
+                            List<EUserRegistration> users = dealerUsers.stream().map(ERoleMapping::getUser).toList();
                             userIds = users.stream().map(EUserRegistration::getId).collect(Collectors.toList());
                         }
                         userIds.add(userId);

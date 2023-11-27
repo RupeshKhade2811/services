@@ -28,11 +28,8 @@ public interface OffersMapper {
     @Mapping(target = "vehiclePic1",source = "eAppraiseVehicle.tdStatus.aprVehImg.vehiclePic1")
     @Mapping(target = "titleSts",expression = "java(setTitelStsConfig(eAppraiseVehicle))")
     @Mapping(target = "isOfferMade",expression = "java(setIsOfferMade(eAppraiseVehicle.getOffers(),allUsersUnderDealer))")
-    AppraisalVehicleCard eApprVehiToOffersCards(EAppraiseVehicle eAppraiseVehicle, UUID userId,List<UUID> allUsersUnderDealer);
     @Mapping (target = "dsName",source = "eAppraiseVehicle.dlrsUserNames.userName")
-    AppraisalVehicleCard eApprVehiToOffersCards(EAppraiseVehicle eAppraiseVehicle, UUID userId);
-
-
+    AppraisalVehicleCard eApprVehiToOffersCards(EAppraiseVehicle eAppraiseVehicle, UUID userId,List<UUID> allUsersUnderDealer);
 
     /**
      *This method mapping Eoofer to OfferCards

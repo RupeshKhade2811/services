@@ -16,8 +16,13 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import jakarta.persistence.*;
+import org.hibernate.search.engine.backend.types.Aggregable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 @Entity
+@Indexed(index = "keyassure_Report_Log")
 @Table(name = "keyassure_Report_Log")
 @Audited
 @AuditOverrides({
@@ -38,6 +43,7 @@ import jakarta.persistence.*;
 @AttributeOverride(name = "valid", column = @Column(name = "IS_ACTIVE"))
 public class KeyassureReportLog extends TransactionEntity{
     @Id
+    @GenericField(aggregable = Aggregable.YES)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ka_report_log_seq")
     @GenericGenerator(name = "ka_report_log_seq", strategy= AppraisalConstants.CUSTOM_SEQUENCE_GENERATOR)
     private Long id;
@@ -46,11 +52,13 @@ public class KeyassureReportLog extends TransactionEntity{
     @OneToOne(targetEntity = EUserRegistration.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID",nullable = false)
     @Where(clause = "IS_ACTIVE=true")
+    @IndexedEmbedded(includeDepth = 1)
     private EUserRegistration user;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(targetEntity = EAppraiseVehicle.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "APPR_REF_ID ", nullable = false)
     @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
     private EAppraiseVehicle appraisalRef;
 }

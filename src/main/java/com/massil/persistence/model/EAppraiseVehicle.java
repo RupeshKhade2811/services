@@ -206,4 +206,10 @@ public class EAppraiseVehicle extends TransactionEntity {
     @Where(clause = "IS_ACTIVE = true")
     private ECountdownClockHighBid clockHighBid;
 
+    @IndexedEmbedded(includeDepth = 1)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "appraisalRef",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    private List<KeyassureReportLog> keyReportLogs;
+
 }

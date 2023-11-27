@@ -1,0 +1,159 @@
+<configuration>
+
+
+    <property resource="application-prod.yml"/>
+
+    <appender name="STDOUT-N-O" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F:M%L] -> %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+    <appender name="STDOUT-N" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT-N-O" />
+    </appender>
+
+
+
+
+    <appender name="FILE-AUDIT-N-O" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log-path}/factory-app.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F:M%L] -> %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log-path}/archived/factory-app.%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FILE-AUDIT-N" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE-AUDIT-N-O" />
+    </appender>
+
+    <appender name="FILE-ERROR-N-O" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log-path}/factory-error.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F:M%L] -> %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <maxFileSize>10MB</maxFileSize>
+            <fileNamePattern>${log-path}/archived/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <appender name="FILE-ERROR-N" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE-ERROR-N-O" />
+    </appender>
+
+
+
+
+
+
+    <appender name="STDOUT-O" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F:M%L] -> %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT-O" />
+    </appender>
+
+
+
+    <appender name="FILE-AUDIT-O" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log-path}/elk/factory-app.log</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+                <timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSX</timestampFormat>
+                <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
+                <appendLineSeparator>true</appendLineSeparator>
+                <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                    <prettyPrint>false</prettyPrint>
+                </jsonFormatter>
+            </layout>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log-path}/elk/archived/factory-app.%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    <appender name="FILE-AUDIT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE-AUDIT-O" />
+    </appender>
+
+
+
+
+
+
+
+    <appender name="FILE-ERROR-O" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log-path}/elk/factory-error.log</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+                <timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSX</timestampFormat>
+                <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
+                <appendLineSeparator>true</appendLineSeparator>
+
+                <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                    <prettyPrint>false</prettyPrint>
+                </jsonFormatter>
+            </layout>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <maxFileSize>10MB</maxFileSize>
+            <fileNamePattern>${log-path}/elk/archived/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <appender name="FILE-ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE-ERROR-O" />
+    </appender>
+
+    <logger name="org.springframework" level="INFO" additivity="FALSE">
+        <appender-ref ref="FILE-AUDIT"/>
+        <appender-ref ref="FILE-AUDIT-N"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.springframework" level="ERROR" additivity="FALSE">
+        <appender-ref ref="FILE-ERROR"/>
+        <appender-ref ref="FILE-ERROR-N"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="com.factory" level="INFO" additivity="FALSE">
+        <appender-ref ref="FILE-AUDIT"/>
+        <appender-ref ref="FILE-AUDIT-N"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="com.factory" level="ERROR" additivity="FALSE">
+        <appender-ref ref="FILE-ERROR"/>
+        <appender-ref ref="FILE-ERROR-N"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate" level="INFO" additivity="FALSE">
+        <appender-ref ref="FILE-AUDIT"/>
+        <appender-ref ref="FILE-AUDIT-N"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate" level="ERROR" additivity="FALSE">
+        <appender-ref ref="FILE-ERROR"/>
+        <appender-ref ref="FILE-ERROR-N"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="FILE-AUDIT"/>
+        <appender-ref ref="FILE-AUDIT-N"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <root level="ERROR">
+        <appender-ref ref="FILE-ERROR-N"/>
+        <appender-ref ref="STDOUT-N"/>
+    </root>
+</configuration>

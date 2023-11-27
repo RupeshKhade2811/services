@@ -158,7 +158,27 @@ public class EUserRegistration extends TransactionEntity {
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
     private List<ECreateOtp> otp;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private List<KeyassureReportLog> keyReportLogs;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private List<PaymentDetails> paymentDetails;
+
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @Where(clause = "IS_ACTIVE = true")
+    @IndexedEmbedded(includeDepth = 1)
+    private List<PaymentSubs> paymentSubs;
+
+
 
 
 

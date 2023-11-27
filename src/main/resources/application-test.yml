@@ -10,12 +10,12 @@ host : marketcheck-prod.apigee.net
 image_folder_path: D:/images/
 video_folder_path: D:/images/
 profile_pic_path: C:/profilepics/
-#image_folder_path: /home/factory/images/
-#video_folder_path: /home/factory/videos/
+#image_folder_path: images
+#video_folder_path: videos
 properties_path : /home/factory/properties/
-#profile_pic_path: /home/factory/profilepics/
+#profile_pic_path: profilepics
 file_size: 500000000
-#saved_pdf_Path: /home/factory/pdf/
+#saved_pdf_Path: pdf
 saved_pdf_Path: D:/pdf/
 get-link: https://services-test.keyassure.live/appraisal/getpic1?pic1=
 appraisal_form_path: src\\main\\resources\\AppraisalFormJR.jrxml
@@ -27,11 +27,17 @@ access_key: IJNKK0VI1KN7268AVRH2
 secret : q4M7yWvLhpkpIameiiMB6PmmphcEjACOUAbv1oBs
 amazonS3_url : dal-storage.hostwinds.net/keyassure-test/
 jrXmlPics: https://dal-storage.hostwinds.net/swift/v1/c652a066a7e14f32b4dfd9981ccac3ce/keyassure-test/images/
-
+identityServerAuth: YWRtaW46YWRtaW4=
+payment_server: secure.nmi.com
+payment_port: 443
+payment_path: https://secure.nmi.com/api/transact.php
 
 cron.schedule.expression: "0 */50 * * * *"
 cron.schedule.everyDay: "0 0 20 * * *"
 cron.schedule.onceInMonth: "0 0 0 6 * *"
+cron.schedule.expression.autoBid: "0 */2 * * * *"
+#countdownClockOfMin: 30
+countdownClockOfMin: 5
 
 spring:
   autoconfigure:
@@ -41,12 +47,12 @@ spring:
     prefix: file:src/main/resources/templates/
   datasource:
     driver-class-name: org.postgresql.Driver
-#    password: Massil@123
-#    url: jdbc:postgresql://localhost:5432/Factory_db
-#    username: postgres
-    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
-    username: keyassureadmin
-    password: HxH50y8rpp$j
+    password: Massil@123
+    url: jdbc:postgresql://localhost:5432/Factory_db
+    username: postgres
+#    url: jdbc:postgresql://hwsrv-1076442.hostwindsdns.com:5438/keyassure
+#    username: keyassureadmin
+#    password: HxH50y8rpp$j
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -75,8 +81,8 @@ spring:
     show-sql: true
 
   mail:
-    host: smtp.gmail.com
-    password: ewigwguryncmvbtl
+    host: mail.factorykeyassure.com
+    password: TIbMFm(#2Wn.
     port: 587
     properties:
       mail:
@@ -91,7 +97,7 @@ spring:
           protocol: smtp
     protocol: smtp
     test-connection: false
-    username: yudhistervijay@gmail.com
+    username: system@factorykeyassure.com
   servlet:
     multipart:
       max-file-size: 500MB
@@ -130,6 +136,7 @@ org:
 #    strategy: create
 
 
-
+logging:
+  config: classpath:logback-test1.xml
 
 

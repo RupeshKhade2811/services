@@ -96,7 +96,7 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
     @Query(value = "SELECT av FROM EAppraiseVehicle av " +
             "WHERE av.user.id not in (:userId) AND av.invntrySts = :inventory " +
             "AND av.valid =:valid AND av.field1<>true AND av.field2<>true " +
-            "AND av.id NOT IN (SELECT o.appRef FROM EOffers o WHERE o.status in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id not in (:userId) AND av.invntrySts = :inventory AND av.valid = true)) " +
+            "AND av.id NOT IN (SELECT o.appRef FROM EOffers o WHERE o.status.id in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id not in (:userId) AND av.invntrySts = :inventory AND av.valid = true)) " +
             "ORDER BY av.modifiedOn DESC")
     Page<EAppraiseVehicle> findByUserIdNot(@Param("userId") List<UUID> userId, @Param("inventory") String inventory,Boolean valid, Pageable pageable);
 
@@ -110,7 +110,7 @@ public interface AppraiseVehicleRepo extends JpaRepository<EAppraiseVehicle,Long
     @Query(value = "SELECT av FROM EAppraiseVehicle av " +
             "WHERE av.dealer.id <> :dealerId AND av.invntrySts = :inventory " +
             "AND av.valid =:valid  " +
-            "AND av.id NOT IN (SELECT o.appRef FROM EOffers o WHERE o.status in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id <> :dealerId AND av.invntrySts = :inventory AND av.valid = true)) " +
+            "AND av.id NOT IN (SELECT o.appRef FROM EOffers o WHERE o.status.id in (4,5) AND o.appRef IN (SELECT av.id FROM EAppraiseVehicle av WHERE av.user.id <> :dealerId AND av.invntrySts = :inventory AND av.valid = true)) " +
             "ORDER BY av.modifiedOn DESC")
     Page<EAppraiseVehicle> findByDealerIdNot(@Param("dealerId") Long dealerId,@Param("inventory") String inventory, Boolean valid, Pageable pageable);
 

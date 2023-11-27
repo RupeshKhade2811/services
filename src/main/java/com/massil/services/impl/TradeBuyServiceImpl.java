@@ -70,24 +70,19 @@ public class TradeBuyServiceImpl implements TradeBuyService {
         CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
         Page<EAppraiseVehicle> pageResult = null;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.CREATEDON).descending());
-
-        EUserRegistration userById = userRepo.findUserById(id);
-        ERoleMapping findUserId = roleMappingRepo.findByUserId(userById.getId());
-
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
+        ERoleMapping findUserId = roleMappingRepo.findByUserId(id);
         if (findUserId.getRole().getRole().equals("D2") || findUserId.getRole().getRole().equals("D3") || findUserId.getRole().getRole().equals("S1") || findUserId.getRole().getRole().equals("M1")) {
             id = findUserId.getDealerAdmin();
         }
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(id);
 
-        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
-
-            if (Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
+        if (Boolean.FALSE.equals(configurationCodesRepo.isElasticActive())) {
                 pageResult = eAppraiseVehicleRepo.findNotUserIdInAvbleTrdCrds(allUsersUnderDealer, AppraisalConstants.CREATED, true, true, pageable);
             } else {
                 cardsPage = appraisalVehicleERepo.availableTradeCards(allUsersUnderDealer, pageNumber, pageSize);
             }
-
-            if (null != pageResult && pageResult.getTotalElements() != 0) {
+        if (null != pageResult && pageResult.getTotalElements() != 0) {
                 pageInfo.setTotalRecords(pageResult.getTotalElements());
                 pageInfo.setTotalPages((long) pageResult.getTotalPages());
                 List<EAppraiseVehicle> apv = pageResult.toList();
@@ -95,10 +90,9 @@ public class TradeBuyServiceImpl implements TradeBuyService {
                 for (EAppraiseVehicle eAppraiseVehicle : apv) {
                     invenVehDtos.add(appraisalVehicleMapper.lEApprVehiToLApprVehiCard1(eAppraiseVehicle, id));
                 }
-
                 pageInfo.setCards(invenVehDtos);
 
-            } else if (null != cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()) {
+        } else if (null != cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()) {
                 pageInfo.setTotalRecords(cardsPage.getTotalRecords());
                 pageInfo.setTotalPages((long) cardsPage.getTotalPages());
                 List<EAppraiseVehicle> apv = cardsPage.getAppraiseVehicleList();
@@ -107,37 +101,27 @@ public class TradeBuyServiceImpl implements TradeBuyService {
                     invenVehDtos.add(appraisalVehicleMapper.lEApprVehiToLApprVehiCard1(eAppraiseVehicle, id));
                 }
                 pageInfo.setCards(invenVehDtos);
-            } else throw new AppraisalException("Available TardeBuy Cards not available");
-            pageInfo.setMessage("Available trade buy cards found");
-            pageInfo.setCode(HttpStatus.OK.value());
-            pageInfo.setStatus(true);
-            return pageInfo;
-
+        } else throw new AppraisalException("Available TardeBuy Cards not available");
+        pageInfo.setMessage("Available trade buy cards found");
+        pageInfo.setCode(HttpStatus.OK.value());
+        pageInfo.setStatus(true);
+        return pageInfo;
 
     }
-
-
-
-
     @Override
     public CardsPage factoryOffersCards(UUID id, Integer pageNumber, Integer pageSize) throws AppraisalException {
         CardsPage pageInfo = new CardsPage();
         Page<EOffers> pageResult = null;
-
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
         ERoleMapping findUserId = roleMappingRepo.findByUserId(id);
         if(findUserId.getRole().getRole().equals("D2") || findUserId.getRole().getRole().equals("D3") || findUserId.getRole().getRole().equals("S1") || findUserId.getRole().getRole().equals("M1")){
             id=findUserId.getDealerAdmin();
         }
-
-        EUserRegistration userById = userRepo.findUserById(id);
-        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
-        if (null != userById) {
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(id);
+        if (!allUsersUnderDealer.isEmpty()) {
             pageResult = offersRepo.findBySlrUserIdInGetFctryOfrsJPQL(allUsersUnderDealer, true, pageable);
         }
-
-            if (null != pageResult && pageResult.getTotalElements() != 0) {
+        if (null != pageResult && pageResult.getTotalElements() != 0) {
                 pageInfo.setTotalRecords(pageResult.getTotalElements());
                 pageInfo.setTotalPages((long) pageResult.getTotalPages());
 
@@ -145,13 +129,11 @@ public class TradeBuyServiceImpl implements TradeBuyService {
                 List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
 
                 pageInfo.setCards(appraiseVehicleDtos);
-            } else throw new AppraisalException("Factory Offers Cards not available");
-
-
-            pageInfo.setMessage("Factory Offers cards found");
-            pageInfo.setCode(HttpStatus.OK.value());
-            pageInfo.setStatus(true);
-            return pageInfo;
+        } else throw new AppraisalException("Factory Offers Cards not available");
+        pageInfo.setMessage("Factory Offers cards found");
+        pageInfo.setCode(HttpStatus.OK.value());
+        pageInfo.setStatus(true);
+        return pageInfo;
     }
     @Override
     public OfferInfo factoryOffersInfo (Long offerId) throws OfferException {

@@ -47,8 +47,8 @@ public interface ConfigCodesService {
     Response deleteConfig(Long codeId) throws GlobalException;
 
     FilterDropdowns sendFilterParams(FilterParameters filter, UUID userId, String module) throws AppraisalException;
-    FilterDropdowns sendFilterParams();
-    FilterDropdowns appraisalDropdown(FilterParameters filter, UUID userId) throws AppraisalException ;
+
+
 
 
 }

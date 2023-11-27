@@ -12,10 +12,12 @@ import com.massil.repository.*;
 import com.massil.services.AutoBidService;
 import com.massil.services.OffersService;
 import org.jobrunr.jobs.JobId;
+import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,10 +48,12 @@ public class AutoBidServiceImpl implements AutoBidService {
     private OffersRepo offersRepo;
     @Autowired
     private AutoBidMapper autoBidMapper;
+    @Value("${countdownClockOfMin}")
+    private Integer timeInMin;
     Logger log = LoggerFactory.getLogger(AutoBidServiceImpl.class);
 
-//    @Job(name = "The AutoBid job", retries = 1)
-   @Scheduled(fixedDelay = 60 * 1000)
+    @Job(name = "The AutoBid job")
+   //@Scheduled(fixedDelay = 60 * 1000)
     @Override
     public void sellerAutoBid() throws OfferException, AppraisalException {
         log.info("*****Auto bid start******");
@@ -112,7 +116,7 @@ public class AutoBidServiceImpl implements AutoBidService {
             clockHighBid.setHighBid(args.getRunningOfferQuotes().getBuyerQuote());
 
             //start timerClock
-            JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(5), x -> setCountDownClock(args.getAppraisalRef().getId()));//send here apprId using that apprId find EClockhighbid
+            JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(timeInMin), x -> setCountDownClock(args.getAppraisalRef().getId()));//send here apprId using that apprId find EClockhighbid
             clockHighBid.setJobRunRTimerId(jobId.asUUID());
             clockHighBid.setOffersQuotes(args.getRunningOfferQuotes());
             clockHighBid.setAutoBidJobs(args.getJob());
@@ -134,7 +138,7 @@ public class AutoBidServiceImpl implements AutoBidService {
             if (null != args.getOldClockHighBid().getJobRunRTimerId())
                 jobScheduler.delete(args.getOldClockHighBid().getJobRunRTimerId(),"got a new HighBid ");
             //start new timerClock
-            JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(5), x -> setCountDownClock(args.getAppraisalRef().getId()));
+            JobId jobId = jobScheduler.schedule(LocalDateTime.now().plusMinutes(timeInMin), x -> setCountDownClock(args.getAppraisalRef().getId()));
             args.getOldClockHighBid().setJobRunRTimerId(jobId.asUUID());
 
             //giving bump to oldHighBid
@@ -169,7 +173,7 @@ public class AutoBidServiceImpl implements AutoBidService {
     }
     void giveBump(ECountdownClockHighBid oldClockHighBid,Double dealerReserve,EAutoBidJobs job) throws OfferException {
         //giving bump
-        Double highBid = oldClockHighBid.getHighBid();
+        Double highBid = null!=oldClockHighBid? oldClockHighBid.getHighBid():null;
         Double counter = (null != highBid && highBid > 0) ? highBid : dealerReserve;
         offersService.sellerCounter(job.getOfferId().getId(), new Offers(counter + job.getBump().getBump()));
         //job completed

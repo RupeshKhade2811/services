@@ -48,7 +48,7 @@ public class ERoleMapping extends TransactionEntity{
     @Id
     @GenericField
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROLE_MAPPING_SEQ")
-    @GenericGenerator(name = "ROLE_MAPPING_SEQ", type = CustomIDGenerator.class)
+    @GenericGenerator(name = "ROLE_MAPPING_SEQ", strategy=AppraisalConstants.CUSTOM_SEQUENCE_GENERATOR)
     private Long id;
 
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

@@ -108,44 +108,31 @@ public class OffersServiceImpl implements OffersService {
         CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
         Page<EOffers> pageResult = null;
-
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-
         ERoleMapping findUserId = roleMappingRepo.findByUserId(id);
         if (findUserId.getRole().getRole().equals("D2") || findUserId.getRole().getRole().equals("D3") || findUserId.getRole().getRole().equals("S1") || findUserId.getRole().getRole().equals("M1")) {
             id = findUserId.getDealerAdmin();
         }
-        EUserRegistration userById = userRepo.findUserById(id);
-        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
-        if (null != userById) {
-            if (Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
-                pageResult = offersRepo.findByBuyerUserIdJPQL(allUsersUnderDealer, AppraisalConstants.INVENTORY, true, false, pageable);
-            } else {
-                cardsPage = offersERepo.procurementCards(id, pageNumber, pageSize);
-            }
-
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(id);
+        if (Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
+            pageResult = offersRepo.findByBuyerUserIdJPQL(allUsersUnderDealer, AppraisalConstants.INVENTORY, true, false, pageable);
+        } else {
+            cardsPage = offersERepo.procurementCards(allUsersUnderDealer, pageNumber, pageSize);
         }
-
         if (null != pageResult && pageResult.getTotalElements() != 0) {
 
             pageInfo.setTotalRecords(pageResult.getTotalElements());
             pageInfo.setTotalPages((long) pageResult.getTotalPages());
-
             List<EOffers> apv = pageResult.toList();
-
             List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
             pageInfo.setCards(appraiseVehicleDtos);
         } else if (null != cardsPage && !cardsPage.getEOffersList().isEmpty()) {
             pageInfo.setTotalRecords(cardsPage.getTotalRecords());
             pageInfo.setTotalPages(cardsPage.getTotalPages());
-
             List<EOffers> apv = cardsPage.getEOffersList();
-
             List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
             pageInfo.setCards(appraiseVehicleDtos);
         } else throw new AppraisalException("AppraisalCards not available");
-
-
         pageInfo.setCode(HttpStatus.OK.value());
         pageInfo.setMessage("Getting all procurement cards in offers page");
         pageInfo.setStatus(true);
@@ -158,33 +145,20 @@ public class OffersServiceImpl implements OffersService {
 
         CardsPage pageInfo = new CardsPage();
         Page<EOffers> pageResult = null;
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-
         ERoleMapping findUserId = roleMappingRepo.findByUserId(id);
         if (findUserId.getRole().getRole().equals("D2") || findUserId.getRole().getRole().equals("D3") || findUserId.getRole().getRole().equals("S1") || findUserId.getRole().getRole().equals("M1")) {
             id = findUserId.getDealerAdmin();
         }
-
-        EUserRegistration userById = userRepo.findUserById(id);
-        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
-        if (null != userById) {
-
-            pageResult = offersRepo.findBySellerUserIdJPQL(allUsersUnderDealer, false, pageable);
-
-        }
-
+        List<UUID> allUsersUnderDealer = dealersUser.getAllUsersUnderDealer(id);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
+        pageResult = offersRepo.findBySellerUserIdJPQL(allUsersUnderDealer, false, pageable);
         if (null != pageResult && pageResult.getTotalElements() != 0) {
-
             pageInfo.setTotalRecords(pageResult.getTotalElements());
             pageInfo.setTotalPages((long) pageResult.getTotalPages());
-
             List<EOffers> apv = pageResult.toList();
             List<AppraisalVehicleCard> appraiseVehicleDtos = offersMapper.lEoffersToOffersCards(apv);
             pageInfo.setCards(appraiseVehicleDtos);
         } else throw new AppraisalException("AppraisalCards not available");
-
-
         pageInfo.setCode(HttpStatus.OK.value());
         pageInfo.setMessage("Getting all liquidation cards in offers page");
         pageInfo.setStatus(true);
@@ -354,13 +328,15 @@ public class OffersServiceImpl implements OffersService {
 
         if (null != offers) {
 
-            int rowUpdated = offersRepo.updateOfferSetPurchasedBuyerAccept(offerId, offers.getAppRef().getId());
-            int rowsUpdated = offersRepo.updateOfferSetSold(offerId, offers.getAppRef().getId());
-            EShipment shipment = new EShipment();
-            shipment.setBuyerAgreed(false);
-            insertShipmentDtls(offers, shipment);
+                int rowUpdated = offersRepo.updateOfferSetPurchasedBuyerAccept(offerId, offers.getAppRef().getId());
+                int rowsUpdated = offersRepo.updateOfferSetSold(offerId, offers.getAppRef().getId());
+                EShipment shipment=new EShipment();
+                shipment.setBuyerAgreed(false);
+                shipment.setBuyerUserId(offers.getBuyerUserId());
+                shipment.setSellerUserId(offers.getSellerUserId());
+                insertShipmentDtls(offers,shipment);
 
-        } else throw new OfferException("Invalid offer id Send..");
+            } else throw new OfferException("Invalid offer id Send..");
 
         response.setStatus(Boolean.TRUE);
         response.setCode(HttpStatus.OK.value());

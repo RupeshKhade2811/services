@@ -99,7 +99,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
                     }
                 }else {
                     if(Boolean.TRUE.equals(configCodesRepo.isElasticActive())){
-                        cardsPage = eRepo.appraisalCards(userId, pageNo, pageSize);
+                        cardsPage = eRepo.appraisalCards(allUsersUnderDealer, pageNo, pageSize);
                     }else {
                         resultPage = eAppraiseVehicleRepo.appraisalCards(allUsersUnderDealer, true, pageable);
                     }
@@ -129,54 +129,45 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
         Page<EAppraiseVehicle> resultPage=null;
         CardsPage cardsPage = null;
         CardsPage pageInfo = new CardsPage();
-        EUserRegistration userById = userRegistrationRepo.findUserById(userId);
-        List<UUID> usersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
-
-        ERoleMapping byUserId = roleMappingRepo.findByUserId(userById.getId());
+        ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
         if(byUserId.getRole().getRole().equals("D2") || byUserId.getRole().getRole().equals("D3") || byUserId.getRole().getRole().equals("S1") || byUserId.getRole().getRole().equals("M1")){
             userId=byUserId.getDealerAdmin();
-             usersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
         }
+        List<UUID> usersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
 
-        if (null != userById) {
-
-                Pageable pageable = PageRequest.of(pageNo, pageSize);
-
-                if (null != filter) {
+         if (null != filter) {
                     if (Boolean.TRUE.equals(configCodesRepo.isElasticActive())) {
                         cardsPage = eRepo.filterInventoryCards(filter, usersUnderDealer, pageNo, pageSize);
                     } else {
                         resultPage = eAppraiseVehicleRepo.findAll(AppraisalSpecification.getInventrySpecification(filter, usersUnderDealer), pageable);
                     }
-                } else {
+         } else {
                     if (Boolean.TRUE.equals(configCodesRepo.isElasticActive())) {
                         cardsPage = eRepo.inventoryCards(usersUnderDealer, pageNo, pageSize);
                     } else {
                         resultPage = eAppraiseVehicleRepo.findUserAndInvntrySts(usersUnderDealer, AppraisalConstants.INVENTORY, true, pageable);
                     }
-                }
-
-                if (null != resultPage && !resultPage.isEmpty()) {
+         }
+         if (null != resultPage && !resultPage.isEmpty()) {
                     pageInfo.setTotalRecords(resultPage.getTotalElements());
                     List<AppraisalVehicleCard> cards = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(resultPage.getContent());
                     pageInfo.setCards(cards);
                     pageInfo.setTotalPages((long) resultPage.getTotalPages());
-                } else if (null != cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()) {
+         }
+         else if (null != cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()) {
                     pageInfo.setTotalRecords(cardsPage.getTotalRecords());
                     pageInfo.setTotalPages((long) cardsPage.getTotalPages());
                     List<EAppraiseVehicle> invtry = cardsPage.getAppraiseVehicleList();
                     List<AppraisalVehicleCard> appraiseVehicleDtos = appraisalVehicleMapper.lEApprVehiToLApprVehiCard(invtry);
                     pageInfo.setCards(appraiseVehicleDtos);
+         }
+         else throw new AppraisalException("InventoryCards not available");
 
-                }
-                else throw new AppraisalException("InventoryCards not available");
-                pageInfo.setCode(HttpStatus.OK.value());
-                pageInfo.setMessage("Cards showing successfully");
-                pageInfo.setStatus(true);
-                return pageInfo;
-            } else throw new AppraisalException(AppraisalConstants.INVALID_USER_ID);
-
-
+         pageInfo.setCode(HttpStatus.OK.value());
+         pageInfo.setMessage("Cards showing successfully");
+         pageInfo.setStatus(true);
+         return pageInfo;
     }
 
 
@@ -185,77 +176,58 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
         Page<EAppraiseVehicle>resultPage=null;
         CardsPage cardsPage=null;
         CardsPage pageInfo = new CardsPage();
-        EUserRegistration userById = userRegistrationRepo.findUserById(userId);
         List<AppraisalVehicleCard> offersCards=new ArrayList<>();
-        List<UUID> usersUnderDealer = dealersUser.getAllUsersUnderDealer(userById.getId());
+        ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
+        if(byUserId.getRole().getRole().equals("D2") || byUserId.getRole().getRole().equals("D3") || byUserId.getRole().getRole().equals("S1") || byUserId.getRole().getRole().equals("M1")){
+            userId=byUserId.getDealerAdmin();
+        }
+        List<UUID> usersUnderDealer = dealersUser.getAllUsersUnderDealer(userId);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
 
-            if (null != userById) {
-                Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(AppraisalConstants.MODIFIEDON).descending());
-
-                if (null!=filter) {
+        if (null!=filter) {
                     if(Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
                         List<Long> unsoldVehicles = eAppraiseVehicleRepo.apprIdOfUnsoldVehicles(usersUnderDealer);
-
                         resultPage = eAppraiseVehicleRepo.findAll(AppraisalSpecification.getSearchFactorySpecification(filter, usersUnderDealer,unsoldVehicles), pageable);
                     }else {
-                        cardsPage = eRepo.filterSearchFactoryVehicle(filter, userId, pageNo, pageSize);
+                        cardsPage = eRepo.filterSearchFactoryVehicle(filter, usersUnderDealer, pageNo, pageSize);
                     }
-                }else {
-                    if(Boolean.FALSE.equals(configCodesRepo.isElasticActive())) {
-                        resultPage = eAppraiseVehicleRepo.findByUserIdNot(usersUnderDealer, AppraisalConstants.INVENTORY, true, pageable);
-                    }
-                    else {
-                        cardsPage = eRepo.searchFactory( userId, pageNo, pageSize);
-                    }
-                }
-
-                if (null!=resultPage && resultPage.getTotalElements() != 0) {
-
-
+        }
+        if (null!=resultPage && resultPage.getTotalElements() != 0) {
                     pageInfo.setTotalRecords(resultPage.getTotalElements());
                     pageInfo.setTotalPages((long) resultPage.getTotalPages());
 
                     List<EAppraiseVehicle> invtry = resultPage.toList();
                     for (EAppraiseVehicle vehicle:invtry) {
-                        ERoleMapping byUserId = roleMappingRepo.findByUserId(vehicle.getUser().getId());
+                        ERoleMapping byUserId1 = roleMappingRepo.findByUserId(vehicle.getUser().getId());
                         AppraisalVehicleCard appraisalVehicleCard = offersMapper.eApprVehiToOffersCards(vehicle, userId,usersUnderDealer);
-                        appraisalVehicleCard.setRole(appraisalVehicleMapper.eRoleToRole(byUserId.getRole()));
+                        appraisalVehicleCard.setRole(appraisalVehicleMapper.eRoleToRole(byUserId1.getRole()));
                         offersCards.add(appraisalVehicleCard);
                     }
-
                     pageInfo.setCode(HttpStatus.OK.value());
                     pageInfo.setMessage("SearchFactory vehicle cards are visible");
                     pageInfo.setStatus(Boolean.TRUE);
                     pageInfo.setCards(offersCards);
-                    ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
                     pageInfo.setRoleType(byUserId.getRole().getRole());
                     pageInfo.setRoleGroup(byUserId.getRole().getRoleGroup());
-                }else if (null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()){
+        }else if (null!=cardsPage && !cardsPage.getAppraiseVehicleList().isEmpty()){
 
                     pageInfo.setTotalRecords(cardsPage.getTotalRecords());
                     pageInfo.setTotalPages(cardsPage.getTotalPages());
 
                     List<EAppraiseVehicle> invtry = cardsPage.getAppraiseVehicleList();
                     for (EAppraiseVehicle vehicle:invtry) {
-                        ERoleMapping byUserId = roleMappingRepo.findByUserId(vehicle.getUser().getId());
+                        ERoleMapping byUserId1 = roleMappingRepo.findByUserId(vehicle.getUser().getId());
                         AppraisalVehicleCard appraisalVehicleCard = offersMapper.eApprVehiToOffersCards(vehicle, userId,usersUnderDealer);
-                        appraisalVehicleCard.setRole(appraisalVehicleMapper.eRoleToRole(byUserId.getRole()));
+                        appraisalVehicleCard.setRole(appraisalVehicleMapper.eRoleToRole(byUserId1.getRole()));
                         offersCards.add(appraisalVehicleCard);
                     }
-
                     pageInfo.setCode(HttpStatus.OK.value());
                     pageInfo.setMessage("SearchFactory vehicle cards are visible");
                     pageInfo.setStatus(Boolean.TRUE);
                     pageInfo.setCards(offersCards);
-                    ERoleMapping byUserId = roleMappingRepo.findByUserId(userId);
                     pageInfo.setRoleType(byUserId.getRole().getRole());
                     pageInfo.setRoleGroup(byUserId.getRole().getRoleGroup());
-
-                }
-                else throw new AppraisalException("No Cards available");
-
-
-            } else throw new AppraisalException("userID is null");
+        } else throw new AppraisalException("No Cards available");
         return pageInfo;
     }
 
@@ -329,7 +301,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
     public DlrList srchByDlrList(DealerRegistration filter) throws AppraisalException {
         List<EDealerRegistration> all = dlrRegRepo.findAll( AppraisalSpecification.dsplyDlrList(filter));
         DlrList dealerList= new DlrList();
-        if(null!=all){
+        if(!all.isEmpty()){
             List<DealerRegistration> sellingDealers = appraisalVehicleMapper.eDlrRegToDlrReg(all);
             dealerList.setDlrWithNoCmp(sellingDealers);
         }else throw new AppraisalException("No such Dealer Found");
@@ -400,7 +372,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
         List<Company> companies = null;
         List<ECompany> companyList = companyRepo.findAll(AppraisalSpecification.searchByCompany(name));
 
-        if (companyList != null) {
+        if (!companyList.isEmpty()) {
             companies = appraisalVehicleMapper.leCompDetailsTolCompDetails(companyList);
 
             // Check if there are enough elements for the requested page
@@ -437,7 +409,7 @@ public class FilterSpecificationServiceImpl implements FilterSpecificationServic
 //        Specification<CorporateAdminView> corAdminViewSpec = AppraisalSpecification.corporateAdminList(filter);
         List<CorporateAdminView> all = corAdminViewRepo.findAll();
         CorporateAdminList corporateAdminList= new CorporateAdminList();
-        if(null!=all){
+        if(!all.isEmpty()){
             corporateAdminList.setCorAdminList(all);
         }else throw new AppraisalException("No such Corporate Admin Found");
         corporateAdminList.setCode(HttpStatus.OK.value());

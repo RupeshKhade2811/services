@@ -50,7 +50,7 @@ public class JobRunrConfig {
         jobScheduler.<PaymentGatewayService>scheduleRecurrently(onceInAMonth, PaymentGatewayService::onceInAMonth);
         jobScheduler.<OffersService>scheduleRecurrently(cronExpression, OffersService::myScheduledTask);
 
-        jobScheduler.<AutoBidService>scheduleRecurrently(Cron.minutely(), AutoBidService::sellerAutoBid);
+        jobScheduler.<AutoBidService>scheduleRecurrently(autoBidCronExpression, AutoBidService::sellerAutoBid);
 
    /*@Bean
     public StorageProvider storageProvider(JobMapper jobMapper) {
